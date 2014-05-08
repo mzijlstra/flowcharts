@@ -48,10 +48,9 @@ and open the template in the editor.
 }
 .assignment {
     border: 1px solid black;
-    max-width: 160px;
+    max-width: 170px;
     padding: 15px;
     font-family: monospace;
-    /*margin-left: 20px;*/
 }
 .assignment div {
     display: inline-block;
@@ -123,8 +122,24 @@ and open the template in the editor.
 .if .join_true_h {
     display: inline-block;
 }
+.if .true,
+.if .false {
+    position: relative;
+    width: 200px;
+}
+
+.if .absolute_line {
+    position: absolute;
+    top: 0px;
+    bottom: 0xp;
+    left: 59px;
+    width: 0px;
+    height: 100%;
+    border: 1px solid black;
+}
+
 .if .true_line_h { 
-    width: 94px;
+    width: 146px;
     height: 0px;
     border: 1px solid black;
     margin-bottom: 59px;
@@ -136,19 +151,12 @@ and open the template in the editor.
     margin-left: -8px;
     border: 1px solid black;
 }
-.if .false .connection,
-.if .join_false .connection {
-    margin-left: 50px;
-}
-.if .true .connection {
-    margin-left: 135px;
-}
 .if .join_true_v .connection {
     margin-left: 0px;
 }
 .if .join_true_h {
     height: 0px;
-    width: 128px;
+    width: 180px;
     border: 1px solid black;
     margin-bottom: 28px;
     margin-left: -14px;

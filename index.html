@@ -11,90 +11,97 @@ and open the template in the editor.
         <link rel="stylesheet" href="style.css" type="text/css" />
     </head>
     <body>
-        <div class="item start">
+        <div class="item">
+            <div class="start">
                 int main()
-        </div>
-        <div class="connection">
-            <div class="line">
             </div>
-            <div class="point">
-            </div>            
-            <div class="line">
+            <div class="connection">
+                <div class="line">
+                </div>
+                <div class="point">
+                </div>            
+                <div class="line">
+                </div>
+                <div class="arrow_down">
+                </div>                        
             </div>
-            <div class="arrow_down">
-            </div>                        
+
         </div>
-        <div class="item assignment">
+        <div class="item">
+            <div class="assignment">
                 <div class="var">x</div>
                 <div class="asgn">&#171;</div> 
                 <div class="exp">5 + y</div>
-        </div>
-        <div class="connection">
-            <div class="line">
             </div>
-            <div class="point">
-            </div>            
-            <div class="line">
+            <div class="connection">
+                <div class="line">
+                </div>
+                <div class="point">
+                </div>            
+                <div class="line">
+                </div>
+                <div class="arrow_down">
+                </div>                        
             </div>
-            <div class="arrow_down">
-            </div>                        
         </div>
         <div class="item if">
-                <div class="display">
-                    <div class="diamond_top_outside">
-                        <div class="diamond_top_inside">
-                        </div>
-                    </div>
-                    <div class="diamond_bot_outside">
-                        <div class="diamond_bot_inside">
-                        </div>
-                    </div>
-                    <div class="label_true">true</div>
-                    <div class="label_false">false</div>
-                </div>
-                <div class="exp">some &lt; other</div>
-                <div class="true_line_h"></div>
-                <div class="true_line_v"></div>
-                <br />
-                <div class="false">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="point">
-                        </div>            
-                        <div class="line">
-                        </div>
+            <div class="display">
+                <div class="diamond_top_outside">
+                    <div class="diamond_top_inside">
                     </div>
                 </div>
-                <div class="true">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="point">
-                        </div>            
-                        <div class="line">
-                        </div>
+                <div class="diamond_bot_outside">
+                    <div class="diamond_bot_inside">
                     </div>
                 </div>
-                <br />
-                <div class="join_false">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="arrow_down">
-                        </div>                        
+                <div class="label_true">true</div>
+                <div class="label_false">false</div>
+            </div>
+            <div class="exp">some &lt; other</div>
+            <div class="true_line_h"></div>
+            <div class="true_line_v"></div>
+            <br />
+            <div class="false">
+                <div class="absolute_line"></div>
+                <div class="connection">
+                    <div class="line">
+                    </div>
+                    <div class="point">
+                    </div>            
+                    <div class="line">
                     </div>
                 </div>
-                <div class="join_true_v">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="arrow_down">
-                        </div>
+            </div>
+            <div class="true">
+                <div class="absolute_line"></div>
+                <div class="connection">
+                    <div class="line">
+                    </div>
+                    <div class="point">
+                    </div>            
+                    <div class="line">
                     </div>
                 </div>
-                <div class="join_true_h">
+            </div>
+            <br />
+            <div class="join_false">
+                <div class="connection">
+                    <div class="line">
+                    </div>
+                    <div class="arrow_down">
+                    </div>                        
                 </div>
+            </div>
+            <div class="join_true_v">
+                <div class="connection">
+                    <div class="line">
+                    </div>
+                    <div class="arrow_down">
+                    </div>
+                </div>
+            </div>
+            <div class="join_true_h">
+            </div>
         </div>
         <div class="item stop">
             return 0
