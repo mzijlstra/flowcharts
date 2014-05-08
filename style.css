@@ -51,6 +51,7 @@ and open the template in the editor.
     max-width: 170px;
     padding: 15px;
     font-family: monospace;
+    background-color: white;
 }
 .assignment div {
     display: inline-block;
@@ -107,7 +108,7 @@ and open the template in the editor.
     top: 120px;
     left: 70px;
 }
-.if div.exp {
+.if > div.exp {
     position: absolute;
     top: 55px;
     left: 15px;
@@ -122,20 +123,30 @@ and open the template in the editor.
 .if .join_true_h {
     display: inline-block;
 }
+.if .true_or_false {
+    position: relative;
+    width: 410px;
+}
+.true_or_false .absolute {
+    position: absolute;
+    top: 0px;
+    bottom: 0xp;
+    width: 0px;
+    height: 100%;
+    border: 1px solid black;
+    z-index: 0;
+}
+.absolute.false_line {
+    left: 59px;
+}
+.absolute.true_line {
+    left: 266px;
+}
 .if .true,
 .if .false {
     position: relative;
     width: 200px;
-}
-
-.if .absolute_line {
-    position: absolute;
-    top: 0px;
-    bottom: 0xp;
-    left: 59px;
-    width: 0px;
-    height: 100%;
-    border: 1px solid black;
+    z-index: 10;
 }
 
 .if .true_line_h { 
