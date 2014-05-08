@@ -1,0 +1,155 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 3, 2014, 6:10:01 PM
+    Author     : mzijlstra
+*/
+
+.start, .stop {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 45px;
+    border: 1px solid black;
+    text-align: center;
+    font-family: monospace;
+    line-height: 75px;
+    margin-left: 20px; 
+}
+.connection {
+    margin-left: 50px;
+}
+.line {
+    display: block;
+    border: 1px solid black;
+    width: 0px;
+    height: 20px;
+    margin-left: 9px;
+}
+.point {
+    display: block;
+    border: 3px solid black;
+    width: 0px;
+    height: 0px;
+    margin-left: 7px;
+    border-radius: 3px;
+}
+
+.arrow_down {
+    width: 0px;
+    height: 0px;
+    border-top: 8px solid black;
+    border-left: 8px solid transparent; 
+    border-right: 8px solid transparent; 
+    margin-left: 2px;
+}
+.assignment {
+    border: 1px solid black;
+    max-width: 160px;
+    padding: 15px;
+    font-family: monospace;
+    /*margin-left: 20px;*/
+}
+.assignment div {
+    display: inline-block;
+}
+.diamond_top_outside {
+    width: 0px;
+    height: 0px;
+    position: relative;
+    border-bottom: 60px solid black;
+    border-left: 60px solid transparent; 
+    border-right: 60px solid transparent; 
+}
+.diamond_bot_outside {
+    width: 0px;
+    height: 0px;
+    position: relative;
+    border-top: 60px solid black;
+    border-left: 60px solid transparent; 
+    border-right: 60px solid transparent; 
+}
+.diamond_top_inside {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-bottom: 58px solid white;
+    border-left: 58px solid transparent; 
+    border-right: 58px solid transparent;
+    left: -58px;
+    top: 2px;
+}
+.diamond_bot_inside {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-top: 58px solid white;
+    border-left: 58px solid transparent; 
+    border-right: 58px solid transparent; 
+    left: -58px;
+    top: -61px;
+}
+.if {
+    font-family: monospace;
+    position: relative;
+    line-height: 0px;
+    /*margin-left:40px;*/
+}
+.if .label_true {
+    position: absolute;
+    top: 50px;
+    left: 120px;
+}
+.if .label_false {
+    position: absolute;
+    top: 120px;
+    left: 70px;
+}
+.if div.exp {
+    position: absolute;
+    top: 55px;
+    left: 15px;
+}
+.if .display, 
+.if .true_line_h, 
+.if .true_line_v, 
+.if .true, 
+.if .false,
+.if .join_false,
+.if .join_true_v,
+.if .join_true_h {
+    display: inline-block;
+}
+.if .true_line_h { 
+    width: 94px;
+    height: 0px;
+    border: 1px solid black;
+    margin-bottom: 59px;
+    margin-left: -8px;
+}
+.if .true_line_v { 
+    width: 0px;
+    height: 59px;
+    margin-left: -8px;
+    border: 1px solid black;
+}
+.if .false .connection,
+.if .join_false .connection {
+    margin-left: 50px;
+}
+.if .true .connection {
+    margin-left: 135px;
+}
+.if .join_true_v .connection {
+    margin-left: 0px;
+}
+.if .join_true_h {
+    height: 0px;
+    width: 128px;
+    border: 1px solid black;
+    margin-bottom: 28px;
+    margin-left: -14px;
+}
