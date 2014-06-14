@@ -11,40 +11,33 @@ and open the template in the editor.
         <link rel="stylesheet" href="style.css" type="text/css" />
     </head>
     <body>
-        <div class="item">
+        <div class="statement">
             <div class="start">
                 int main()
             </div>
             <div class="connection">
-                <div class="line">
-                </div>
-                <div class="point">
-                </div>            
-                <div class="line">
-                </div>
+                <div class="line"></div>
+                <div class="point"></div>            
+                <div class="line"></div>
             </div>
         </div>
-        <div class="item">
+        <div class="statement">
+            <div class="arrow_down"></div>                        
             <div class="assignment">
-                <div class="arrow_down"></div>                        
                 <span class="var">x</span>
                 <span class="asgn">&#171;</span> 
                 <span class="exp">5 + y</span>
             </div>
             <div class="connection">
-                <div class="line">
-                </div>
-                <div class="point">
-                </div>            
-                <div class="line">
-                </div>
+                <div class="line"></div>
+                <div class="point"></div>            
+                <div class="line"></div>
             </div>
         </div>
-        <div class="item">
+        <div class="statement">
+            <div class="arrow_down"></div>                        
             <div class="if">
                 <div class="diamond">
-                    <div class="arrow_down">
-                    </div>                        
                     <div class="diamond_top_outside">
                         <div class="diamond_top_inside">
                         </div>
@@ -55,63 +48,53 @@ and open the template in the editor.
                     </div>
                     <div class="label_true">true</div>
                     <div class="label_false">false</div>
+                    <div class="exp">some &lt; other</div>
                 </div>
-                <div class="exp">some &lt; other</div>
-                <div class="start_true_line"></div>
-                <br />
-            </div>
-            <div class="true_or_false">
-                <div class="absolute false_line"></div>
-                <div class="absolute true_line"></div>
-                <div class="false">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="point">
-                        </div>            
-                        <div class="line">
-                        </div>
-                    </div>
-                </div>
-                <div class="true">
-                    <div class="connection">
-                        <div class="line">
-                        </div>
-                        <div class="point">
-                        </div>            
-                        <div class="line">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="assignment">
-                            <div class="arrow_down"></div>                        
-                            <span class="var">x</span>
-                            <span class="asgn">&#171;</span> 
-                            <span class="exp">5 + y</span>
-                        </div>
-                        <div class="connection">
-                            <div class="line">
+                <table><tr><td class="left">
+                            <div class="absolute_true"></div>
+                            <div class="expander true">
+                                <div class="top_connector"></div>
+                                <div class="connection">
+                                    <div class="line"></div>
+                                    <div class="point"></div>            
+                                    <div class="line"></div>
+                                </div>
+                                <div class="arrow_down"></div>                        
+                                <div class="assignment">
+                                    <span class="var">x</span>
+                                    <span class="asgn">&#171;</span> 
+                                    <span class="exp">5 + y</span>
+                                </div>
+                                <div class="connection">
+                                    <div class="line"></div>
+                                    <div class="point"></div>            
+                                    <div class="line"></div>
+                                </div>
+
+                                <div class="bot_connector">
+                                    <div class="vertical_line"></div>
+                                    <div class="arrow_left"></div>
+                                </div>
                             </div>
-                            <div class="point">
-                            </div>            
-                            <div class="line">
+                        </td><td class="right">
+                            <div class="expander false">
+                                <div class="connection">
+                                    <div class="line"></div>
+                                    <div class="point"></div>            
+                                    <div class="line"></div>
+                                </div>
+                                <div class="bot_false_connect"></div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </td></tr></table>
             </div>
             <div class="connection">
-                <div class="line">
-                </div>
-                <div class="end_true_line">
-                    <div class="arrow_down">
-                    </div>
-                </div>
+                <div class="line"></div>
+                <div class="point"></div>            
+                <div class="line"></div>
             </div>
         </div>
-        <div class="item">
-            <div class="arrow_down">
-            </div>                        
+        <div class="statement">
+            <div class="arrow_down"></div>                        
             <div class="stop">
                 return 0
             </div>

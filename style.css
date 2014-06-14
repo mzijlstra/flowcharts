@@ -12,10 +12,9 @@ body {
     font-size: 12px;
 }
 .start, .stop {
-    display: inline-block;
     width: 80px;
     height: 80px;
-    border-radius: 45px;
+    border-radius: 55px;
     border: 1px solid black;
     text-align: center;
     font-family: monospace;
@@ -24,6 +23,8 @@ body {
 }
 .connection {
     margin-left: 50px;
+    background-color: white;
+    z-index: 10;
 }
 .line {
     display: block;
@@ -40,7 +41,7 @@ body {
     margin-left: 7px;
     border-radius: 3px;
 }
-.item {
+.statement {
     position: relative;
 }
 .arrow_down {
@@ -49,10 +50,7 @@ body {
     border-top: 8px solid black;
     border-left: 8px solid transparent; 
     border-right: 8px solid transparent; 
-    margin-left: 2px;
-    position: absolute;
-    top: -8px;
-    left: 50px;
+    margin-left: 52px;
 }
 .assignment {
     border: 1px solid black;
@@ -99,70 +97,110 @@ body {
 }
 .if {
     position: relative;
-    line-height: 0px;
+    overflow: hidden;
+}
+.if .diamond .exp {
+    position: absolute;
+    top: 55px;
+    left: 15px;    
 }
 .if .label_true {
     position: absolute;
-    top: 50px;
-    left: 120px;
+    top: 100px;
+    left: 10px;
 }
 .if .label_false {
     position: absolute;
-    top: 120px;
-    left: 70px;
+    top: 40px;
+    left: 115px;
 }
-.if > div.exp {
-    position: absolute;
-    top: 55px;
-    left: 15px;
-}
-.if .start_true_line {
-    position: absolute;
-    left: 119px;
-    top: 59px;
-    width: 147px;
-    height: 64px;
-    border-right: 2px solid black;
-    border-top: 2px solid black;
-}
-.true_or_false {
+.if table {
+    border-spacing: 0px;
     position: relative;
-    width: 425px;
 }
-.true_or_false .absolute {
+.if td {
+    vertical-align: top;
+    padding: 0px;
+}
+.if td.left {
+    border-right: 2px solid black;
+}
+.if td.right {
+    border-left: 2px solid black;
+}
+.expander {
+    min-width: 200px;
+    position: relative;
+    padding-right: 5px;
+}
+td.left .expander {
+    left: 2px;
+    padding-bottom: 8px;
+}
+td.right .expander {
+    right: 3px;
+}
+.if table .connection {
+    margin-left: 48px;
+}
+.if table .arrow_down  {
+    margin-left: 50px;
+}
+.absolute_true {
     position: absolute;
     top: 0px;
     bottom: 0px;
-    width: 0px;
-    height: 100%; /* for clarity, bottom:0px also does it */
-    border: 1px solid black;
-    z-index: 0;
-}
-.absolute.false_line {
     left: 59px;
+    width: 0px;
+    border: 1px solid black;
 }
-.absolute.true_line {
-    left: 266px;
+.true {
+/*    width: 200px;
+    height: 200px;*/
+    background-color: blanchedalmond;
+    
 }
-.true,
 .false {
-    display: inline-block;
-    position: relative;
-    width: 200px;
-    z-index: 10;
+/*    width: 200px;
+    height: 400px;*/
+    background-color: orange;
 }
-
-.connection .end_true_line {
-    border-left: 2px solid black;
-    border-top: 2px solid black;
+.top_connector {
     position: absolute;
-    width: 190px;
-    height: 20px;
-    bottom: 0px;
-    left: 75px;
+    top: -61px;
+    right: -66px;
+    left: 120px;
+    height: 61px;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
 }
-.end_true_line .arrow_down {
-    left: -11px;
-    top: auto;
-    bottom: 0px;
+.bot_connector {
+    margin-left: 50px;
+    /*background-color: white;*/
+    position: relative;
+    height: 2px;
+}
+.bot_connector .vertical_line {
+    position: absolute;
+    left: 9px;
+    right: 0px;
+    top: 0px;
+    height: 0px;
+    border: 1px solid black;
+}
+.bot_connector .arrow_left {
+    width: 0px;
+    height: 0px;
+    border-right: 8px solid black;
+    border-top: 8px solid transparent; 
+    border-bottom: 8px solid transparent; 
+    position: absolute;
+    top: -7px;
+    left: 10px;
+}
+.bot_false_connect {
+    height: 0px;
+    width: 64px;
+    border: 1px solid black;
+    margin-left: -5px;
 }
