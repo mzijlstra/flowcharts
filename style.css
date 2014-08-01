@@ -132,7 +132,7 @@ body {
 /* if statements */
 .if {
     position: relative;
-    overflow: hidden;
+/*    overflow: hidden;*/
 }
 .if table {
     border-spacing: 0px;
@@ -141,84 +141,59 @@ body {
 .if td {
     vertical-align: top;
     padding: 0px;
-}
-.if td.left {
-    border-right: 2px solid black;
-}
-.if td.right {
-    border-left: 2px solid black;
-}
-.if .expander {
-    min-width: 100px;
     position: relative;
-    background-color: white;
-}
-.if td.left > .expander {
-    left: 2px;
-    padding-right: 5px;    
-}
-.if td.right > .expander {
-    right: 2px;
-    padding-left: 5px;
-}
-.if td.left > .expander > div {
-    position: relative;
-    left: -2px;
-}
-.if td.right > .expander > div {
-    position: relative;
-    right: -2px;
 }
 .if .absolute_left {
     position: absolute;
     top: 0px;
     bottom: 0px;
-    left: 59px;
+    margin-left: 59px;
     width: 0px;
     border: 1px solid black;
 }
-.if > table tr td .expander .top_connector {
+.if .absolute_right {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    width: 0px;
+    margin-left: 59px;
+    border: 1px solid black;
+}
+
+.if > table tr td .top_connector {
     position: absolute;
     top: -61px;
-    right: -68px;
+    right: -61px;
     left: 118px;
     height: 61px;
     border-top: 2px solid black;
     border-right: 2px solid black;
 }
-.if .bot_connector {
-    margin-left: 50px;
-}
-.if .bot_connector .vert_line {
-    height: 16px;
-    border: 1px solid black;
-    width: 0px;
-    margin-left: 9px;
-}
-.if .bot_connector .horiz_line {
+.if .bot_left_connect {
     position: absolute;
-    left: 9px;
-    right: -7px;
-    top: 8px;
-    height: 8px;
-    border-top: 2px solid black;
-    border-right: 2px solid black;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-left: 61px;
+    border: 1px solid black;
 }
-.if .bot_connector .arrow_left {
+.if .bot_left_connect .arrow_left {
     width: 0px;
     height: 0px;
     border-right: 8px solid black;
     border-top: 8px solid transparent; 
     border-bottom: 8px solid transparent; 
     position: absolute;
-    top: 0px;
-    left: 10px;
+    top: -8px;
+    left: 0px;    
 }
 .if .bot_right_connect {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
     height: 0px;
-    width: 66px;
+    width: 59px;
     border: 1px solid black;
-    margin-left: -7px;
 }
 
 /* while statements */
