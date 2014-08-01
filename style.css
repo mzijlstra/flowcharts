@@ -11,6 +11,22 @@ body {
     font-family: monospace;
     font-size: 12px;
 }
+.building_blocks {
+    display: none;
+}
+#menu {
+    display: none;
+    position: absolute;
+    border: 1px solid black;
+    background-color: #eeeeee;
+}
+.menu_item {
+    padding: 3px;
+}
+.menu_item:hover {
+    background-color: #ddddee;
+}
+
 .start, .stop {
     width: 80px;
     height: 80px;
@@ -23,18 +39,16 @@ body {
 }
 .connection {
     margin-left: 50px;
-    background-color: white;
-    z-index: 10;
+/*    background-color: white;
+    z-index: 10; */
 }
 .line {
-    display: block;
     border: 1px solid black;
     width: 0px;
-    height: 20px;
+    height: 15px;
     margin-left: 9px;
 }
 .point {
-    display: block;
     border: 3px solid black;
     width: 0px;
     height: 0px;
@@ -123,7 +137,6 @@ body {
     position: relative;
     overflow: hidden;
 }
-
 .if table {
     border-spacing: 0px;
     position: relative;
@@ -159,7 +172,6 @@ td.right .expander > div {
     position: relative;
     right: -2px;
 }
-
 .absolute_left {
     position: absolute;
     top: 0px;
@@ -179,7 +191,6 @@ td.right .expander > div {
 }
 .bot_connector {
     margin-left: 50px;
-    /*background-color: white;*/
 }
 .bot_connector .vert_line {
     height: 16px;
@@ -243,8 +254,7 @@ td.right .expander > div {
     border-bottom: 2px solid black;
 }
 .while .loop_body {
-    position: relative;
-    left: 115px;
+    margin-left: 115px;
 }
 .while .arrow_up {
     position: absolute;

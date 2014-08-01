@@ -9,124 +9,121 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <title>Flow Chart</title>
         <link rel="stylesheet" href="style.css" type="text/css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="script.js"></script>
     </head>
     <body>
+        <div class="building_blocks">
+            <div id="connection" class="connection">
+                <div class="line"></div>
+                <div class="point"></div>            
+                <div class="line"></div>
+            </div>
+
+
+            <div id="assignment" class="statement" >
+                <div class="arrow_down"></div>                        
+                <div class="assignment">
+                    <span class="var">x</span>
+                    <span class="asgn">&#171;</span> 
+                    <span class="exp">5 + y</span>
+                </div>
+            </div>
+
+            <div id="if" class="statement" >
+                <div class="arrow_down"></div>                        
+                <div class="if">
+                    <div class="diamond">
+                        <div class="diamond_top_outside">
+                            <div class="diamond_top_inside">
+                            </div>
+                        </div>
+                        <div class="diamond_bot_outside">
+                            <div class="diamond_bot_inside">
+                            </div>
+                        </div>
+                        <div class="label_stmt">if</div>
+                        <div class="label_true">true</div>
+                        <div class="label_false">false</div>
+                        <div class="exp">some &lt; other</div>
+                    </div>
+                    <table>
+                        <tr>
+                            <td class="left">
+                                <div class="absolute_left"></div>
+                                <div class="expander">
+                                    <div class="top_connector"></div>
+                                    <div class="connection">
+                                        <div class="line"></div>
+                                        <div class="point"></div>            
+                                        <div class="line"></div>
+                                    </div>
+                                    <div class="bot_connector">
+                                        <div class="vert_line"></div>
+                                        <div class="horiz_line"></div>
+                                        <div class="arrow_left"></div>
+                                    </div>
+                                </div>
+                            </td><td class="right">
+                                <div class="expander">
+                                    <div class="connection">
+                                        <div class="line"></div>
+                                        <div class="point"></div>            
+                                        <div class="line"></div>
+                                    </div>
+
+                                    <div class="bot_right_connect"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="while" class="statement">
+                <div class="arrow_down"></div>                        
+                <div class="while">
+                    <div class="diamond">
+                        <div class="diamond_top_outside">
+                            <div class="diamond_top_inside">
+                            </div>
+                        </div>
+                        <div class="diamond_bot_outside">
+                            <div class="diamond_bot_inside">
+                            </div>
+                        </div>
+                        <div class="label_stmt">while</div>
+                        <div class="label_true">true</div>
+                        <div class="label_false">false</div>
+                        <div class="exp">some &lt; other</div>
+                        <div class="true_connector"></div>
+                    </div> 
+                    <div class="container">
+                        <div class="false_line"></div>
+                        <div class="return_line">
+                            <div class="arrow_up"></div>
+                        </div>
+                        <div class="loop_body">
+                            <div class="connection">
+                                <div class="line"></div>
+                                <div class="point"></div>            
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end building blocks -->
+
         <div class="statement">
             <div class="start">
                 int main()
             </div>
-            <div class="connection">
-                <div class="line"></div>
-                <div class="point"></div>            
-                <div class="line"></div>
-            </div>
         </div>
-        <div class="statement">
-            <div class="arrow_down"></div>                        
-            <div class="assignment">
-                <span class="var">x</span>
-                <span class="asgn">&#171;</span> 
-                <span class="exp">5 + y</span>
-            </div>
-            <div class="connection">
-                <div class="line"></div>
-                <div class="point"></div>            
-                <div class="line"></div>
-            </div>
-        </div>
-        <div class="statement">
-            <div class="arrow_down"></div>                        
-            <div class="while">
-                <div class="diamond">
-                    <div class="diamond_top_outside">
-                        <div class="diamond_top_inside">
-                        </div>
-                    </div>
-                    <div class="diamond_bot_outside">
-                        <div class="diamond_bot_inside">
-                        </div>
-                    </div>
-                    <div class="label_stmt">while</div>
-                    <div class="label_true">true</div>
-                    <div class="label_false">false</div>
-                    <div class="exp">some &lt; other</div>
-                    <div class="true_connector"></div>
-                </div> 
-                <div class="container">
-                    <div class="false_line"></div>
-                    <div class="return_line">
-                        <div class="arrow_up"></div>
-                    </div>
-                    <div class="loop_body">
-                        <div class="connection">
-                            <div class="line"></div>
-                            <div class="point"></div>            
-                            <div class="line"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="statement">
-            <div class="arrow_down"></div>                        
-            <div class="if">
-                <div class="diamond">
-                    <div class="diamond_top_outside">
-                        <div class="diamond_top_inside">
-                        </div>
-                    </div>
-                    <div class="diamond_bot_outside">
-                        <div class="diamond_bot_inside">
-                        </div>
-                    </div>
-                    <div class="label_stmt">if</div>
-                    <div class="label_true">true</div>
-                    <div class="label_false">false</div>
-                    <div class="exp">some &lt; other</div>
-                </div>
-                <table><tr><td class="left">
-                            <div class="absolute_left"></div>
-                            <div class="expander">
-                                <div class="top_connector"></div>
-                                <div class="connection">
-                                    <div class="line"></div>
-                                    <div class="point"></div>            
-                                    <div class="line"></div>
-                                </div>
-                                <div class="bot_connector">
-                                    <div class="vert_line"></div>
-                                    <div class="horiz_line"></div>
-                                    <div class="arrow_left"></div>
-                                </div>
-                            </div>
-                        </td><td class="right">
-                            <div class="expander">
-                                <div class="connection">
-                                    <div class="line"></div>
-                                    <div class="point"></div>            
-                                    <div class="line"></div>
-                                </div>
-                                <div class="arrow_down"></div>                        
-                                <div class="assignment">
-                                    <span class="var">x</span>
-                                    <span class="asgn">&#171;</span> 
-                                    <span class="exp">5 + y</span>
-                                </div>
-                                <div class="connection">
-                                    <div class="line"></div>
-                                    <div class="point"></div>            
-                                    <div class="line"></div>
-                                </div>
-
-                                <div class="bot_right_connect"></div>
-                            </div>
-                        </td></tr></table>
-            </div>
-            <div class="connection">
-                <div class="line"></div>
-                <div class="point"></div>            
-                <div class="line"></div>
-            </div>
+        <div class="connection">
+            <div class="line"></div>
+            <div class="point"></div>            
+            <div class="line"></div>
         </div>
         <div class="statement">
             <div class="arrow_down"></div>                        
@@ -134,5 +131,12 @@ and open the template in the editor.
                 return 0
             </div>
         </div>
+
+        <div id="menu">
+            <div class="menu_item" id="add_asgn">Assignment</div>
+            <div class="menu_item" id="add_if">If Statement</div>
+            <div class="menu_item" id="add_while">While Loop</div>
+        </div>
+
     </body>
 </html>
