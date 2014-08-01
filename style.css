@@ -156,19 +156,19 @@ body {
     position: relative;
     background-color: white;
 }
-td.left .expander {
+td.left > .expander {
     left: 2px;
     padding-right: 5px;    
 }
-td.right .expander {
+td.right > .expander {
     right: 2px;
     padding-left: 5px;
 }
-td.left .expander > div {
+td.left > .expander > div {
     position: relative;
     left: -2px;
 }
-td.right .expander > div {
+td.right > .expander > div {
     position: relative;
     right: -2px;
 }
