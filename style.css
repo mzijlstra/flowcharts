@@ -1,32 +1,19 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
 /* 
     Created on : May 3, 2014, 6:10:01 PM
     Author     : mzijlstra
 */
+/* Force consistent fonts across browsers */
 body {
     font-family: monospace;
     font-size: 12px;
 }
+
+/* Storage for initial building blocks */
 .building_blocks {
     display: none;
 }
-#menu {
-    display: none;
-    position: absolute;
-    border: 1px solid black;
-    background-color: #eeeeee;
-}
-.menu_item {
-    padding: 3px;
-}
-.menu_item:hover {
-    background-color: #ddddee;
-}
 
+/* begin and end of flow chart */
 .start, .stop {
     width: 80px;
     height: 80px;
@@ -37,6 +24,8 @@ body {
     line-height: 75px;
     margin-left: 20px; 
 }
+
+/* connections between statements */
 .connection {
     margin-left: 50px;
 /*    background-color: white;
@@ -55,6 +44,8 @@ body {
     margin-left: 7px;
     border-radius: 3px;
 }
+
+/* all statements */
 .statement {
     position: relative;
 }
@@ -66,6 +57,8 @@ body {
     border-right: 8px solid transparent; 
     margin-left: 52px;
 }
+
+/* assignment statements */
 .assignment {
     border: 1px solid black;
     max-width: 170px;
@@ -73,6 +66,8 @@ body {
     font-family: monospace;
     background-color: white;
 }
+
+/* decision diamond for IF and WHILE statemetns */
 .diamond_top_outside {
     width: 0px;
     height: 0px;
@@ -133,6 +128,8 @@ body {
     top: 100px;
     left: 10px;
 }
+
+/* if statements */
 .if {
     position: relative;
     overflow: hidden;
@@ -151,28 +148,28 @@ body {
 .if td.right {
     border-left: 2px solid black;
 }
-.expander {
+.if .expander {
     min-width: 100px;
     position: relative;
     background-color: white;
 }
-td.left > .expander {
+.if td.left > .expander {
     left: 2px;
     padding-right: 5px;    
 }
-td.right > .expander {
+.if td.right > .expander {
     right: 2px;
     padding-left: 5px;
 }
-td.left > .expander > div {
+.if td.left > .expander > div {
     position: relative;
     left: -2px;
 }
-td.right > .expander > div {
+.if td.right > .expander > div {
     position: relative;
     right: -2px;
 }
-.absolute_left {
+.if .absolute_left {
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -189,16 +186,16 @@ td.right > .expander > div {
     border-top: 2px solid black;
     border-right: 2px solid black;
 }
-.bot_connector {
+.if .bot_connector {
     margin-left: 50px;
 }
-.bot_connector .vert_line {
+.if .bot_connector .vert_line {
     height: 16px;
     border: 1px solid black;
     width: 0px;
     margin-left: 9px;
 }
-.bot_connector .horiz_line {
+.if .bot_connector .horiz_line {
     position: absolute;
     left: 9px;
     right: -7px;
@@ -207,7 +204,7 @@ td.right > .expander > div {
     border-top: 2px solid black;
     border-right: 2px solid black;
 }
-.bot_connector .arrow_left {
+.if .bot_connector .arrow_left {
     width: 0px;
     height: 0px;
     border-right: 8px solid black;
@@ -217,13 +214,14 @@ td.right > .expander > div {
     top: 0px;
     left: 10px;
 }
-.bot_right_connect {
+.if .bot_right_connect {
     height: 0px;
     width: 66px;
     border: 1px solid black;
     margin-left: -7px;
 }
 
+/* while statements */
 .while .true_connector {
     position: absolute;
     top: 59px;
@@ -265,4 +263,18 @@ td.right > .expander > div {
     border-bottom: 8px solid black;
     border-left: 8px solid transparent; 
     border-right: 8px solid transparent; 
+}
+
+/* left click insertion menu */
+#menu {
+    display: none;
+    position: absolute;
+    border: 1px solid black;
+    background-color: #eeeeee;
+}
+.menu_item {
+    padding: 3px;
+}
+.menu_item:hover {
+    background-color: #ddddee;
 }

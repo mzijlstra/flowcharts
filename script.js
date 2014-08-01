@@ -1,16 +1,16 @@
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+    Created on : Juyl 31, 2014, 7:10:01 PM
+    Author     : mzijlstra
+*/
 
-// hook up event handlers
+// wr namespace
 var wr = {
     "block" : function(id) {
         return $(id).clone(true).removeAttr("id");
     }
 };
 
+// hook up event handlers
 $(function() {
 
     // display menu when clicking on a connection block
@@ -34,22 +34,22 @@ $(function() {
         }
     });
 
-    // click assignment
+    // click menu assignment
     $("#add_asgn").click(function() {
-        wr.clicked.after(wr.block("#connection"));
-        wr.clicked.after(wr.block("#assignment"));
+        wr.clicked.after(wr.block("#connection"))
+                .after(wr.block("#assignment"));
     });
     
-    // click if statement
+    // click menu if statement
     $("#add_if").click(function() {
-        wr.clicked.after(wr.block("#connection"));
-        wr.clicked.after(wr.block("#if"));
+        wr.clicked.after(wr.block("#connection"))
+                .after(wr.block("#if"));
     });
     
-    // click while loop
+    // click menu while loop
     $("#add_while").click(function() {
-        wr.clicked.after(wr.block("#connection"));
-        wr.clicked.after(wr.block("#while"));
+        wr.clicked.after(wr.block("#connection"))
+                .after(wr.block("#while"));
     });
 
 });
