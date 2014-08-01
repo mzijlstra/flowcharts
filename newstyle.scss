@@ -1,0 +1,279 @@
+/* 
+    Created on : Aug 1, 2014, 3:05:57 PM
+    Author     : Michael Zijlstra <mzijlstra at mum.edu>
+*/
+
+// global variables
+$border: solid black;
+$hide: solid transparent;
+
+$line:  1px;
+$point: 3px;
+$arrow: 8px;
+$size: 60px;
+
+/* Force consistent fonts across browsers */
+body {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+/* Storage for initial building blocks */
+.building_blocks {
+    display: none;
+}
+
+/* begin and end of flow chart */
+.start, .stop { 
+    width: 80px;
+    height: 80px;
+    margin-left: 20px; 
+    text-align: center;
+    line-height: 75px;
+    border: $line $border;
+    border-radius: 55px;
+}
+
+/* connections between statements */
+.connection {
+    .line {
+        width: 0px;
+        height: 15px;
+        margin-left: $size - $line;
+        border: $line $border;
+    }
+    .point {
+        width: 0px;
+        height: 0px;
+        margin-left: $size - $point;
+        border: $point $border;
+        border-radius: $point;
+    }
+}
+
+/* all statements */ 
+.arrow_down {
+    width: 0px;
+    height: 0px;
+    border-top: $arrow $border;
+    border-left: $arrow $hide; 
+    border-right: $arrow $hide; 
+    margin-left: $size - $arrow;
+}
+
+/* assignment statements */
+.assignment {
+    position: relative;
+    padding: 17px;
+    margin-left: 22px;
+    
+    .var {
+        background-color: white;
+        border: 2*$line $border;
+        padding: 15px;
+    }
+    .asgn {
+        font-size: 300%;
+        line-height: 0px;
+        vertical-align: middle;
+    }
+    .exp {
+        @extend .var;
+    }
+}
+
+/* decision diamond for IF and WHILE statemetns */
+.diamond {
+    position: relative;
+
+    .diamond_top_outside {
+        width: 0px;
+        height: 0px;
+        position: relative;
+        border-bottom: $size $border;
+        border-left: $size $hide; 
+        border-right: $size $hide; 
+
+    }
+    .diamond_bot_outside {
+        width: 0px;
+        height: 0px;
+        position: relative;
+        border-top: $size $border;
+        border-left: $size $hide; 
+        border-right: $size $hide; 
+    }
+    .diamond_top_inside {
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-bottom: $size - (2 * $line) solid white;
+        border-left: $size - (2 * $line) $hide; 
+        border-right: $size - (2 * $line) $hide;
+        left: -($size - (2 * $line));
+        top: 2*$line;
+    }
+    .diamond_bot_inside {
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        border-top: $size - (2 * $line) solid white;
+        border-left: $size - (2 * $line) $hide; 
+        border-right: $size - (2 * $line) $hide; 
+        left: -($size - (2 * $line));
+        top: -($size + $line);
+    }
+
+    .exp {
+        position: absolute;
+        top: 50px;
+        left: 15px;    
+    }
+
+    .label_stmt {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        font-weight: bold;
+    }
+    .label_true {
+        position: absolute;
+        top: 40px;
+        left: 115px;
+    }
+    .label_false {
+        position: absolute;
+        top: 100px;
+        left: 10px;
+    }
+}
+
+/* if statements */
+.if {
+    position: relative;
+
+    table {
+        border-spacing: 0px;
+        position: relative;
+    }
+    td {
+        vertical-align: top;
+        padding: 0px;
+        position: relative;
+    }
+    .absolute_left {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        margin-left: $size - $line;
+        width: 0px;
+        border: $line $border;
+    }
+    .absolute_right {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        width: 0px;
+        margin-left: $size - $line;
+        border: $line $border;
+    }
+
+    .top_connect {
+        position: absolute;
+        top: -($size + $line);
+        right: -($size + $line);
+        left: ($size * 2) - ($line * 2);
+        height: $size + $line;
+        border-top: 2*$line $border;
+        border-right: 2*$line $border;
+    }
+    .bot_left_connect {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        margin-left: $size + $line;
+        border: $line $border;
+
+        .arrow_left {
+            position: absolute;
+            top: -$arrow;
+            left: 0px;    
+            width: 0px;
+            height: 0px;
+            border-right: $arrow $border;
+            border-top: $arrow $hide; 
+            border-bottom: $arrow $hide; 
+        }
+    }
+    .bot_right_connect {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        height: 0px;
+        width: $size - $line;
+        border: $line $border;
+    }
+}
+
+/* while statements */
+.while { 
+    .true_connector {
+        position: absolute;
+        top: $size - $line;
+        left: ($size * 2) - ($line * 2);
+        width: 56px;
+        height: $size - $line;
+        border-top: 2*$line $border;
+        border-right: 2*$line $border;
+    }
+    .container {
+        position: relative;
+    }
+    .false_line {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: $size - $line;
+        width: 0px;
+        border: $line $border;
+    }
+    .return_line {
+        position: absolute;
+        top: -8px;
+        bottom: -2px;
+        left: 79px;
+        width: 95px;
+        border-left: 2*$line $border;
+        border-bottom: 2*$line $border;
+    }
+    .loop_body {
+        margin-left: 115px;
+    }
+    .arrow_up {
+        position: absolute;
+        left: -9px;
+        top: -$arrow;
+        width: 0px;
+        height: 0px;
+        border-bottom: $arrow $border;
+        border-left: $arrow $hide; 
+        border-right: $arrow $hide; 
+    }
+}
+
+/* left click insertion menu */
+#menu {
+    display: none;
+    position: absolute;
+    border: $line $border;
+    background-color: #eeeeee;
+
+    .menu_item {
+        padding: 3px;
+    }
+    .menu_item:hover {
+        background-color: #ddddee;
+    }
+}
+
