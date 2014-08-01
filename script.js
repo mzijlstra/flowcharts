@@ -5,7 +5,11 @@
  */
 
 // hook up event handlers
-var wraptor = {};
+var wr = {
+    "block" : function(id) {
+        return $(id).clone(true).removeAttr("id");
+    }
+};
 
 $(function() {
 
@@ -16,7 +20,7 @@ $(function() {
             menu.css("top", event.pageY);
             menu.css("left", event.pageX);
             menu.css("display", "block");
-            wraptor.clicked = $(this);
+            wr.clicked = $(this);
         } else {
             menu.css("display", "none");
         }
@@ -32,20 +36,20 @@ $(function() {
 
     // click assignment
     $("#add_asgn").click(function() {
-        wraptor.clicked.after($("#connection").clone(true));
-        wraptor.clicked.after($("#assignment").clone(true));
+        wr.clicked.after(wr.block("#connection"));
+        wr.clicked.after(wr.block("#assignment"));
     });
     
     // click if statement
     $("#add_if").click(function() {
-        wraptor.clicked.after($("#connection").clone(true));
-        wraptor.clicked.after($("#if").clone(true));
+        wr.clicked.after(wr.block("#connection"));
+        wr.clicked.after(wr.block("#if"));
     });
     
     // click while loop
     $("#add_while").click(function() {
-        wraptor.clicked.after($("#connection").clone(true));
-        wraptor.clicked.after($("#while").clone(true));
+        wr.clicked.after(wr.block("#connection"));
+        wr.clicked.after(wr.block("#while"));
     });
 
 });
