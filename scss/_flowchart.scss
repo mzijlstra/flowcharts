@@ -1,27 +1,9 @@
 /* 
-    Created on : Aug 1, 2014, 3:05:57 PM
+    Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
 
-// global variables
-$border: solid black;
-$hide: solid transparent;
 
-$line:  1px;
-$point: 3px;
-$arrow: 8px;
-$size: 60px;
-
-/* Force consistent fonts across browsers */
-body {
-    font-family: monospace;
-    font-size: 12px;
-}
-
-/* Storage for initial building blocks */
-.building_blocks {
-    display: none;
-}
 
 /* begin and end of flow chart */
 .start, .stop { 
@@ -66,7 +48,7 @@ body {
     position: relative;
     padding: 17px;
     margin-left: 22px;
-    
+
     .var {
         background-color: white;
         border: 2*$line $border;
@@ -276,4 +258,3 @@ body {
         background-color: #ddddee;
     }
 }
-

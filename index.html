@@ -7,12 +7,12 @@
     <head>
         <meta charset="UTF-8">
         <title>Flow Chart</title>
-        <link rel="stylesheet" href="newstyle.css" type="text/css" />
+        <link rel="stylesheet" href="css/page.css" type="text/css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="script.js"></script>
     </head>
     <body>
-        <div class="building_blocks">
+        <div id="building_blocks">
             <div id="connection" class="connection">
                 <div class="line"></div>
                 <div class="point"></div>            
@@ -63,7 +63,7 @@
                             </td>
                             <td class="right">
                                 <div class="absolute_right"></div>
-                                    
+
                                 <div class="connection">
                                     <div class="line"></div>
                                     <div class="point"></div>            
@@ -112,22 +112,37 @@
             </div>
         </div> <!-- end building blocks -->
 
-        <div class="statement">
-            <div class="start">
-                int main()
+        <h1>My Project</h1>
+
+        <div id="workspace">
+            <div id="variables">
+                <div>Variables:</div>
             </div>
-        </div>
-        <div class="connection">
-            <div class="line"></div>
-            <div class="point"></div>            
-            <div class="line"></div>
-        </div>
-        <div class="statement">
-            <div class="arrow_down"></div>                        
-            <div class="stop">
-                return 0
+
+            <div id="functions">
+                <div id="fun-names"><span>main</span></div>
+                <div id="instructions">
+                    <div class="statement">
+                        <div class="start">
+                            int main()
+                        </div>
+                    </div>
+                    <div class="connection">
+                        <div class="line"></div>
+                        <div class="point"></div>            
+                        <div class="line"></div>
+                    </div>
+                    <div class="statement">
+                        <div class="arrow_down"></div>                        
+                        <div class="stop">
+                            return 0
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
+        </div> <!-- end workspace -->
+        <footer>Web-Raptor</footer>
 
         <div id="menu">
             <div class="menu_item" id="add_asgn">Assignment</div>

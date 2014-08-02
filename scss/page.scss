@@ -1,0 +1,87 @@
+/* 
+    Created on : Aug 1, 2014, 3:05:57 PM
+    Author     : Michael Zijlstra <mzijlstra at mum.edu>
+*/
+
+// global variables
+$color: #336;
+$border: solid $color;
+$hide: solid transparent;
+
+$line:  1px;
+$point: 3px;
+$arrow: 8px;
+$size: 60px;
+
+@import 'flowchart';
+
+/* Storage for initial building blocks */
+body {
+    font-family: monospace;
+    font-size: 12px;
+    color: $color;
+}
+
+h1 {
+    margin-left: 10px;
+    margin-top: 0px;
+}
+
+#building_blocks {
+    display: none;
+}
+
+#workspace {
+    position: fixed;
+    top: 40px;
+    bottom: 20px;
+    left: 10px;
+    right: 2px;
+    border-top: $line $border;
+    border-bottom: $line $border;
+    border-right: $line $border;
+}
+
+#variables {
+    position: absolute;
+    left: 0px;
+    width: 250px;
+    top: 0px;
+    bottom: 0px;
+}
+
+/* Force consistent fonts across browsers */
+#functions {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 250px;
+    right: 0px;
+    border-left: $line $border;
+
+    #fun-names { 
+        padding: 3px;
+        border-bottom: $line $border;
+    }
+
+    #instructions {
+        position: absolute;
+        padding: 5px;
+        top: 21px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        overflow: auto;
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+    text-align: center;
+}
+
+
