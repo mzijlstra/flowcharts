@@ -8,11 +8,67 @@
         <meta charset="UTF-8">
         <title>Flow Chart</title>
         <link rel="stylesheet" href="css/page.css" type="text/css" />
+        <link rel="stylesheet" href="css/extra.css" type="text/css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="script.js"></script>
     </head>
     <body>
+        <h1>
+			<span id="projects">&nbsp;<div></div></span>
+			My Project
+		</h1>
+		<div id="user">Hi, Michael! <a href="">logout</a></div>
+
+        <div id="workspace">
+            <div id="variables">
+                <div>Variables:</div>
+            </div>
+
+            <div id="functions">
+                <div id="fun-names"><span>main</span></div>
+                <div id="instructions">
+                    <div class="statement">
+                        <div class="start">
+                            int main()
+                        </div>
+                    </div>
+                    <div class="connection">
+                        <div class="line"></div>
+                        <div class="point"></div>            
+                        <div class="line"></div>
+                    </div>
+                    <div class="statement">
+                        <div class="arrow_down"></div>                        
+                        <div class="stop">
+                            return 0
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- end workspace -->
+        <footer>Web-Raptor</footer>
+
+        <div id="menu">
+            <div class="menu_item" id="add_asgn">Assignment</div>
+            <div class="menu_item" id="add_if">If Statement</div>
+            <div class="menu_item" id="add_while">While Loop</div>
+        </div>
+
         <div id="building_blocks">
+			<div id="start" class="statement">
+				<div class="start">
+					int main()
+				</div>
+			</div>
+
+			<div id="stop" class="statement">
+				<div class="arrow_down"></div>                        
+				<div class="stop">
+					return 0
+				</div>
+			</div>
+
             <div id="connection" class="connection">
                 <div class="line"></div>
                 <div class="point"></div>            
@@ -111,44 +167,6 @@
                 </div>
             </div>
         </div> <!-- end building blocks -->
-
-        <h1>My Project</h1>
-
-        <div id="workspace">
-            <div id="variables">
-                <div>Variables:</div>
-            </div>
-
-            <div id="functions">
-                <div id="fun-names"><span>main</span></div>
-                <div id="instructions">
-                    <div class="statement">
-                        <div class="start">
-                            int main()
-                        </div>
-                    </div>
-                    <div class="connection">
-                        <div class="line"></div>
-                        <div class="point"></div>            
-                        <div class="line"></div>
-                    </div>
-                    <div class="statement">
-                        <div class="arrow_down"></div>                        
-                        <div class="stop">
-                            return 0
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div> <!-- end workspace -->
-        <footer>Web-Raptor</footer>
-
-        <div id="menu">
-            <div class="menu_item" id="add_asgn">Assignment</div>
-            <div class="menu_item" id="add_if">If Statement</div>
-            <div class="menu_item" id="add_while">While Loop</div>
-        </div>
 
     </body>
 </html>
