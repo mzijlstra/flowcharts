@@ -34,22 +34,11 @@ $(function() {
         }
     });
 
-    // click menu assignment
-    $("#add_asgn").click(function() {
+    // menu clicks trigger insertions based on id clicked
+    $("#menu").click(function(event) {
+        var t = $(event.target);
+        var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.after(wr.block("#connection"))
-                .after(wr.block("#assignment"));
+                .after(wr.block(toLoad));
     });
-    
-    // click menu if statement
-    $("#add_if").click(function() {
-        wr.clicked.after(wr.block("#connection"))
-                .after(wr.block("#if"));
-    });
-    
-    // click menu while loop
-    $("#add_while").click(function() {
-        wr.clicked.after(wr.block("#connection"))
-                .after(wr.block("#while"));
-    });
-
 });

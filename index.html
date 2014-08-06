@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
     Created on : May 3, 2014, 6:10:01 PM
-    Author     : mzijlstra
+    Author     : mzijlstra 
 -->
 <html>
     <head>
@@ -14,14 +14,15 @@
     </head>
     <body>
         <h1>
-			<span id="projects">&nbsp;<div></div></span>
-			My Project
-		</h1>
-		<div id="user">Hi, Michael! <a href="">logout</a></div>
+            <span id="projects">&nbsp;<span></span></span>
+            My Project
+        </h1>
+        <div id="user">Hi, Michael! <a href="">logout</a></div>
 
         <div id="workspace">
-            <div id="variables">
+            <div id="var_area">
                 <div>Variables:</div>
+                <div id="variables"></div>
             </div>
 
             <div id="functions">
@@ -49,30 +50,50 @@
         </div> <!-- end workspace -->
         <footer>Web-Raptor</footer>
 
-        <div id="menu">
-            <div class="menu_item" id="add_asgn">Assignment</div>
+        <div id="ins_menu" class="menu">
+            <div class="menu_item" id="add_input">Input</div>
+            <div class="menu_item" id="add_output">Output</div>
+            <div class="menu_item" id="add_assignment">Assignment</div>
             <div class="menu_item" id="add_if">If Statement</div>
             <div class="menu_item" id="add_while">While Loop</div>
         </div>
 
         <div id="building_blocks">
-			<div id="start" class="statement">
-				<div class="start">
-					int main()
-				</div>
-			</div>
+            <div id="start" class="statement">
+                <div class="start">
+                    int main()
+                </div>
+            </div>
 
-			<div id="stop" class="statement">
-				<div class="arrow_down"></div>                        
-				<div class="stop">
-					return 0
-				</div>
-			</div>
+            <div id="stop" class="statement">
+                <div class="arrow_down"></div>                        
+                <div class="stop">
+                    return 0
+                </div>
+            </div>
 
             <div id="connection" class="connection">
                 <div class="line"></div>
                 <div class="point"></div>            
                 <div class="line"></div>
+            </div>
+
+            <div id="input" class="statement" >
+                <div class="arrow_down"></div>                        
+                <div class="assignment">
+                    <span class="var">x</span>
+                    <span class="asgn">&#171;</span> 
+                    <span class="exp">INPUT</span>
+                </div>
+            </div>
+
+            <div id="output" class="statement" >
+                <div class="arrow_down"></div>                        
+                <div class="assignment">
+                    <span class="var">OUTPUT</span>
+                    <span class="asgn">&#171;</span> 
+                    <span class="exp">5 + y</span>
+                </div>
             </div>
 
             <div id="assignment" class="statement" >
