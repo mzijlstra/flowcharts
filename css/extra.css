@@ -1,28 +1,3 @@
 
-#user {
- position: absolute;
- top: 0px;
- right: 0px;
- margin-right: 5px;
-}
 
-span#projects {
- position: relative;
- padding: 0px 6px;
- margin-right: 0px;
- border: 1px solid black;
- cursor: pointer;
-}
 
-span#projects div {
- position: absolute;
- top: 10px;
- left: 4px;
- border-left: 10px solid transparent;
- border-right: 10px solid transparent;
- border-top: 10px solid black;
-}
-
-.connection {
- cursor: pointer;
-}

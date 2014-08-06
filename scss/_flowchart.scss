@@ -18,6 +18,8 @@
 
 /* connections between statements */
 .connection {
+    cursor: pointer;
+
     .line {
         width: 0px;
         height: 15px;
@@ -245,7 +247,7 @@
 }
 
 /* left click insertion menu */
-#menu {
+#ins_menu {
     display: none;
     position: absolute;
     border: $line $border;
