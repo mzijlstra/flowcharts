@@ -13,15 +13,23 @@
         <script src="script.js"></script>
     </head>
     <body>
-        <h1>
-            <span id="projects">&nbsp;<span></span></span>
-            My Project
-        </h1>
+        <h1>My Project</h1>
+        <div id="projects">
+            <div class="arrow_down"></div>
+            <div id="project_menu" class="menu">
+                <div class="menu_item">New Project</div>
+                <div class="menu_label">----Recent----</div>
+                <div class="menu_item">My Other Project</div>
+                <div class="menu_item">My Different Project</div>
+                <div class="menu_item">Yet Another Project</div>
+            </div>
+        </div>
+
         <div id="user">Hi, Michael! <a href="">logout</a></div>
 
         <div id="workspace">
             <div id="var_area">
-                <div>Variables:</div>
+                <div class="label">Variables:</div>
                 <div id="variables"></div>
             </div>
 
@@ -57,6 +65,7 @@
             <div class="menu_item" id="add_if">If Statement</div>
             <div class="menu_item" id="add_while">While Loop</div>
         </div>
+
 
         <div id="building_blocks">
             <div id="start" class="statement">
