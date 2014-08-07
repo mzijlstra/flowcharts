@@ -52,7 +52,7 @@
     margin-left: 22px;
 
     .var {
-        background-color: white;
+        background-color: $bg;
         border: 2*$line $border;
         padding: 15px;
     }
@@ -91,7 +91,7 @@
         width: 0px;
         height: 0px;
         position: absolute;
-        border-bottom: $size - (2 * $line) solid white;
+        border-bottom: $size - (2 * $line) solid $bg;
         border-left: $size - (2 * $line) $hide; 
         border-right: $size - (2 * $line) $hide;
         left: -($size - (2 * $line));
@@ -101,7 +101,7 @@
         width: 0px;
         height: 0px;
         position: absolute;
-        border-top: $size - (2 * $line) solid white;
+        border-top: $size - (2 * $line) solid $bg;
         border-left: $size - (2 * $line) $hide; 
         border-right: $size - (2 * $line) $hide; 
         left: -($size - (2 * $line));
@@ -243,20 +243,5 @@
         border-bottom: $arrow $border;
         border-left: $arrow $hide; 
         border-right: $arrow $hide; 
-    }
-}
-
-/* left click insertion menu */
-#ins_menu {
-    display: none;
-    position: absolute;
-    border: $line $border;
-    background-color: #eeeeee;
-
-    .menu_item {
-        padding: 3px;
-    }
-    .menu_item:hover {
-        background-color: #ddddee;
     }
 }

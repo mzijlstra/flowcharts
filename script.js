@@ -12,30 +12,31 @@ var wr = {
 
 // hook up event handlers
 $(function() {
+    wr.ins_menu = $('#ins_menu');
+    wr.proj_menu = $('#project_menu');
 
-    // display menu when clicking on a connection block
+    // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
-        var menu = $("#menu");
-        if (menu.css("display") === "none") {
-            menu.css("top", event.pageY);
-            menu.css("left", event.pageX);
-            menu.css("display", "block");
+        if (wr.ins_menu.css("display") === "none") {
+            wr.ins_menu.css("top", event.pageY);
+            wr.ins_menu.css("left", event.pageX);
+            wr.ins_menu.css("display", "block");
             wr.clicked = $(this);
         } else {
-            menu.css("display", "none");
+            wr.ins_menu.css("display", "none");
         }
         return false;
     });
 
     // hide menu when clicking elsewhere
     $("body").click(function() {
-        if ($("#menu").css("display") !== "none") {
-            $("#menu").css("display", "none");
+        if (wr.ins_menu.css("display") !== "none") {
+            wr.ins_menu.css("display", "none");
         }
     });
 
     // menu clicks trigger insertions based on id clicked
-    $("#menu").click(function(event) {
+    $("#ins_menu").click(function(event) {
         var t = $(event.target);
         var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.after(wr.block("#connection"))

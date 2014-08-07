@@ -4,6 +4,7 @@
 */
 
 // global variables
+$bg: white;
 $color: #336;
 $border: solid $color;
 $hide: solid transparent;
@@ -23,26 +24,40 @@ body {
 }
 
 h1 {
-    margin-left: 10px;
+    margin-left: 35px;
     margin-top: 0px;
+}
 
-    span#projects {
+div#projects {
+    background-color: #eeeeee;
+    position: absolute; 
+    top: 10px;
+    left: 10px;
+    width: 25px;
+    height: 25px;
+    border: $line $border;
+    cursor: pointer;
+    
+    div.arrow_down {
         position: relative;
-        padding: 0px 6px;
-        margin-right: 0px;
-        border: $line $border;
-        cursor: pointer;
-    }
-
-    span#projects span {
-        position: absolute;
-        top: 10px;
-        left: 4px;
-        border-left: 10px $hide;
-        border-right: 10px $hide;
-        border-top: 10px $border;
+        margin-left: 5px;
+        top: 9px;
     }
 }
+
+div#projects:hover #project_menu {
+    display: block;
+}
+
+/*div#projects span {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+    border-left: 10px $hide;
+    border-right: 10px $hide;
+    border-top: 10px $border;
+}*/
+
 
 #user {
     position: absolute;
@@ -97,6 +112,33 @@ h1 {
         bottom: 0px;
         overflow: auto;
     }
+}
+
+/* left click insertion menu */
+.menu {
+    display: none;
+    position: absolute;
+    border: $line $border;
+    background-color: #eeeeee;
+    z-index: 10;
+
+    .menu_item {
+        padding: 3px;
+        white-space: nowrap;
+    }
+    .menu_label {
+        text-align: center;
+        font-style: italic;
+        cursor: auto;
+    }
+    .menu_item:hover {
+        background-color: #ddddee;
+    }
+}
+
+#project_menu {
+    top: 24px;
+    left: -1px;    
 }
 
 footer {
