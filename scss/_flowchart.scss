@@ -35,6 +35,13 @@
     }
 }
 
+.connection:hover .point {
+    background-color: $bg;
+    width: 4px;
+    height: 4px;
+    border: 1px solid $color;
+}
+
 /* all statements */ 
 .arrow_down {
     width: 0px;
