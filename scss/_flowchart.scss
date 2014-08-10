@@ -36,6 +36,8 @@
 }
 
 .connection:hover .point {
+	position: relative;
+	z-index: 3;
     background-color: $bg;
     width: 4px;
     height: 4px;
@@ -152,15 +154,8 @@
         padding: 0px;
         position: relative;
     }
-    .absolute_left {
-        position: absolute;
-        top: 0px;
-        bottom: 0px;
-        margin-left: $size - $line;
-        width: 0px;
-        border: $line $border;
-    }
-    .absolute_right {
+    .absolute_left, .absolute_right {
+		z-index: 0;
         position: absolute;
         top: 0px;
         bottom: 0px;

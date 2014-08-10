@@ -32,6 +32,8 @@
     border-radius: 3px; }
 
 .connection:hover .point {
+  position: relative;
+  z-index: 3;
   background-color: white;
   width: 4px;
   height: 4px;
@@ -123,14 +125,8 @@
     vertical-align: top;
     padding: 0px;
     position: relative; }
-  .if .absolute_left {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    margin-left: 59px;
-    width: 0px;
-    border: 1px solid #333366; }
-  .if .absolute_right {
+  .if .absolute_left, .if .absolute_right {
+    z-index: 0;
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -311,5 +307,3 @@ footer {
   width: 300px;
   margin-left: -150px;
   text-align: center; }
-
-/*# sourceMappingURL=page.css.map */
