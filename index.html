@@ -30,7 +30,17 @@
         <div id="workspace">
             <div id="var_area">
                 <div class="label">Variables:</div>
-                <div id="variables"></div>
+				<div id="variables">
+					<div class="variable bottom">
+						<select>
+							<option>string</option>
+							<option>int</option>
+							<option>float</option>
+							<option>bool</option>
+						</select>
+						<input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+					</div>
+				</div>
             </div>
 
             <div id="functions">
@@ -64,17 +74,28 @@
             <div class="menu_item" id="add_assignment">Assignment</div>
             <div class="menu_item" id="add_if">If Statement</div>
             <div class="menu_item" id="add_while">While Loop</div>
+            <div class="menu_item" id="add_return">Return</div>
         </div>
 
 
         <div id="building_blocks">
+			<div id="declaration" class="variable bottom">
+				<select>
+					<option>string</option>
+					<option>int</option>
+					<option>float</option>
+					<option>bool</option>
+				</select>
+				<input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+			</div>
+
             <div id="start" class="statement">
                 <div class="start">
                     int main()
                 </div>
             </div>
 
-            <div id="stop" class="statement">
+            <div id="return" class="statement">
                 <div class="arrow_down"></div>                        
                 <div class="stop">
                     return 0
