@@ -36,8 +36,8 @@
 }
 
 .connection:hover .point {
-	position: relative;
-	z-index: 3;
+    position: relative;
+    z-index: 3;
     background-color: $bg;
     width: 4px;
     height: 4px;
@@ -54,26 +54,40 @@
     margin-left: $size - $arrow;
 }
 
-/* assignment statements */
+/* assignment statements input/output/assignment */
 .assignment {
     position: relative;
     padding: 17px;
     margin-left: 22px;
 
-    .var {
+    .var_container {
+        float: left;
+
+        .menu {
+            position: absolute;
+            top: 45px;
+            left: 17px;
+            min-width: 100px;
+            min-height: 10px;
+        }
+    }
+    .var_container:hover .menu {
+        display: block;
+    }
+
+    .var, .exp {
         background-color: $bg;
         border: 2*$line $border;
         padding: 15px;
     }
+
     .asgn {
         font-size: 300%;
         line-height: 0px;
         vertical-align: middle;
     }
-    .exp {
-        @extend .var;
-    }
 }
+
 
 /* decision diamond for IF and WHILE statemetns */
 .diamond {
@@ -155,7 +169,7 @@
         position: relative;
     }
     .absolute_left, .absolute_right {
-		z-index: 0;
+        z-index: 0;
         position: absolute;
         top: 0px;
         bottom: 0px;

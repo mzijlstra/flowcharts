@@ -30,17 +30,17 @@
         <div id="workspace">
             <div id="var_area">
                 <div class="label">Variables:</div>
-				<div id="variables">
-					<div class="variable bottom">
-						<select>
-							<option>string</option>
-							<option>int</option>
-							<option>float</option>
-							<option>bool</option>
-						</select>
-						<input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
-					</div>
-				</div>
+                <div id="variables">
+                    <div class="variable bottom">
+                        <select>
+                            <option>string</option>
+                            <option>int</option>
+                            <option>float</option>
+                            <option>bool</option>
+                        </select>
+                        <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+                    </div>
+                </div>
             </div>
 
             <div id="functions">
@@ -74,20 +74,19 @@
             <div class="menu_item" id="add_assignment">Assignment</div>
             <div class="menu_item" id="add_if">If Statement</div>
             <div class="menu_item" id="add_while">While Loop</div>
-            <div class="menu_item" id="add_return">Return</div>
         </div>
 
 
         <div id="building_blocks">
-			<div id="declaration" class="variable bottom">
-				<select>
-					<option>string</option>
-					<option>int</option>
-					<option>float</option>
-					<option>bool</option>
-				</select>
-				<input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
-			</div>
+            <div id="declaration" class="variable bottom">
+                <select>
+                    <option>string</option>
+                    <option>int</option>
+                    <option>float</option>
+                    <option>bool</option>
+                </select>
+                <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+            </div>
 
             <div id="start" class="statement">
                 <div class="start">
@@ -111,7 +110,10 @@
             <div id="input" class="statement" >
                 <div class="arrow_down"></div>                        
                 <div class="assignment">
-                    <span class="var">x</span>
+                    <div class="var_container">
+                        <div class="menu"></div>
+                        <span class="var"> </span>
+                    </div>
                     <span class="asgn">&#171;</span> 
                     <span class="exp">INPUT</span>
                 </div>
@@ -129,7 +131,10 @@
             <div id="assignment" class="statement" >
                 <div class="arrow_down"></div>                        
                 <div class="assignment">
-                    <span class="var">x</span>
+                    <div class="var_container">
+                        <div class="menu"></div>
+                        <span class="var"> </span>
+                    </div>
                     <span class="asgn">&#171;</span> 
                     <span class="exp">5 + y</span>
                 </div>

@@ -48,11 +48,21 @@
   border-right: 8px solid transparent;
   margin-left: 52px; }
 
-/* assignment statements */
+/* assignment statements input/output/assignment */
 .assignment {
   position: relative;
   padding: 17px;
   margin-left: 22px; }
+  .assignment .var_container {
+    float: left; }
+    .assignment .var_container .menu {
+      position: absolute;
+      top: 45px;
+      left: 17px;
+      min-width: 100px;
+      min-height: 10px; }
+  .assignment .var_container:hover .menu {
+    display: block; }
   .assignment .var, .assignment .exp {
     background-color: white;
     border: 2px solid #333366;
@@ -307,3 +317,5 @@ footer {
   width: 300px;
   margin-left: -150px;
   text-align: center; }
+
+/*# sourceMappingURL=page.css.map */
