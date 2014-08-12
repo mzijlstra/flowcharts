@@ -18,6 +18,9 @@ $(function() {
     wr.ins_menu = $('#ins_menu');
     wr.proj_menu = $('#project_menu');
 
+    /**********************************
+     * Insertion menu related code
+     **********************************/
     // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
         if (wr.ins_menu.css("display") === "none") {
@@ -44,8 +47,19 @@ $(function() {
         var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.after(wr.block("#connection"))
                 .after(wr.block(toLoad));
+        
+        // trigger initializer code
+        var n = wr.clicked.next();
+        if (n.init && typeof n.init === "function") {
+            n.init();
+        }
+        
+        // TODO AJAX POST instructions
     });
 
+    /************************************
+     * Variable declaration related code
+     ************************************/
     // store current var name on focus
     $(".variable .var").focus(function() {
         var t = $(this);
@@ -79,20 +93,29 @@ $(function() {
             return false;
         }
 
+        // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
             if (wr.vars[t.val()]) {
                 alert("Duplicate variable name " + t.val() + "\n" +
                         "Please change one to keep them unique");
                 this.focus();
             } else {
+                var oldn = t.attr('cur');
+                var newn = t.val();
+                
                 // remove old name from our vars 
-                if (t.attr("cur") !== "" 
-                        && wr.vars[t.attr("cur")] === t.parent()) {
-                    delete wr.vars[t.attr("cur")];
+                if (t.attr("cur") !== ""
+                        && wr.vars[oldn] === t.parent().get(0)) {
+                    delete wr.vars[oldn];
                 }
 
                 // add new name to our vars 
-                wr.vars[t.val()] = t.parent();
+                wr.vars[newn] = t.parent().get(0);
+                
+                // update instructions with old name to new name
+                $('span.var:contains('+oldn+')').text(function(i,s){
+                    return s === oldn ? newn : s;
+                });
 
                 // append another declration field
                 if (t.parent().hasClass("bottom")) {
@@ -108,6 +131,9 @@ $(function() {
         }
     });
 
+    /******************************
+     * Variable menu related code
+     ******************************/
     // repopulate var menu on mouse enter
     $(".assignment .var_container").mouseenter(function(event) {
         var t = $(this);
@@ -117,21 +143,20 @@ $(function() {
         for (var k in wr.vars) {
             menu.append("<div class='menu_item'>" + k + "</div>");
         }
+        menu.css("display", "block");
     });
-    
+
+    // handle var menu clicks
     $(".var_container .menu").click(function(event) {
         var t = $(event.target);
         var v = $(this).parent().children("span.var");
         v.text(t.text());
         $(this).slideUp(50);
-    }); 
-    
-    $(".var_container").mouseenter(function() {
-        $(this).children(".menu").css("display", "block");
     });
-    
+
+    // hide menu if not clicked
     $(".var_container").mouseleave(function() {
         $(this).children(".menu").css("display", "none");
     });
-       
+
 });
