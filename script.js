@@ -16,6 +16,37 @@ $(function() {
     wr.ins_menu = $('#ins_menu');
     wr.proj_menu = $('#project_menu');
 
+	$("#functions").click(function(event) {
+		t = $(event.target);
+
+		function showMenu(connection) {
+			if (wr.ins_menu.css("display") === "none") {
+				wr.ins_menu.css("top", event.pageY - 45);
+				wr.ins_menu.css("left", event.pageX - 265);
+				wr.ins_menu.css("display", "block");
+				wr.clicked = connection;
+			} else {
+				wr.ins_menu.css("display", "none");
+			}
+			return false;
+		}
+
+		function hideMenu() {
+			if (wr.ins_menu.css("display") !== "none") {
+				wr.ins_menu.css("display", "none");
+			}
+		}
+
+		if (t.hasClass('connection')) {
+			showMenu(t);
+		} else if (t.hasClass('line') || t.hasClass('point')) {
+			showMenu(t.parent());
+		} else {
+			hideMenu();
+		}
+	}); 
+	
+/*
     // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
         if (wr.ins_menu.css("display") === "none") {
@@ -35,7 +66,7 @@ $(function() {
             wr.ins_menu.css("display", "none");
         }
     });
-
+*/
     // menu clicks trigger insertions based on id clicked
     wr.ins_menu.click(function(event) {
         var t = $(event.target);
