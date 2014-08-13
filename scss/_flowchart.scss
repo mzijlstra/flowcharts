@@ -75,10 +75,25 @@
         display: block;
     }
 
-    .var, .exp {
+    .var, .io {
         background-color: $bg;
         border: 2*$line $border;
         padding: 15px;
+    }
+    
+    .exp {
+        @extend .var;
+        position: relative;
+        
+        input[type=text] {
+            position: absolute;
+            top: -4px;
+            left: -1px;
+            width: 400px;
+            border: 2*$line $border;
+            padding: 15px;
+            background-color: $bg;
+        }
     }
 
     .asgn {
@@ -133,8 +148,19 @@
 
     .exp {
         position: absolute;
-        top: 50px;
-        left: 15px;    
+        top: 42px;
+        left: 20px;    
+        background: $bg;
+        padding-top: 3px;
+        
+        input {
+            position: absolute;
+            top: -5px;
+            left: 0px;
+            width: 400px;
+            border: $line $border;
+            background: $bg;
+        }
     }
 
     .label_stmt {
@@ -145,8 +171,8 @@
     }
     .label_true {
         position: absolute;
-        top: 40px;
-        left: 115px;
+        top: 65px;
+        left: 125px;
     }
     .label_false {
         position: absolute;

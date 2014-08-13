@@ -9,7 +9,8 @@
         <title>Flow Chart</title>
         <link rel="stylesheet" href="css/page.css" type="text/css" />
         <link rel="stylesheet" href="css/extra.css" type="text/css" />
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+        <script src="http://code.jquery.com/jquery-2.1.1.js"></script>
         <script src="script.js"></script>
     </head>
     <body>
@@ -38,7 +39,7 @@
                             <option>float</option>
                             <option>bool</option>
                         </select>
-                        <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+                        <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
                     </div>
                 </div>
             </div>
@@ -115,16 +116,16 @@
                         <span class="var"> </span>
                     </div>
                     <span class="asgn">&#171;</span> 
-                    <span class="exp">INPUT</span>
+                    <span class="io">INPUT</span>
                 </div>
             </div>
 
             <div id="output" class="statement" >
                 <div class="arrow_down"></div>                        
                 <div class="assignment">
-                    <span class="var">OUTPUT</span>
+                    <span class="io">OUTPUT</span>
                     <span class="asgn">&#171;</span> 
-                    <span class="exp">5 + y</span>
+                    <span class="exp">&nbsp;</span>
                 </div>
             </div>
 
@@ -136,7 +137,7 @@
                         <span class="var"> </span>
                     </div>
                     <span class="asgn">&#171;</span> 
-                    <span class="exp">5 + y</span>
+                    <span class="exp">&nbsp;</span>
                 </div>
             </div>
 
@@ -155,7 +156,7 @@
                         <div class="label_stmt">if</div>
                         <div class="label_true">true</div>
                         <div class="label_false">false</div>
-                        <div class="exp">some &lt; other</div>
+                        <div class="exp"></div>
                     </div>
                     <table>
                         <tr>
@@ -204,7 +205,7 @@
                         <div class="label_stmt">while</div>
                         <div class="label_true">true</div>
                         <div class="label_false">false</div>
-                        <div class="exp">some &lt; other</div>
+                        <div class="exp"></div>
                         <div class="true_connector"></div>
                     </div> 
                     <div class="container">

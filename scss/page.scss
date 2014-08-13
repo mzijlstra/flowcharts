@@ -23,6 +23,11 @@ body {
     color: $color;
 }
 
+input {
+    font-family: monospace;
+    font-size: inherit;
+}
+
 h1 {
     margin-left: 35px;
     margin-top: 0px;
