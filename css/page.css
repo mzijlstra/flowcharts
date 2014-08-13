@@ -239,7 +239,7 @@ body {
   color: #333366; }
 
 input {
-  font-family: monospace;
+  font-family: inherit;
   font-size: inherit; }
 
 h1 {

@@ -6,7 +6,12 @@
 // wr namespace
 var wr = {
     "block": function(id) {
-        return $(id).clone(true).removeAttr("id");
+        var elem = $(id);
+        var result = elem.clone(true).removeAttr("id");
+        if (elem.get(0).init) {
+            result.get(0).init = elem.get(0).init;
+        }
+        return result;
     }
 };
 
@@ -52,12 +57,20 @@ $(function() {
                 .after(wr.block(toLoad));
 
         // trigger initializer code
-        var n = wr.clicked.next();
+        var n = wr.clicked.next().get(0);
         if (n.init && typeof n.init === "function") {
             n.init();
         }
 
         // TODO AJAX POST instructions
+    });
+
+    // initialize the variable name for input and assignment
+    // to the last used variable name (declared or selected)
+    $('#input, #assignment').each(function(i, o) {
+        o.init = function() {
+            $(this).find(".var").text(wr.lastVar);
+        };
     });
 
     /************************************
@@ -105,15 +118,17 @@ $(function() {
             } else {
                 var oldn = t.attr('cur');
                 var newn = t.val();
+                var elem = t.parent().get(0);
 
                 // remove old name from our vars 
                 if (t.attr("cur") !== ""
-                        && wr.vars[oldn] === t.parent().get(0)) {
+                        && wr.vars[oldn] === elem) {
                     delete wr.vars[oldn];
                 }
 
                 // add new name to our vars 
-                wr.vars[newn] = t.parent().get(0);
+                wr.vars[newn] = elem;
+                wr.lastVar = newn;
 
                 // update instructions with old name to new name
                 $('span.var:contains(' + oldn + ')').text(function(i, s) {
@@ -153,6 +168,7 @@ $(function() {
     $(".var_container .menu").click(function(event) {
         var t = $(event.target);
         $(this).parent().children("span.var").text(t.text());
+        wr.lastVar = t.text();
         $(this).hide();
     });
 
@@ -168,28 +184,28 @@ $(function() {
         var t = $(elem);
         var i = $($("<input type='text' />"));
         i.val(t.text());
-        
+
         i.keydown(function(event) {
             if (event.which === 13) {
                 this.blur();
             }
         });
-        
+
         i.blur(function() {
             var t = $(this);
             var exp = t.val();
             var p = t.parent();
             p.empty().text(exp);
         });
-        
+
         t.append(i);
-        i.focus();    
+        i.focus();
     };
-    
+
     $("span.exp, div.exp").click(function() {
         expDecl(this);
     });
-    
+
     $(".diamond").click(function(event) {
         expDecl($(this).find(".exp").get(0));
     });
