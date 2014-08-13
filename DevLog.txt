@@ -1,0 +1,15 @@
+FEATURES TO ADD:
+- DELETION
+- FUNCTIONS
+- ENTIRE PHP BACKEND
+
+
+2014-08-12:
+Stayed home all day to work on web-raptor. Was able to implement a good amount of features including variable selection in assignment and input statement, and expressions in output, assignment, if and while statements.
+
+Near the end I also added a feature where the assignment and input statements automaticallt select the last used variable, so that they don't start blank. Not sure if this is really a good feature as it may be better for students to exprience explicitly setting the variable.  Perhaps an alternate feature would be highlighting that the variable (and or expression) is not set yet.
+
+2014-08-13:
+Realized I should probably also keep a dev log. Will try to do a retrospective and indicate what I did when.
+
+Also thought a bit about updating the DB model to have creation, modified and accessed time stamps on the different tables... Still need to add an enabled field to the user table as well.
