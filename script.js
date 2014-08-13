@@ -118,7 +118,10 @@ $(function() {
             } else {
                 var oldn = t.attr('cur');
                 var newn = t.val();
+<<<<<<< HEAD
                 var elem = t.parent().get(0);
+=======
+>>>>>>> FETCH_HEAD
 
                 // remove old name from our vars 
                 if (t.attr("cur") !== ""
@@ -127,8 +130,12 @@ $(function() {
                 }
 
                 // add new name to our vars 
+<<<<<<< HEAD
                 wr.vars[newn] = elem;
                 wr.lastVar = newn;
+=======
+                wr.vars[newn] = t.parent().get(0);
+>>>>>>> FETCH_HEAD
 
                 // update instructions with old name to new name
                 $('span.var:contains(' + oldn + ')').text(function(i, s) {
@@ -168,7 +175,10 @@ $(function() {
     $(".var_container .menu").click(function(event) {
         var t = $(event.target);
         $(this).parent().children("span.var").text(t.text());
+<<<<<<< HEAD
         wr.lastVar = t.text();
+=======
+>>>>>>> FETCH_HEAD
         $(this).hide();
     });
 
@@ -184,19 +194,28 @@ $(function() {
         var t = $(elem);
         var i = $($("<input type='text' />"));
         i.val(t.text());
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> FETCH_HEAD
         i.keydown(function(event) {
             if (event.which === 13) {
                 this.blur();
             }
         });
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> FETCH_HEAD
         i.blur(function() {
             var t = $(this);
             var exp = t.val();
             var p = t.parent();
             p.empty().text(exp);
         });
+<<<<<<< HEAD
 
         t.append(i);
         i.focus();
@@ -206,6 +225,17 @@ $(function() {
         expDecl(this);
     });
 
+=======
+        
+        t.append(i);
+        i.focus();    
+    };
+    
+    $("span.exp, div.exp").click(function() {
+        expDecl(this);
+    });
+    
+>>>>>>> FETCH_HEAD
     $(".diamond").click(function(event) {
         expDecl($(this).find(".exp").get(0));
     });
