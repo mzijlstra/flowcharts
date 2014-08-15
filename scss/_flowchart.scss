@@ -45,13 +45,32 @@
 }
 
 /* all statements */ 
-.arrow_down {
-    width: 0px;
-    height: 0px;
-    border-top: $arrow $border;
-    border-left: $arrow $hide; 
-    border-right: $arrow $hide; 
-    margin-left: $size - $arrow;
+.statement {
+    position: relative;
+    
+    .del {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        color: white;
+        background-color: #DD4444;
+        padding: 2px 4px;
+        border: $line $border;
+        display: none;
+    }
+    .arrow_down {
+        width: 0px;
+        height: 0px;
+        border-top: $arrow $border;
+        border-left: $arrow $hide; 
+        border-right: $arrow $hide; 
+        margin-left: $size - $arrow;
+    }
+}
+
+.statement:hover .del {
+    display: block;
+    z-index: 10;
 }
 
 /* assignment statements input/output/assignment */
@@ -80,11 +99,11 @@
         border: 2*$line $border;
         padding: 15px;
     }
-    
+
     .exp {
         @extend .var;
         position: relative;
-        
+
         input[type=text] {
             position: absolute;
             top: -4px;
@@ -148,11 +167,11 @@
 
     .exp {
         position: absolute;
-        top: 42px;
-        left: 20px;    
+        top: 40px;
+        left: 22px;    
         background: $bg;
         padding-top: 3px;
-        
+
         input {
             position: absolute;
             top: -5px;
@@ -165,8 +184,8 @@
 
     .label_stmt {
         position: absolute;
-        top: 5px;
-        left: 5px;
+        top: 15px;
+        left: -3px;
         font-weight: bold;
     }
     .label_true {

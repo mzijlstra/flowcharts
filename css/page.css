@@ -40,13 +40,28 @@
   border: 1px solid #333366; }
 
 /* all statements */
-.arrow_down {
-  width: 0px;
-  height: 0px;
-  border-top: 8px solid #333366;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  margin-left: 52px; }
+.statement {
+  position: relative; }
+  .statement .del {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: white;
+    background-color: #DD4444;
+    padding: 2px 4px;
+    border: 1px solid #333366;
+    display: none; }
+  .statement .arrow_down {
+    width: 0px;
+    height: 0px;
+    border-top: 8px solid #333366;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    margin-left: 52px; }
+
+.statement:hover .del {
+  display: block;
+  z-index: 10; }
 
 /* assignment statements input/output/assignment */
 .assignment {
@@ -119,8 +134,8 @@
     top: -61px; }
   .diamond .exp {
     position: absolute;
-    top: 42px;
-    left: 20px;
+    top: 40px;
+    left: 22px;
     background: white;
     padding-top: 3px; }
     .diamond .exp input {
@@ -132,8 +147,8 @@
       background: white; }
   .diamond .label_stmt {
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: 15px;
+    left: -3px;
     font-weight: bold; }
   .diamond .label_true {
     position: absolute;
