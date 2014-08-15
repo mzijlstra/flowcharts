@@ -59,7 +59,7 @@
     border-right: 8px solid transparent;
     margin-left: 52px; }
 
-.statement:hover .del {
+.statement:hover > .del, .diamond:hover .del {
   display: block;
   z-index: 10; }
 
@@ -147,8 +147,8 @@
       background: white; }
   .diamond .label_stmt {
     position: absolute;
-    top: 15px;
-    left: -3px;
+    top: 5px;
+    left: 85px;
     font-weight: bold; }
   .diamond .label_true {
     position: absolute;

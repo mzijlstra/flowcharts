@@ -68,7 +68,7 @@
     }
 }
 
-.statement:hover .del {
+.statement:hover > .del, .diamond:hover .del {
     display: block;
     z-index: 10;
 }
@@ -184,8 +184,8 @@
 
     .label_stmt {
         position: absolute;
-        top: 15px;
-        left: -3px;
+        top: 5px;
+        left: 85px;
         font-weight: bold;
     }
     .label_true {
