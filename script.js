@@ -84,9 +84,9 @@ $(function() {
     // to the last used variable name (declared or selected)
     $('#input, #assignment').each(function(i, o) {
         o.init = function() {
-            if (wr.mode !== "beginner") {
+       //     if (wr.mode !== "beginner") {
                 $(this).find(".var").text(wr.lastVar);
-            }
+       //     }
         };
     });
 
@@ -244,7 +244,7 @@ $(function() {
     $("#if, #while").each(function(i, o) {
         o.destroy = function() {
             return confirm("are you sure you want to delete this "
-                    + o.getAttribute("id") + "statement and everything "
+                    + o.getAttribute("id") + " statement and everything "
                     + "inside it?");
         };
     });
