@@ -2,8 +2,46 @@
     Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
+/* General components */
+.del {
+    position: absolute;
+    color: white;
+    background-color: #DD4444;
+    padding: 2px 4px;
+    border: $line $border;
+    display: none;
+    cursor: pointer;
+}
+.arrow_down {
+    width: 0px;
+    height: 0px;
+    border-top: $arrow $border;
+    border-left: $arrow $hide; 
+    border-right: $arrow $hide; 
+    margin-left: $size - $arrow;
+}
 
 
+/* variables section */
+.variable {
+    padding-left: 15px;
+    position: relative;
+    
+    .del {
+        top: 2px;
+        left: -2px;
+    }
+}
+div.variable:hover .del {
+    display: block;
+}
+div.variable.bottom .del {
+    display: none;
+}
+.variable.inuse .del {
+    background-color: $menu;
+    color: $hl;
+}
 
 /* begin and end of flow chart */
 .start, .stop { 
@@ -41,30 +79,16 @@
     background-color: $bg;
     width: 4px;
     height: 4px;
-    border: 1px solid $color;
+    border: 1px solid $fg;
 }
 
 /* all statements */ 
 .statement {
-    position: relative;
+    position: relative;    
     
     .del {
-        position: absolute;
         top: 0px;
-        left: 0px;
-        color: white;
-        background-color: #DD4444;
-        padding: 2px 4px;
-        border: $line $border;
-        display: none;
-    }
-    .arrow_down {
-        width: 0px;
-        height: 0px;
-        border-top: $arrow $border;
-        border-left: $arrow $hide; 
-        border-right: $arrow $hide; 
-        margin-left: $size - $arrow;
+        left: 0px;        
     }
 }
 

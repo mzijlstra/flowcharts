@@ -8,7 +8,7 @@ var wr = {
     "block": function(id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
-        
+
         // also copy init and destroy methods
         if (elem.get(0).init) {
             result.get(0).init = elem.get(0).init;
@@ -39,9 +39,10 @@ $(function() {
         if (Object.keys) {
             size = Object.keys(wr.vars).length;
         } else {
-            for (var k in wr.vars) size++;
+            for (var k in wr.vars)
+                size++;
         }
-        
+
         // check if we should insert
         if (size === 0) {
             alert("Please declare a variable first.");
@@ -84,9 +85,9 @@ $(function() {
     // to the last used variable name (declared or selected)
     $('#input, #assignment').each(function(i, o) {
         o.init = function() {
-       //     if (wr.mode !== "beginner") {
+            if (wr.mode !== "beginner") {
                 $(this).find(".var").text(wr.lastVar);
-       //     }
+            }
         };
     });
 
@@ -225,13 +226,16 @@ $(function() {
     $(".diamond").click(function(event) {
         expDecl($(this).find(".exp").get(0));
     });
-    
+
     /***********************************
-     * Statement deletion related code
+     * Deletion related code
      ***********************************/
     // hook up delete click handlers
     $(".statement .del").click(function() {
         var p = $(this).parent();
+        if (!p.hasClass("statement")) {
+            p = p.parents(".statement");
+        }
         var pelem = p.get(0);
         var c = p.next(); // connector
         if (!pelem.destroy || pelem.destroy()) {
@@ -239,7 +243,7 @@ $(function() {
             p.remove();
         }
     });
-    
+
     // add confirmation meessages if and while stmts
     $("#if, #while").each(function(i, o) {
         o.destroy = function() {
@@ -247,5 +251,33 @@ $(function() {
                     + o.getAttribute("id") + " statement and everything "
                     + "inside it?");
         };
+    });
+
+    // variable delete handler
+    $(".variable .del").click(function() {
+        var p = $(this).parent();
+        var name = p.children("input").val();
+        if (!p.hasClass("inuse")) {
+            p.remove();
+            delete wr.vars[name];
+        } else {
+            alert("Cannot remove variable while in use");
+        }
+    });
+
+    // gray out variable deletes if var in use
+    $(".variable").mouseenter(function() {
+        var t = $(this);
+        var name = t.children("input").val();
+        var inuse = false;
+        $(".statement .var").each(function(i, o) {
+            if (!inuse && $(o).text() === name) {
+                inuse = true;
+                t.addClass("inuse");
+            }
+        });
+        if (!inuse && t.hasClass("inuse")) {
+            t.removeClass("inuse");
+        }
     });
 });

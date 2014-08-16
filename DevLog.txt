@@ -1,4 +1,6 @@
 FEATURES TO ADD:
+- Highlight missing values
+- Highlight current variable in var menu
 - FUNCTIONS
 - ENTIRE PHP BACKEND
 - INTERPRETER
@@ -16,4 +18,7 @@ Also thought a bit about updating the DB model to have creation, modified and ac
 
 2014-08-14:
 Implemented statement deletion, including confirmation dialogs when deleting if or while statements, by adding a destroy hook on elements.
+
+2014-08-15:
+Implemented variable deletion. Variables that are currently assigned to (input or assignment) cannot be deleted (are greyed out, and give an explanitory error message)
 

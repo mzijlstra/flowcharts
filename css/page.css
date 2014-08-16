@@ -6,6 +6,42 @@
     Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
+/* General components */
+.del {
+  position: absolute;
+  color: white;
+  background-color: #DD4444;
+  padding: 2px 4px;
+  border: 1px solid #333366;
+  display: none;
+  cursor: pointer; }
+
+.arrow_down {
+  width: 0px;
+  height: 0px;
+  border-top: 8px solid #333366;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  margin-left: 52px; }
+
+/* variables section */
+.variable {
+  padding-left: 15px;
+  position: relative; }
+  .variable .del {
+    top: 2px;
+    left: -2px; }
+
+div.variable:hover .del {
+  display: block; }
+
+div.variable.bottom .del {
+  display: none; }
+
+.variable.inuse .del {
+  background-color: #f8f8f8;
+  color: #ddddee; }
+
 /* begin and end of flow chart */
 .start, .stop {
   width: 80px;
@@ -43,21 +79,8 @@
 .statement {
   position: relative; }
   .statement .del {
-    position: absolute;
     top: 0px;
-    left: 0px;
-    color: white;
-    background-color: #DD4444;
-    padding: 2px 4px;
-    border: 1px solid #333366;
-    display: none; }
-  .statement .arrow_down {
-    width: 0px;
-    height: 0px;
-    border-top: 8px solid #333366;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    margin-left: 52px; }
+    left: 0px; }
 
 .statement:hover > .del, .diamond:hover .del {
   display: block;

@@ -5,8 +5,10 @@
 
 // global variables
 $bg: white;
-$color: #336;
-$border: solid $color;
+$fg: #336;
+$menu: #f8f8f8;
+$hl: #dde;
+$border: solid $fg;
 $hide: solid transparent;
 
 $line:  1px;
@@ -20,7 +22,7 @@ $size: 60px;
 body {
     font-family: monospace;
     font-size: 12px;
-    color: $color;
+    color: $fg;
 }
 
 input {
@@ -34,7 +36,7 @@ h1 {
 }
 
 div#projects {
-    background-color: #f8f8f8;
+    background-color: $menu;
     position: absolute; 
     top: 10px;
     left: 10px;
@@ -85,7 +87,7 @@ div#projects:hover #project_menu {
     
     .label {
         padding: 3px;
-        border-bottom: $line dashed $color;
+        border-bottom: $line dashed $fg;
     }
 }
 
@@ -119,7 +121,7 @@ div#projects:hover #project_menu {
     display: none;
     position: absolute;
     border: $line $border;
-    background-color: #f8f8f8;
+    background-color: $menu;
     z-index: 10;
 
     .menu_item {
@@ -132,7 +134,7 @@ div#projects:hover #project_menu {
         cursor: auto;
     }
     .menu_item:hover {
-        background-color: #ddddee;
+        background-color: $hl;
     }
 }
 
