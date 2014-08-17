@@ -32,15 +32,17 @@
             <div id="var_area">
                 <div class="label">Variables:</div>
                 <div id="variables">
-                    <div class="variable bottom">
-                        <div class="del">&times;</div>
-                        <select>
-                            <option>string</option>
-                            <option>int</option>
-                            <option>float</option>
-                            <option>bool</option>
-                        </select>
-                        <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+                    <div id="vars_main" class="variables active">
+                        <div class="variable bottom">
+                            <div class="del">&times;</div>
+                            <select>
+                                <option>string</option>
+                                <option>int</option>
+                                <option>float</option>
+                                <option>bool</option>
+                            </select>
+                            <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,30 +57,24 @@
                         <span class="name">main</span>
                         <span class="rem">&times;</span>
                     </span>
-                    <span class="fun">
-                        <span class="cornerb">
-                            <span class="cornerw"></span>
-                        </span>
-                        <span class="name">extra</span>
-                        <span class="rem">&times;</span>
-                    </span>
-
                 </div>
                 <div id="instructions">
-                    <div class="statement">
-                        <div class="start">
-                            int main()
+                    <div id="ins_main" class="instructions active">
+                        <div class="statement">
+                            <div class="start">
+                                int main()
+                            </div>
                         </div>
-                    </div>
-                    <div class="connection">
-                        <div class="line"></div>
-                        <div class="point"></div>            
-                        <div class="line"></div>
-                    </div>
-                    <div class="statement">
-                        <div class="arrow_down"></div>                        
-                        <div class="stop">
-                            return 0
+                        <div class="connection">
+                            <div class="line"></div>
+                            <div class="point"></div>            
+                            <div class="line"></div>
+                        </div>
+                        <div class="statement">
+                            <div class="arrow_down"></div>                        
+                            <div class="stop">
+                                return 0
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,6 +93,14 @@
 
 
         <div id="building_blocks">
+            <span id="fun-name" class="fun">
+                <span class="cornerb">
+                    <span class="cornerw"></span>
+                </span>
+                <span class="name">extra</span>
+                <span class="rem">&times;</span>
+            </span>
+
             <div id="declaration" class="variable bottom">
                 <div class="del">&times;</div>
                 <select>

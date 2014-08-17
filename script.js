@@ -25,7 +25,10 @@ $(function() {
     "use strict";
 
     wr.mode = "beginner";
-    wr.vars = {};
+    wr.functions = {'main': {}};
+    wr.curvars = wr.functions.main;
+    wr.vararea = $("#vars_main");
+    wr.insarea = $("#ins_main");
     wr.ins_menu = $('#ins_menu');
     wr.proj_menu = $('#project_menu');
 
@@ -37,9 +40,9 @@ $(function() {
         // get the amount of variables declared, compatible with old brwsrs
         var size = 0;
         if (Object.keys) {
-            size = Object.keys(wr.vars).length;
+            size = Object.keys(wr.curvars).length;
         } else {
-            for (var k in wr.vars)
+            for (var k in wr.curvars)
                 size++;
         }
 
@@ -129,7 +132,7 @@ $(function() {
 
         // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
-            if (wr.vars[t.val()]) {
+            if (wr.curvars[t.val()]) {
                 alert("Duplicate variable name " + t.val() + "\n" +
                         "Please change one to keep them unique");
                 this.focus();
@@ -140,14 +143,14 @@ $(function() {
 
                 // remove old name from our vars 
                 if (t.attr("cur") !== ""
-                        && wr.vars[oldn] === elem) {
-                    delete wr.vars[oldn];
+                        && wr.carvars[oldn] === elem) {
+                    delete wr.carvars[oldn];
                 }
 
                 // add new name to our vars 
-                wr.vars[newn] = elem;
+                wr.curvars[newn] = elem;
                 wr.lastVar = newn;
-                wr.vars[newn] = t.parent().get(0);
+                wr.curvars[newn] = t.parent().get(0);
 
                 // update instructions with old name to new name
                 $('span.var:contains(' + oldn + ')').text(function(i, s) {
@@ -177,7 +180,7 @@ $(function() {
         var menu = $(t.children(".menu")[0]);
 
         menu.empty();
-        for (var k in wr.vars) {
+        for (var k in wr.curvars) {
             menu.append("<div class='menu_item'>" + k + "</div>");
         }
         menu.show();
@@ -247,7 +250,7 @@ $(function() {
     // add confirmation meessages if and while stmts
     $("#if, #while").each(function(i, o) {
         o.destroy = function() {
-            return confirm("are you sure you want to delete this "
+            return confirm("Are you sure you want to delete this "
                     + o.getAttribute("id") + " statement and everything "
                     + "inside it?");
         };
@@ -259,7 +262,7 @@ $(function() {
         var name = p.children("input").val();
         if (!p.hasClass("inuse")) {
             p.remove();
-            delete wr.vars[name];
+            delete wr.curvars[name];
         } else {
             alert("Cannot remove variable while in use");
         }
@@ -280,4 +283,65 @@ $(function() {
             t.removeClass("inuse");
         }
     });
+    
+    // function delete handler
+    $(".rem").click(function() {
+        // TODO write function delete code
+    });
+
+    /*************************************
+     * Adding and switching to functions
+     *************************************/
+    // add a function
+    $("#add_fun").click(function() {
+
+        // ask for new function name
+        var n = prompt("Name for new function:");
+
+        // create a new scope for the variables
+        wr.functions[n] = {};
+
+        // append a new function name tab
+        var fname = wr.block("#fun-name");
+        fname.find(".name").text(n);
+        $("#fun-names").append(fname);
+
+        // append a new instructions area
+        var ins = $("<div id='ins_" + n + "' class='instructions'></div>");
+        // FIXME function name in start block
+        ins.append(wr.block("#start"))
+                .append(wr.block("#connection"))
+                .append(wr.block("#return"));
+        $("#instructions").append(ins);
+
+        // append a new variables area
+        var vs = $("<div id='vars_" + n + "' class='variables'></div>");
+        vs.append(wr.block("#declaration"));
+        $("#variables").append(vs);
+        
+        // TODO AJAX call to create function on server
+
+        // switch to our new function (see below)
+        fname.click();
+    });
+
+    // switching to a different function
+    $(".fun").click(function() {
+        var t = $(this);
+        var n = t.find(".name").text();
+
+        // deactivate the previous tab, instructions area, variables area
+        $(".active").removeClass("active");
+
+        // activate areas for this function
+        t.addClass("active");
+        $("#vars_" + n).addClass("active");
+        $("#ins_" + n).addClass("active");
+
+        // also switch over global vars
+        wr.curvars = wr.functions[n];
+        wr.vararea = $("#vars_" + n);
+        wr.insarea = $("#ins_" + n);
+    });
+
 });

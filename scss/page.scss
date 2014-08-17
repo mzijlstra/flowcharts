@@ -89,6 +89,13 @@ div#projects:hover #project_menu {
         padding: 3px;
         border-bottom: $line dashed $fg;
     }
+    
+    .variables {
+        display: none;
+    }
+    .variables.active {
+        display: block;
+    }
 }
 
 /* Force consistent fonts across browsers */
@@ -104,7 +111,7 @@ div#projects:hover #project_menu {
         padding-top: 6px;
         padding-left: 18px;
         border-bottom: $line $border;
-
+        
         #add_fun {
             position: absolute;
             top: 0px;
@@ -148,7 +155,9 @@ div#projects:hover #project_menu {
             }
         }
         span.fun.active {
-            background-color: $menu;
+            border-bottom: none;
+            padding-bottom: 2px;
+            background-color: $bg;
         }
         span.fun:hover .rem {
             display: inline;
@@ -163,7 +172,15 @@ div#projects:hover #project_menu {
         right: 0px;
         bottom: 0px;
         overflow: auto;
+        
+        .instructions {
+            display: none;
+        }
+        .instructions.active {
+            display: block;
+        }
     }
+    
 }
 
 /* left click insertion menu */

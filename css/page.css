@@ -40,6 +40,7 @@ div.variable.bottom .del {
 
 .variable.inuse .del {
   background-color: #f8f8f8;
+  border-color: #ddddee;
   color: #ddddee; }
 
 /* begin and end of flow chart */
@@ -329,6 +330,10 @@ div#projects:hover #project_menu {
   #var_area .label {
     padding: 3px;
     border-bottom: 1px dashed #333366; }
+  #var_area .variables {
+    display: none; }
+  #var_area .variables.active {
+    display: block; }
 
 /* Force consistent fonts across browsers */
 #functions {
@@ -375,7 +380,9 @@ div#projects:hover #project_menu {
         cursor: pointer;
         display: none; }
     #functions #fun-names span.fun.active {
-      background-color: #f8f8f8; }
+      border-bottom: none;
+      padding-bottom: 2px;
+      background-color: white; }
     #functions #fun-names span.fun:hover .rem {
       display: inline; }
   #functions #instructions {
@@ -386,6 +393,10 @@ div#projects:hover #project_menu {
     right: 0px;
     bottom: 0px;
     overflow: auto; }
+    #functions #instructions .instructions {
+      display: none; }
+    #functions #instructions .instructions.active {
+      display: block; }
 
 /* left click insertion menu */
 .menu {
