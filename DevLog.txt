@@ -1,7 +1,9 @@
 FEATURES TO ADD:
 - Highlight missing values
 - Highlight current variable in var menu
-- FUNCTIONS
+- function renaming
+- redo type selection 
+- add returns inside if statements
 - ENTIRE PHP BACKEND
 - INTERPRETER
 
@@ -22,3 +24,5 @@ Implemented statement deletion, including confirmation dialogs when deleting if 
 2014-08-15:
 Implemented variable deletion. Variables that are currently assigned to (input or assignment) cannot be deleted (are greyed out, and give an explanitory error message)
 
+2014-08-17:
+Implemented functions (adding, switching to, removing). Ran into some interesting CSS issues with function renaming which I was going to implement by clicking on the start ball...
