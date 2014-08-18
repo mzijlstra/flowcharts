@@ -62,7 +62,8 @@
                     <div id="ins_main" class="instructions active">
                         <div class="statement">
                             <div class="start">
-                                int main()
+                                <span class="rtype">int</span> 
+                                <span class="name">main</span>(<span class="params"></span>)
                             </div>
                         </div>
                         <div class="connection">
@@ -70,10 +71,10 @@
                             <div class="point"></div>            
                             <div class="line"></div>
                         </div>
-                        <div class="statement">
+                        <div class="statement return">
                             <div class="arrow_down"></div>                        
                             <div class="stop">
-                                return 0
+                                return <span class="exp">0</span>
                             </div>
                         </div>
                     </div>
@@ -112,16 +113,17 @@
                 <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
             </div>
 
-            <div id="start" class="statement">
+            <div id="start" class="statement start">
                 <div class="start">
-                    int main()
+                    <span class="rtype">int</span> 
+                    <span class="name">main</span>(<span class="params"></span>)
                 </div>
             </div>
 
             <div id="return" class="statement">
                 <div class="arrow_down"></div>                        
                 <div class="stop">
-                    return 0
+                    return <span class="exp">0</span>
                 </div>
             </div>
 

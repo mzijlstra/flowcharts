@@ -202,7 +202,7 @@ $(function() {
     /**************************************
      * Expression declaration related code
      **************************************/
-    var expDecl = function(elem) {
+    var inputHere = function(elem) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
         i.val(t.text());
@@ -223,11 +223,11 @@ $(function() {
     };
 
     $("span.exp, div.exp").click(function() {
-        expDecl(this);
+        inputHere(this);
     });
 
     $(".diamond").click(function(event) {
-        expDecl($(this).find(".exp").get(0));
+        inputHere($(this).find(".exp").get(0));
     });
 
     /***********************************
@@ -283,10 +283,20 @@ $(function() {
             t.removeClass("inuse");
         }
     });
-    
+
     // function delete handler
     $(".rem").click(function() {
-        // TODO write function delete code
+        var t = $(this);
+        var n = t.parent().children(".name").text();
+        if (n === "main") {
+            alert("Cannot delete main, the program cannot start without it");
+            return false;
+        } else if (confirm("Delete the function: " + n + "?")) {
+            $("#vars_" + n).remove();
+            $("#ins_" + n).remove();
+            t.parent().remove();
+            $("#fun-names .fun")[0].click();
+        }
     });
 
     /*************************************
@@ -318,7 +328,7 @@ $(function() {
         var vs = $("<div id='vars_" + n + "' class='variables'></div>");
         vs.append(wr.block("#declaration"));
         $("#variables").append(vs);
-        
+
         // TODO AJAX call to create function on server
 
         // switch to our new function (see below)
@@ -342,6 +352,11 @@ $(function() {
         wr.curvars = wr.functions[n];
         wr.vararea = $("#vars_" + n);
         wr.insarea = $("#ins_" + n);
+    });
+    
+    // renaming a function
+    $(".start").click(function() {
+        inputHere($(this).children(".name").get(0));
     });
 
 });

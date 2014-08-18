@@ -53,6 +53,18 @@ div.variable.bottom .del {
   border: 1px solid #333366;
   border-radius: 55px; }
 
+.stop input {
+  position: absolute;
+  top: 35px;
+  left: 75px;
+  background-color: white; }
+
+.start input {
+  position: absolute;
+  top: 26px;
+  left: 48px;
+  background-color: white; }
+
 /* connections between statements */
 .connection {
   cursor: context-menu; }

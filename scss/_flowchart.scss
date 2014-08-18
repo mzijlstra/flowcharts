@@ -26,7 +26,7 @@
 .variable {
     padding-left: 15px;
     position: relative;
-    
+
     .del {
         top: 2px;
         left: -2px;
@@ -53,6 +53,19 @@ div.variable.bottom .del {
     line-height: 75px;
     border: $line $border;
     border-radius: 55px;
+}
+
+.stop input {
+    position: absolute;
+    top: 35px;
+    left: 75px;
+    background-color: $bg;
+}
+.start input {
+    position: absolute;
+    top: 26px;
+    left: 48px;
+    background-color: $bg;    
 }
 
 /* connections between statements */
@@ -86,7 +99,7 @@ div.variable.bottom .del {
 /* all statements */ 
 .statement {
     position: relative;    
-    
+
     .del {
         top: 0px;
         left: 0px;        
