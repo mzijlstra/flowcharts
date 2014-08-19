@@ -356,7 +356,12 @@ $(function() {
     
     // renaming a function
     $(".start").click(function() {
-        inputHere($(this).children(".name").get(0));
+        var n = $(this).find(".name");
+        inputHere(n.get(0));
+        // TODO get the name
+        // check if it is different
+        // update the id's in HTML
+        // update the name in wr.functions
     });
 
 });

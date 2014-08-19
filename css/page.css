@@ -45,25 +45,26 @@ div.variable.bottom .del {
 
 /* begin and end of flow chart */
 .start, .stop {
+  position: relative;
   width: 80px;
   height: 80px;
   margin-left: 20px;
-  text-align: center;
-  line-height: 75px;
   border: 1px solid #333366;
   border-radius: 55px; }
+  .start .text, .stop .text {
+    position: absolute;
+    background-color: white;
+    left: 6px;
+    top: 30px;
+    white-space: nowrap; }
+  .start input, .stop input {
+    position: absolute;
+    top: -4px;
+    left: 25px;
+    background-color: white; }
 
 .stop input {
-  position: absolute;
-  top: 35px;
-  left: 75px;
-  background-color: white; }
-
-.start input {
-  position: absolute;
-  top: 26px;
-  left: 48px;
-  background-color: white; }
+  left: 42px; }
 
 /* connections between statements */
 .connection {
