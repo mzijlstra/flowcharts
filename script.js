@@ -202,7 +202,7 @@ $(function() {
     /**************************************
      * Expression declaration related code
      **************************************/
-    var inputHere = function(elem) {
+    var inputHere = function(elem, blur) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
         i.val(t.text());
@@ -213,6 +213,14 @@ $(function() {
         });
         i.blur(function() {
             var t = $(this);
+
+            // check if the blur handler needs executing
+            if (typeof blur === "function") {
+                if (!blur(t)) {
+                    return false;
+                }
+            }
+
             var exp = t.val();
             var p = t.parent();
             p.empty().text(exp);
@@ -306,7 +314,20 @@ $(function() {
     $("#add_fun").click(function() {
 
         // ask for new function name
-        var n = prompt("Name for new function:");
+        var bad = true;
+        while (bad) {
+            var n = prompt("Name for new function:");
+            if (!n.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
+                alert("Bad Function Name\n\n" +
+                        "Functions can start with an underscore or a letter.\n" +
+                        "Then didigts, underscores, and letters are allowed.");
+            } else if (wr.functions[n]) {
+                alert("Duplicate Function Name\n\n" +
+                        "Please change the name to keep the functions unique");
+            } else {
+                bad = false;
+            }
+        }
 
         // create a new scope for the variables
         wr.functions[n] = {};
@@ -322,6 +343,7 @@ $(function() {
         ins.append(wr.block("#start"))
                 .append(wr.block("#connection"))
                 .append(wr.block("#return"));
+        ins.find(".name").text(n);
         $("#instructions").append(ins);
 
         // append a new variables area
@@ -353,15 +375,48 @@ $(function() {
         wr.vararea = $("#vars_" + n);
         wr.insarea = $("#ins_" + n);
     });
-    
+
     // renaming a function
     $(".start").click(function() {
         var n = $(this).find(".name");
-        inputHere(n.get(0));
-        // TODO get the name
-        // check if it is different
-        // update the id's in HTML
-        // update the name in wr.functions
+        n.attr("cur", n.text());
+        inputHere(n.get(0), function(t) {
+            var cur = n.attr("cur");
+            if (cur === "main") {
+                alert("Cannot rename function main");
+                n.text("main");
+                return true;
+            }
+
+            if (cur !== t.val()) {
+                var upd = t.val();
+
+                // make sure it's valid
+                if (!upd.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
+                    alert("Bad Function Name\n\n" +
+                            "Functions can start with an underscore or a letter.\n" +
+                            "Then didigts, underscores, and letters are allowed.");
+                    t.focus();
+                    return false;
+                }
+
+                // make sure it's not duplicate
+                if (wr.functions[upd]) {
+                    alert("Duplicate function name, please change it to keep " +
+                            "function names unique.");
+                    t.focus();
+                    return false;
+                }
+
+                // do the update
+                wr.functions[upd] = wr.functions[cur];
+                delete wr.functions[cur];
+                $("#vars_" + cur).attr("id", "vars_" + upd);
+                $("#ins_" + cur).attr("id", "ins_" + upd);
+                $("#fun-names .active .name").text(upd);
+                return true;
+            }
+        });
     });
 
 });
