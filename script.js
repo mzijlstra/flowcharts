@@ -348,6 +348,9 @@ $(function() {
 
         // append a new variables area
         var vs = $("<div id='vars_" + n + "' class='variables'></div>");
+        vs.append("<div class='label'>Parameters:</div>");
+        vs.append(wr.block("#declaration"));
+        vs.append("<div class='label'>Variables:</div>");
         vs.append(wr.block("#declaration"));
         $("#variables").append(vs);
 

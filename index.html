@@ -30,9 +30,9 @@
 
         <div id="workspace">
             <div id="var_area">
-                <div class="label">Variables:</div>
                 <div id="variables">
                     <div id="vars_main" class="variables active">
+                        <div class="label">Variables:</div>
                         <div class="variable bottom">
                             <div class="del">&times;</div>
                             <select>
@@ -105,6 +105,18 @@
                 <span class="name">extra</span>
                 <span class="rem">&times;</span>
             </span>
+
+            <div id="pdeclaration" class="parameter variable bottom">
+                <div class="del">&times;</div>
+                <select>
+                    <option>string</option>
+                    <option>int</option>
+                    <option>float</option>
+                    <option>bool</option>
+                </select>
+                <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+            </div>
+
 
             <div id="declaration" class="variable bottom">
                 <div class="del">&times;</div>

@@ -26,3 +26,6 @@ Implemented variable deletion. Variables that are currently assigned to (input o
 
 2014-08-17:
 Implemented functions (adding, switching to, removing). Ran into some interesting CSS issues with function renaming which I was going to implement by clicking on the start ball...
+
+2014-08-23:
+Started on parameters, at first my plan had been to add checkboxes behind each variable which when checked would make it a parameters. Then I realized it would be a lot of work, and things would be a lot easier if I simply make a separate parameters area at the top of the variables area, re-using a lot of the code I already wrote for adding variables.
