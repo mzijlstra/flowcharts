@@ -31,6 +31,10 @@
   .variable .del {
     top: 2px;
     left: -2px; }
+  .variable .type_container {
+    display: inline-block;
+    width: 65px;
+    padding-left: 3px; }
 
 div.variable:hover .del {
   display: block; }
@@ -60,7 +64,7 @@ div.variable.bottom .del {
     white-space: nowrap; }
   .start input, .stop input {
     position: absolute;
-    top: -4px;
+    top: 0px;
     left: 25px;
     background-color: white; }
 

@@ -36,12 +36,15 @@
                         <div class="label">Variables:</div>
                         <div class="variable bottom">
                             <div class="del">&times;</div>
-                            <select>
-                                <option>string</option>
-                                <option>int</option>
-                                <option>float</option>
-                                <option>bool</option>
-                            </select>
+                            <div class="type_container">
+                                <div class="menu">
+                                    <div class="menu_item">string</div>
+                                    <div class="menu_item">int</div>
+                                    <div class="menu_item">float</div>
+                                    <div class="menu_item">bool</div>
+                                </div>
+                                <span class="type">string</span>
+                            </div>
                             <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
                         </div>
                     </div>
@@ -107,26 +110,17 @@
                 <span class="rem">&times;</span>
             </span>
 
-            <div id="param-decl" class="parameter variable bottom">
-                <div class="del">&times;</div>
-                <select>
-                    <option>string</option>
-                    <option>int</option>
-                    <option>float</option>
-                    <option>bool</option>
-                </select>
-                <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
-            </div>
-
-
             <div id="declaration" class="variable bottom">
                 <div class="del">&times;</div>
-                <select>
-                    <option>string</option>
-                    <option>int</option>
-                    <option>float</option>
-                    <option>bool</option>
-                </select>
+                <div class="type_container">
+                    <div class="menu">
+                        <div class="menu_item">string</div>
+                        <div class="menu_item">int</div>
+                        <div class="menu_item">float</div>
+                        <div class="menu_item">bool</div>
+                    </div>
+                    <span class="type">string</span>
+                </div>
                 <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
             </div>
 
@@ -183,7 +177,7 @@
                 <div class="assignment">
                     <div class="var_container">
                         <div class="menu"></div>
-                        <span class="var"> </span>
+                        <span class="var">&nbsp;</span>
                     </div>
                     &nbsp;<span class="asgn">&#171;</span> 
                     <span class="exp">&nbsp;</span>

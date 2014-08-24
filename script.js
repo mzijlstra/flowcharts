@@ -148,7 +148,7 @@ $(function() {
                     var p = t.parent();
                     p.removeClass("bottom");
                     if (t.parent().hasClass("parameter")) {
-                        p.after(cloneBlock("#param-decl"));
+                        p.after(cloneBlock("#declaration").addClass("parameter"));
                     } else {
                         p.after(cloneBlock("#declaration"));
                     }
@@ -354,7 +354,7 @@ $(function() {
         // create a new pramaters area 
         var pm = $("<div class='params'></div>");
         pm.append("<div class='label'>Parameters:</div>");
-        pm.append(cloneBlock("#param-decl"));
+        pm.append(cloneBlock("#declaration").addClass("parameter"));
 
         // append a new variables area
         var vs = $("<div id='vars_" + n + "' class='variables'></div>");
