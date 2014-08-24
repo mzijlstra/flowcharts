@@ -4,8 +4,24 @@
  */
 
 // wr namespace
-var wr = {
-    "block": function(id) {
+var wr = {};
+
+// hook up event handlers and frequently used elements
+$(function() {
+    "use strict";
+
+    wr.mode = "beginner";
+    wr.functions = {'main': {}};
+    wr.curvars = wr.functions.main;
+    wr.vararea = $("#vars_main");
+    wr.insaÏrea = $("#ins_main");
+    wr.ins_menu = $('#ins_menu');
+    wr.proj_menu = $('#project_menu');
+
+    /************************
+     * Helper functions
+     ************************/
+    var cloneBlock = function(id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
 
@@ -17,85 +33,38 @@ var wr = {
             result.get(0).destroy = elem.get(0).destroy;
         }
         return result;
-    }
-};
+    };
 
-// hook up event handlers and frequently used elements
-$(function() {
-    "use strict";
-
-    wr.mode = "beginner";
-    wr.functions = {'main': {}};
-    wr.curvars = wr.functions.main;
-    wr.vararea = $("#vars_main");
-    wr.insarea = $("#ins_main");
-    wr.ins_menu = $('#ins_menu');
-    wr.proj_menu = $('#project_menu');
-
-    /**********************************
-     * Insertion menu related code
-     **********************************/
-    // display insertion menu when clicking on a connection block
-    $(".connection").click(function(event) {
-        // get the amount of variables declared, compatible with old brwsrs
-        var size = 0;
-        if (Object.keys) {
-            size = Object.keys(wr.curvars).length;
-        } else {
-            for (var k in wr.curvars)
-                size++;
-        }
-
-        // check if we should insert
-        if (size === 0) {
-            alert("Please declare a variable first.");
-            $('.variable .var').focus();
-        } else if (wr.ins_menu.css("display") === "none") {
-            wr.ins_menu.css("top", event.pageY);
-            wr.ins_menu.css("left", event.pageX);
-            wr.ins_menu.show();
-            wr.clicked = $(this);
-        } else {
-            wr.ins_menu.hide();
-        }
-        return false;
-    });
-
-    // hide insertion menu when clicking elsewhere
-    $("body").click(function() {
-        if (wr.ins_menu.css("display") !== "none") {
-            wr.ins_menu.hide();
-        }
-    });
-
-    // menu clicks trigger insertions based on id clicked
-    wr.ins_menu.click(function(event) {
-        var t = $(event.target);
-        var toLoad = '#' + t.attr('id').substr(4);
-        wr.clicked.after(wr.block("#connection"))
-                .after(wr.block(toLoad));
-
-        // trigger initializer code
-        var n = wr.clicked.next().get(0);
-        if (n.init && typeof n.init === "function") {
-            n.init();
-        }
-
-        // TODO AJAX POST instructions
-    });
-
-    // initialize the variable name for input and assignment
-    // to the last used variable name (declared or selected)
-    $('#input, #assignment').each(function(i, o) {
-        o.init = function() {
-            if (wr.mode !== "beginner") {
-                $(this).find(".var").text(wr.lastVar);
+    var inputHere = function(elem, blur) {
+        var t = $(elem);
+        var i = $($("<input type='text' />"));
+        i.val(t.text());
+        i.keydown(function(event) {
+            if (event.which === 13) {
+                this.blur();
             }
-        };
-    });
+        });
+        i.blur(function() {
+            var t = $(this);
+
+            // check if the blur handler needs executing
+            if (typeof blur === "function") {
+                if (!blur(t)) {
+                    return false;
+                }
+            }
+
+            var exp = t.val();
+            var p = t.parent();
+            p.empty().text(exp);
+        });
+
+        t.append(i);
+        i.focus();
+    };
 
     /************************************
-     * Variable declaration related code
+     * Variable related code
      ************************************/
     // store current var name on focus
     $(".variable .var").focus(function() {
@@ -142,9 +111,8 @@ $(function() {
                 var elem = t.parent().get(0);
 
                 // remove old name from our vars 
-                if (t.attr("cur") !== ""
-                        && wr.carvars[oldn] === elem) {
-                    delete wr.carvars[oldn];
+                if (oldn !== "" && wr.curvars[oldn] === elem) {
+                    delete wr.curvars[oldn];
                 }
 
                 // add new name to our vars 
@@ -157,12 +125,34 @@ $(function() {
                     return s === oldn ? newn : s;
                 });
 
+                // update param name in signature
+                if (t.parent().hasClass("parameter")) {
+                    var params = $(".active .start .params");
+                    var ptext = params.text();
+
+                    // if this is a new name
+                    if (oldn === "") {
+                        if (ptext === "") {
+                            params.text(newn);
+                        } else {
+                            params.text(ptext + ", " + newn);
+                        }
+                    } else { // existing param
+                        params.text(
+                                ptext.replace(new RegExp(", " + oldn), newn));
+                    }
+                }
+
                 // append another declration field
                 if (t.parent().hasClass("bottom")) {
                     var p = t.parent();
                     p.removeClass("bottom");
-                    p.after(wr.block("#declaration"));
-                    var added = $(".variable .var:last-child");
+                    if (t.parent().hasClass("parameter")) {
+                        p.after(cloneBlock("#param-decl"));
+                    } else {
+                        p.after(cloneBlock("#declaration"));
+                    }
+                    var added = p.parent().find(".var:last-child");
                     added.focus();
                 }
 
@@ -171,10 +161,7 @@ $(function() {
         }
     });
 
-    /******************************
-     * Variable menu related code
-     ******************************/
-    // repopulate var menu on mouse enter
+    // repopulate var select menu on mouse enter
     $(".assignment .var_container").mouseenter(function(event) {
         var t = $(this);
         var menu = $(t.children(".menu")[0]);
@@ -197,71 +184,6 @@ $(function() {
     // hide menu if not clicked
     $(".var_container").mouseleave(function() {
         $(this).children(".menu").hide();
-    });
-
-    /**************************************
-     * Expression declaration related code
-     **************************************/
-    var inputHere = function(elem, blur) {
-        var t = $(elem);
-        var i = $($("<input type='text' />"));
-        i.val(t.text());
-        i.keydown(function(event) {
-            if (event.which === 13) {
-                this.blur();
-            }
-        });
-        i.blur(function() {
-            var t = $(this);
-
-            // check if the blur handler needs executing
-            if (typeof blur === "function") {
-                if (!blur(t)) {
-                    return false;
-                }
-            }
-
-            var exp = t.val();
-            var p = t.parent();
-            p.empty().text(exp);
-        });
-
-        t.append(i);
-        i.focus();
-    };
-
-    $("span.exp, div.exp").click(function() {
-        inputHere(this);
-    });
-
-    $(".diamond").click(function(event) {
-        inputHere($(this).find(".exp").get(0));
-    });
-
-    /***********************************
-     * Deletion related code
-     ***********************************/
-    // hook up delete click handlers
-    $(".statement .del").click(function() {
-        var p = $(this).parent();
-        if (!p.hasClass("statement")) {
-            p = p.parents(".statement");
-        }
-        var pelem = p.get(0);
-        var c = p.next(); // connector
-        if (!pelem.destroy || pelem.destroy()) {
-            c.remove();
-            p.remove();
-        }
-    });
-
-    // add confirmation meessages if and while stmts
-    $("#if, #while").each(function(i, o) {
-        o.destroy = function() {
-            return confirm("Are you sure you want to delete this "
-                    + o.getAttribute("id") + " statement and everything "
-                    + "inside it?");
-        };
     });
 
     // variable delete handler
@@ -292,23 +214,106 @@ $(function() {
         }
     });
 
-    // function delete handler
-    $(".rem").click(function() {
-        var t = $(this);
-        var n = t.parent().children(".name").text();
-        if (n === "main") {
-            alert("Cannot delete main, the program cannot start without it");
-            return false;
-        } else if (confirm("Delete the function: " + n + "?")) {
-            $("#vars_" + n).remove();
-            $("#ins_" + n).remove();
-            t.parent().remove();
-            $("#fun-names .fun")[0].click();
+
+    /**********************************
+     * Statement related code
+     **********************************/
+    // display insertion menu when clicking on a connection block
+    $(".connection").click(function(event) {
+        // get the amount of variables declared, compatible with old brwsrs
+        var size = 0;
+        if (Object.keys) {
+            size = Object.keys(wr.curvars).length;
+        } else {
+            for (var k in wr.curvars)
+                size++;
+        }
+
+        // check if we should insert
+        if (size === 0) {
+            alert("Please declare a variable first.");
+            $('.variable .var').focus();
+        } else if (wr.ins_menu.css("display") === "none") {
+            wr.ins_menu.css("top", event.pageY);
+            wr.ins_menu.css("left", event.pageX);
+            wr.ins_menu.show();
+            wr.clicked = $(this);
+        } else {
+            wr.ins_menu.hide();
+        }
+        return false;
+    });
+
+    // hide insertion menu when clicking elsewhere
+    $("body").click(function() {
+        if (wr.ins_menu.css("display") !== "none") {
+            wr.ins_menu.hide();
         }
     });
 
+    // menu clicks trigger insertions based on id clicked
+    wr.ins_menu.click(function(event) {
+        var t = $(event.target);
+        var toLoad = '#' + t.attr('id').substr(4);
+        wr.clicked.after(cloneBlock("#connection"))
+                .after(cloneBlock(toLoad));
+
+        // trigger initializer code
+        var n = wr.clicked.next().get(0);
+        if (n.init && typeof n.init === "function") {
+            n.init();
+        }
+
+        // TODO AJAX POST instructions
+    });
+
+    // initialize the variable name for input and assignment
+    // to the last used variable name (declared or selected)
+    $('#input, #assignment').each(function(i, o) {
+        o.init = function() {
+            if (wr.mode !== "beginner") {
+                $(this).find(".var").text(wr.lastVar);
+            }
+        };
+    });
+
+    // hook up delete click handlers
+    $(".statement .del").click(function() {
+        var p = $(this).parent();
+        if (!p.hasClass("statement")) {
+            p = p.parents(".statement");
+        }
+        var pelem = p.get(0);
+        var c = p.next(); // connector
+        if (!pelem.destroy || pelem.destroy()) {
+            c.remove();
+            p.remove();
+        }
+    });
+
+    // add confirmation meessages if and while stmts
+    $("#if, #while").each(function(i, o) {
+        o.destroy = function() {
+            return confirm("Are you sure you want to delete this "
+                    + o.getAttribute("id") + " statement and everything "
+                    + "inside it?");
+        };
+    });
+
+    /**************************************
+     * Expression declaration related code
+     **************************************/
+    $("span.exp, div.exp").click(function() {
+        inputHere(this);
+    });
+
+    $(".diamond").click(function(event) {
+        inputHere($(this).find(".exp").get(0));
+    });
+
+
     /*************************************
-     * Adding and switching to functions
+     * Function related code
      *************************************/
     // add a function
     $("#add_fun").click(function() {
@@ -333,25 +338,29 @@ $(function() {
         wr.functions[n] = {};
 
         // append a new function name tab
-        var fname = wr.block("#fun-name");
+        var fname = cloneBlock("#fun-name");
         fname.find(".name").text(n);
         $("#fun-names").append(fname);
 
         // append a new instructions area
         var ins = $("<div id='ins_" + n + "' class='instructions'></div>");
         // FIXME function name in start block
-        ins.append(wr.block("#start"))
-                .append(wr.block("#connection"))
-                .append(wr.block("#return"));
+        ins.append(cloneBlock("#start"))
+                .append(cloneBlock("#connection"))
+                .append(cloneBlock("#return"));
         ins.find(".name").text(n);
         $("#instructions").append(ins);
 
+        // create a new pramaters area 
+        var pm = $("<div class='params'></div>");
+        pm.append("<div class='label'>Parameters:</div>");
+        pm.append(cloneBlock("#param-decl"));
+
         // append a new variables area
         var vs = $("<div id='vars_" + n + "' class='variables'></div>");
-        vs.append("<div class='label'>Parameters:</div>");
-        vs.append(wr.block("#declaration"));
+        vs.append(pm);
         vs.append("<div class='label'>Variables:</div>");
-        vs.append(wr.block("#declaration"));
+        vs.append(cloneBlock("#declaration"));
         $("#variables").append(vs);
 
         // TODO AJAX call to create function on server
@@ -421,5 +430,29 @@ $(function() {
             }
         });
     });
+
+    // function delete handler
+    $(".rem").click(function() {
+        var t = $(this);
+        var n = t.parent().children(".name").text();
+        if (n === "main") {
+            alert("Cannot delete main, the program cannot start without it");
+            return false;
+        } else if (confirm("Delete the function: " + n + "?")) {
+            $("#vars_" + n).remove();
+            $("#ins_" + n).remove();
+            t.parent().remove();
+            $("#fun-names .fun")[0].click();
+        }
+    });
+
+    /***************************************************
+     * Parameters related code (adds to variable code)
+     ***************************************************/
+//    $(".parameter input").blur(function() {
+//        var t = $(this);
+//        var v = t.val();
+//        var c = t.attr("cur");
+//    });
 
 });

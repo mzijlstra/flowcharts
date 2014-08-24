@@ -53,9 +53,10 @@ div.variable.bottom .del {
   border-radius: 55px; }
   .start .text, .stop .text {
     position: absolute;
-    background-color: white;
     left: 6px;
-    top: 30px;
+    top: 26px;
+    padding: 5px 0px;
+    background-color: white;
     white-space: nowrap; }
   .start input, .stop input {
     position: absolute;

@@ -55,9 +55,10 @@ div.variable.bottom .del {
 
     .text {
         position: absolute;
-        background-color: $bg;
         left: 6px;
-        top: 30px;
+        top: 26px;
+        padding: 5px 0px;
+        background-color: $bg;
         white-space: nowrap;
     }
 
