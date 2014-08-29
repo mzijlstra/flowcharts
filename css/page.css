@@ -32,8 +32,7 @@
     top: 2px;
     left: -2px; }
   .variable .type_container {
-    display: inline-block;
-    width: 65px;
+    width: 62px;
     padding-left: 3px; }
 
 div.variable:hover .del {
@@ -46,6 +45,26 @@ div.variable.bottom .del {
   background-color: #f8f8f8;
   border-color: #ddddee;
   color: #ddddee; }
+
+/* Types in var section and start statement */
+.type_container {
+  display: inline-block; }
+  .type_container .type {
+    position: relative;
+    padding: 3px; }
+    .type_container .type input {
+      position: absolute;
+      top: -2px;
+      left: 0px;
+      width: 65px; }
+
+.type_container:hover .type {
+  border: 1px solid #333366; }
+
+.type_container:hover .menu {
+  position: absolute;
+  display: block;
+  top: 20px; }
 
 /* begin and end of flow chart */
 .start, .stop {
@@ -289,7 +308,6 @@ div.variable.bottom .del {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent; }
 
-/* Storage for initial building blocks */
 body {
   font-family: monospace;
   font-size: 12px;
@@ -353,7 +371,6 @@ div#projects:hover #project_menu {
   #var_area .variables.active {
     display: block; }
 
-/* Force consistent fonts across browsers */
 #functions {
   position: absolute;
   top: 0px;
@@ -416,21 +433,25 @@ div#projects:hover #project_menu {
     #functions #instructions .instructions.active {
       display: block; }
 
-/* left click insertion menu */
+/* all custom menus */
 .menu {
   display: none;
   position: absolute;
   border: 1px solid #333366;
   background-color: #f8f8f8;
   z-index: 10; }
-  .menu .menu_item {
+  .menu .menu_item, .menu .menu_edit {
     padding: 3px;
     white-space: nowrap; }
+  .menu .menu_split {
+    width: 100%;
+    height: 0px;
+    border-bottom: 1px solid #333366; }
   .menu .menu_label {
     text-align: center;
     font-style: italic;
     cursor: auto; }
-  .menu .menu_item:hover {
+  .menu .menu_item:hover, .menu .menu_edit:hover, .menu .menu_hl {
     background-color: #ddddee; }
 
 #project_menu {

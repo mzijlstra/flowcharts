@@ -18,7 +18,6 @@ $size: 60px;
 
 @import 'flowchart';
 
-/* Storage for initial building blocks */
 body {
     font-family: monospace;
     font-size: 12px;
@@ -98,7 +97,6 @@ div#projects:hover #project_menu {
     }
 }
 
-/* Force consistent fonts across browsers */
 #functions {
     position: absolute;
     top: 0px;
@@ -183,7 +181,7 @@ div#projects:hover #project_menu {
     
 }
 
-/* left click insertion menu */
+/* all custom menus */
 .menu {
     display: none;
     position: absolute;
@@ -191,16 +189,21 @@ div#projects:hover #project_menu {
     background-color: $menu;
     z-index: 10;
 
-    .menu_item {
+    .menu_item, .menu_edit {
         padding: 3px;
         white-space: nowrap;
+    }
+    .menu_split {
+        width: 100%;
+        height: 0px;
+        border-bottom: $line $border;
     }
     .menu_label {
         text-align: center;
         font-style: italic;
         cursor: auto;
     }
-    .menu_item:hover {
+    .menu_item:hover, .menu_edit:hover, .menu_hl {
         background-color: $hl;
     }
 }

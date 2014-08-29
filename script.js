@@ -64,7 +64,7 @@ $(function() {
     };
 
     /************************************
-     * Variable related code
+     * Variable declaration related code
      ************************************/
     // store current var name on focus
     $(".variable .var").focus(function() {
@@ -127,19 +127,21 @@ $(function() {
 
                 // update param name in signature
                 if (t.parent().hasClass("parameter")) {
+                    var type = t.parent().find(".type").text();
+                    var tn = type + " " + newn;
                     var params = $(".active .start .params");
                     var ptext = params.text();
 
                     // if this is a new name
                     if (oldn === "") {
                         if (ptext === "") {
-                            params.text(newn);
+                            params.text(tn);
                         } else {
-                            params.text(ptext + ", " + newn);
+                            params.text(ptext + ", " + tn);
                         }
                     } else { // existing param
-                        params.text(
-                                ptext.replace(new RegExp(", " + oldn), newn));
+                        params.text(ptext.replace(
+                                new RegExp(type + " " + oldn), tn));
                     }
                 }
 
@@ -161,29 +163,73 @@ $(function() {
         }
     });
 
-    // repopulate var select menu on mouse enter
-    $(".assignment .var_container").mouseenter(function(event) {
+    // helper for the next two functions
+    var updParamType = function(oldt, newt) {
+        var params = $(".active .start .params");
+        var ptext = params.text();
+
+        params.text(ptext.replace(
+                new RegExp(oldt), newt));
+    };
+
+    // handle type menu clicks
+    $(".type_container .menu_item").click(function() {
         var t = $(this);
-        var menu = $(t.children(".menu")[0]);
+        var display = t.parents(".type_container").find(".type");
+        var type = t.text();
+        var prev = display.text();
+        var n = t.parents(".parameter").children("input.var").val();
 
-        menu.empty();
-        for (var k in wr.curvars) {
-            menu.append("<div class='menu_item'>" + k + "</div>");
+        // change to new type
+        display.text(type);
+
+        // if param also update signature (if we have a name / are declared)
+        if (t.parents(".parameter") && n) {
+            updParamType(prev + " " + n, type + " " + n);
         }
-        menu.show();
+
+        t.parent().hide();
+        return false; // so as not to trigger function rename
     });
 
-    // handle var menu clicks
-    $(".var_container .menu").click(function(event) {
-        var t = $(event.target);
-        $(this).parent().children("span.var").text(t.text());
-        wr.lastVar = t.text();
-        $(this).hide();
+    // special case edit item in type menu
+    $(".type_container .menu_edit").click(function() {
+        var t = $(this);
+        var display = t.parents(".type_container").find(".type");
+        var oldt = display.text();
+        
+        inputHere(display, function(t) {
+            var n = t.parents(".parameter").children("input.var").val();
+            if (t.parents(".parameter") && n) {
+                updParamType(oldt, t.val());
+            }
+            return true;
+        });
+
+        t.parent().hide();
+        return false; // so as not to trigger function renme
     });
 
-    // hide menu if not clicked
-    $(".var_container").mouseleave(function() {
-        $(this).children(".menu").hide();
+    // reset type menu hide status & add item highlight
+    $(".type").mouseenter(function() {
+        var t = $(this);
+        var m = t.parent().children(".menu");
+        m.find(".menu_item").each(function(i, o) {
+            if ($(o).text() === t.text()) {
+                $(o).addClass("menu_hl");
+            }
+        });
+        m.show();
+    });
+
+    // remove item highlight (both type and var menus!)
+    $(".menu").mouseenter(function() {
+        $(this).children(".menu_hl").removeClass("menu_hl");
+    });
+
+    // hide menu when mouse out
+    $(".type_container").mouseleave(function() {
+        $(this).find(".menu").hide();
     });
 
     // variable delete handler
@@ -193,6 +239,22 @@ $(function() {
         if (!p.hasClass("inuse")) {
             p.remove();
             delete wr.curvars[name];
+
+            // if param also update signature
+            if (p.hasClass("parameter")) {
+                var params = $(".active .start .params");
+                var ptext = params.text();
+                var type = p.find(".type").text();
+
+                params.text(ptext.replace(
+                        new RegExp("(, )?" + type + " " + name), ""));
+
+                // fix trailing comma when deleting first param
+                if (params.text().match(/^, /)) {
+                    ptext = params.text();
+                    params.text(ptext.replace(/^, /, ""));
+                }
+            }
         } else {
             alert("Cannot remove variable while in use");
         }
@@ -265,6 +327,36 @@ $(function() {
         }
 
         // TODO AJAX POST instructions
+    });
+
+    // repopulate var select menu (in/out/asgn) on mouse enter
+    $(".assignment .var_container").mouseenter(function(event) {
+        var t = $(this);
+        var menu = $(t.children(".menu")[0]);
+        var cur = t.find(".var").text();
+
+        menu.empty();
+        for (var k in wr.curvars) {
+            menu.append("<div class='menu_item'>" + k + "</div>");
+        }
+        // highlight current
+        if (cur && cur !== " ") {
+            menu.find(".menu_item:contains(" + cur + ")").addClass("menu_hl");
+        }
+        menu.show();
+    });
+
+    // handle var select menu clicks
+    $(".var_container .menu").click(function(event) {
+        var t = $(event.target);
+        $(this).parent().children("span.var").text(t.text());
+        wr.lastVar = t.text();
+        $(this).hide();
+    });
+
+    // hide var select menu if not clicked
+    $(".var_container").mouseleave(function() {
+        $(this).children(".menu").hide();
     });
 
     // initialize the variable name for input and assignment
@@ -445,14 +537,4 @@ $(function() {
             $("#fun-names .fun")[0].click();
         }
     });
-
-    /***************************************************
-     * Parameters related code (adds to variable code)
-     ***************************************************/
-//    $(".parameter input").blur(function() {
-//        var t = $(this);
-//        var v = t.val();
-//        var c = t.attr("cur");
-//    });
-
 });

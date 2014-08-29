@@ -32,8 +32,7 @@
         left: -2px;
     }
     .type_container {
-        display: inline-block;
-        width: 65px;
+        width: 62px;
         padding-left: 3px;
     }
 }
@@ -48,6 +47,32 @@ div.variable.bottom .del {
     border-color: $hl;
     color: $hl;
 }
+
+/* Types in var section and start statement */
+.type_container {
+    display: inline-block;
+
+    .type {
+        position: relative;
+        padding: 3px;
+        
+        input {
+            position: absolute;
+            top: -2px;
+            left: 0px;
+            width: 65px;
+        }
+    }
+}
+.type_container:hover .type {
+    border: $line $border;
+}
+.type_container:hover .menu {
+    position: absolute;
+    display: block;
+    top: 20px;
+}
+
 
 /* begin and end of flow chart */
 .start, .stop { 

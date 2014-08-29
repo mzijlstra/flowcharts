@@ -42,6 +42,13 @@
                                     <div class="menu_item">int</div>
                                     <div class="menu_item">float</div>
                                     <div class="menu_item">bool</div>
+                                    <div class="menu_split"></div>
+                                    <div class="menu_item">string[]</div>
+                                    <div class="menu_item">int[]</div>
+                                    <div class="menu_item">float[]</div>
+                                    <div class="menu_item">bool[]</div>
+                                    <div class="menu_split"></div>
+                                    <div class="menu_edit">edit</div>
                                 </div>
                                 <span class="type">string</span>
                             </div>
@@ -67,7 +74,7 @@
                         <div class="statement">
                             <div class="start">
                                 <div class="text">
-                                    <span class="rtype">int</span> 
+                                    <span>int</span>
                                     <span class="name">main</span>(<span class="params"></span>)
                                 </div>
                             </div>
@@ -118,6 +125,13 @@
                         <div class="menu_item">int</div>
                         <div class="menu_item">float</div>
                         <div class="menu_item">bool</div>
+                        <div class="menu_split"></div>
+                        <div class="menu_item">string[]</div>
+                        <div class="menu_item">int[]</div>
+                        <div class="menu_item">float[]</div>
+                        <div class="menu_item">bool[]</div>
+                        <div class="menu_split"></div>
+                        <div class="menu_edit">edit</div>
                     </div>
                     <span class="type">string</span>
                 </div>
@@ -127,7 +141,22 @@
             <div id="start" class="statement">
                 <div class="start">
                     <div class="text">
-                        <span class="rtype">int</span> 
+                        <div class="type_container">
+                            <div class="menu">
+                                <div class="menu_item">string</div>
+                                <div class="menu_item">int</div>
+                                <div class="menu_item">float</div>
+                                <div class="menu_item">bool</div>
+                                <div class="menu_split"></div>
+                                <div class="menu_item">string[]</div>
+                                <div class="menu_item">int[]</div>
+                                <div class="menu_item">float[]</div>
+                                <div class="menu_item">bool[]</div>
+                                <div class="menu_split"></div>
+                                <div class="menu_edit">edit</div>
+                            </div>
+                            <span class="type">int</span>
+                        </div>
                         <span class="name">main</span>(<span class="params"></span>)
                     </div>
                 </div>
