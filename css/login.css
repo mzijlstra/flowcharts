@@ -1,0 +1,28 @@
+/* 
+    Created on : Aug 29, 2014, 1:08:05 PM
+    Author     : mzijlstra
+*/
+
+.central {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+}
+h1 {
+    text-align: center;
+    margin: 5px;
+}
+.container {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: right;
+}
+.error {
+    color: red;
+    text-align: center;
+}
+input[type=email], input[type=password] { 
+    width: 170px;
+}

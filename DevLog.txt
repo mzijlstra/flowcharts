@@ -29,3 +29,9 @@ Implemented functions (adding, switching to, removing). Ran into some interestin
 
 2014-08-23:
 Started on parameters, at first my plan had been to add checkboxes behind each variable which when checked would make it a parameters. Then I realized it would be a lot of work, and things would be a lot easier if I simply make a separate parameters area at the top of the variables area, re-using a lot of the code I already wrote for adding variables.
+
+2014-09-01:
+While in Chicago I finished most of the JS items, and on the train back I started the PHP
+
+2014-09-10:
+Finished user management, and refactored directory structure to clean things up a bit

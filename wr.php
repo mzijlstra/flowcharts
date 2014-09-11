@@ -1,3 +1,11 @@
+<?php 
+session_start(); 
+if (!isset($_SESSION['user'])) {
+    $_SESSION['error'] = "Please Login First";
+    header("Location: index.php");
+    exit(0);
+} 
+?>
 <!DOCTYPE html>
 <!--
     Created on : May 3, 2014, 6:10:01 PM
@@ -9,10 +17,10 @@
         <title>Flow Chart</title>
         <link rel="stylesheet" href="css/page.css" type="text/css" />
         <link rel="stylesheet" href="css/extra.css" type="text/css" />
-        <!--        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
-        <script src="jquery-2.1.1.js" ></script>
-        <script src="script.js"></script>
+        <script src="js/jquery-2.1.1.js" ></script>
+        <script src="js/wr.js"></script>
     </head>
     <body>
         <h1>My Project</h1>
@@ -20,14 +28,17 @@
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
                 <div class="menu_item">New Project</div>
-                <div class="menu_label">----Recent----</div>
-                <div class="menu_item">My Other Project</div>
-                <div class="menu_item">My Different Project</div>
-                <div class="menu_item">Yet Another Project</div>
+                <div class="menu_item">Open Project</div>
+                <?php if ($_SESSION['recent']) : ?>
+                    <div class="menu_label">----Recent----</div>
+                    <?php foreach ($_SESSION['recent'] as $recent) : ?>
+                        <div class="menu_item"><?= $recent ?></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
 
-        <div id="user">Hi, Michael! <a href="">logout</a></div>
+        <div id="user">Hi, <?= $_SESSION['user']['first'] ?>! <a href="logout.php">logout</a></div>
 
         <div id="workspace">
             <div id="var_area">
