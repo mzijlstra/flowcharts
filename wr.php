@@ -38,7 +38,7 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
 
-        <div id="user">Hi, <?= $_SESSION['user']['first'] ?>! <a href="logout.php">logout</a></div>
+        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout.php">logout</a></div>
 
         <div id="workspace">
             <div id="var_area">

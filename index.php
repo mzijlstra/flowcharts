@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (isset($_SESSION['user'])) {
+    header("Location: wr.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <!--
