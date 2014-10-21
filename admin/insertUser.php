@@ -5,13 +5,13 @@
  */
 require '../share/loggedin.php';
 require '../share/admin.php';
-require '../model/db.php';
+require '../share/dbcon.php';
 
 
 $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
 $last  = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
 $sid   = filter_input(INPUT_POST, "sid", FILTER_VALIDATE_REGEXP, 
-        array("options"=>array("regexp"=>"/\d{3}-\d{2}-\d{4}/")));
+        array("options"=>array("regexp"=>"/d{6}/")));
 $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
 $pass  = filter_input(INPUT_POST, "pass");
 $type  = filter_input(INPUT_POST, "type");
@@ -30,7 +30,7 @@ if ($active) {
 }
 
 $stmt = $db->prepare("INSERT INTO user values "
-   . "(NULL, :first, :last, :sid, :email, :pass, :type, NULL, NULL, :active)");
+   . "(NULL, :first, :last, :sid, :email, :pass, :type, NOW(), NOW(), :active)");
 $stmt->execute(array(
     "first" => $first, 
     "last" => $last, 

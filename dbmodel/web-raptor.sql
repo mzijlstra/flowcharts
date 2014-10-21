@@ -101,6 +101,8 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
+INSERT INTO user VALUES(null, 'Michael', 'Zijlstra', '997885', 'mzijlstra@mum.edu', 
+'$2y$10$nzHsPgp0BUZ8HH7RQZGlZeAZ1B37SR5YT3xjakaQnPWH39GCvlYfu', 'admin', NOW(), NOW(), 1);
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
