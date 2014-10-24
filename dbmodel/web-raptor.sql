@@ -27,8 +27,8 @@ CREATE TABLE `function` (
   `name` varchar(255) NOT NULL,
   `instructions` text NOT NULL,
   `variables` text NOT NULL,
-  `craeted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `project_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -42,6 +42,49 @@ CREATE TABLE `function` (
 
 LOCK TABLES `function` WRITE;
 /*!40000 ALTER TABLE `function` DISABLE KEYS */;
+INSERT INTO function VALUES(NULL, 'main', 
+'<div class="label">Variables:</div>
+<div class="variable bottom">
+    <div class="del">&times;</div>
+    <div class="type_container">
+        <div class="menu">
+            <div class="menu_item">string</div>
+            <div class="menu_item">int</div>
+            <div class="menu_item">float</div>
+            <div class="menu_item">bool</div>
+            <div class="menu_split"></div>
+            <div class="menu_item">string[]</div>
+            <div class="menu_item">int[]</div>
+            <div class="menu_item">float[]</div>
+            <div class="menu_item">bool[]</div>
+            <div class="menu_split"></div>
+            <div class="menu_edit">edit</div>
+        </div>
+        <span class="type">string</span>
+    </div>
+    <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+</div>', 
+'<div class="statement">
+    <div class="start">
+        <div class="text">
+            <span>int</span>
+            <span class="name">main</span>(<span class="params"></span>)
+        </div>
+    </div>
+</div>
+<div class="connection">
+    <div class="line"></div>
+    <div class="point"></div>            
+    <div class="line"></div>
+</div>
+<div class="statement return">
+    <div class="arrow_down"></div>                        
+    <div class="stop">
+        <div class="text">
+            return <span class="exp">0</span>
+        </div>
+    </div>
+</div>', NOW(), NOW(), 1, 1);
 /*!40000 ALTER TABLE `function` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,6 +114,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
+INSERT INTO project VALUES(NULL, 'First Project', NOW(), NOW(), 1, 1);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,11 +145,11 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
-INSERT INTO user VALUES(null, 'Michael', 'Zijlstra', '997885', 'mzijlstra@mum.edu', 
-'$2y$10$nzHsPgp0BUZ8HH7RQZGlZeAZ1B37SR5YT3xjakaQnPWH39GCvlYfu', 'admin', NOW(), NOW(), 1);
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO user VALUES(null, 'Michael', 'Zijlstra', '997885', 'mzijlstra@mum.edu', 
+'$2y$10$nzHsPgp0BUZ8HH7RQZGlZeAZ1B37SR5YT3xjakaQnPWH39GCvlYfu', 'admin', NOW(), NOW(), 1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
