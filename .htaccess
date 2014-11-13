@@ -1,0 +1,12 @@
+# Enable Rewriting
+RewriteEngine on 
+
+# Redirect everything in this directory to "frontController.php" 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule .* frontController.php
+
+# alternately we could make the conditions based on a file extensions 
+#RewriteCond $1 !\.(js|ico|gif|jpg|png|css|html|swf|mp3|wav|txt)$
+# or dir names
+#RewriteCond $1 !^(css|js|img)/
