@@ -8,7 +8,7 @@
         <title>Web Raptor</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="css/login.css" type="text/css" />
+        <link rel="stylesheet" href="login.css" type="text/css" />
 
     </head>
     <body>
@@ -19,6 +19,7 @@
                     <?php if (isset($_SESSION['error'])) : ?>
                         <span class="error"><?= $_SESSION['error'] ?></span>
                         <br />
+                        <?php unset($_SESSION['error']) ?>
                     <?php endif; ?>
                     <input type="email" name="email" placeholder="Email Address" />
                     <br />

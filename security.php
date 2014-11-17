@@ -22,11 +22,11 @@ $sec = array(
  * ************************** */
 
 function isLoggedIn() {
-    global $MY_BASE;
     if (!isset($_SESSION['user'])) {
         // TODO store the original request URL?
         // That way we can go there after logging in
-        header("Location: $MY_BASE/login");
+        $_SESSION['error'] = "Please Login First";
+        header("Location: login");
         exit();
     }    
 }

@@ -45,6 +45,7 @@ class UserCtrl {
 
     public function logout() {
         session_destroy();
+        $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
 
@@ -62,7 +63,6 @@ class UserCtrl {
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $sid = filter_input(INPUT_POST, "sid", FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/\d{6}/")));
         $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
@@ -77,7 +77,7 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $uid = $this->userDao->insert($first, $last, $sid, $email, $hash, $type, 
+        $uid = $this->userDao->insert($first, $last, $email, $hash, $type, 
                 $actv);
         return "Location: user/$uid";
     }
@@ -87,7 +87,6 @@ class UserCtrl {
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $sid = filter_input(INPUT_POST, "sid", FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/\d{3}-\d{2}-\d{4}/")));
         $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
@@ -101,7 +100,7 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $this->userDao->update($first, $last, $sid, $email, $type, $actv, 
+        $this->userDao->update($first, $last, $email, $type, $actv, 
                 $uid, $pass);
 
         return "Location: user/$uid";

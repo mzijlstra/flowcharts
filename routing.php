@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Michael Zijlstra 11/15/2014
  */
@@ -42,7 +43,7 @@ function invokeCtrlMethod($class, $method) {
     $getControler = new ReflectionMethod("Context", "get" . $class);
     $controler = $getControler->invoke($context);
     $doMethod = new ReflectionMethod($class, $method);
-    
+
     try {
         return $doMethod->invoke($controler, $method);
     } catch (Exception $e) {
@@ -56,7 +57,7 @@ function invokeCtrlMethod($class, $method) {
 function applyView($view) {
     global $VIEW_DATA;
     global $MY_METHOD;
-    
+
     if (preg_match("/^Location: /", $view)) {
         if ($VIEW_DATA) {
             $_SESSION['redirect'] = $view;
@@ -72,15 +73,15 @@ function applyView($view) {
             $$key = $value;
         }
         require "view/$view";
-    }    
+    }
     // TODO: always exit after displaying the view???
-    exit(); 
+    exit();
 }
 
 function matchUriToCtrl($ctrls) {
     global $MY_URI;
     global $URI_PARAMS;
-    
+
     // check get controlers
     foreach ($ctrls as $pattern => $dispatch) {
         if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
@@ -89,6 +90,9 @@ function matchUriToCtrl($ctrls) {
             applyView($view);
         }
     }
+    // page not found (security mapping exists, but not ctrl mapping)
+    http_response_code(404);
+    exit();
 }
 
 // Dispatch
@@ -102,7 +106,7 @@ switch ($MY_METHOD) {
             unset($_SESSION['redirect']);
             unset($_SESSION['flash_data']);
         }
-        
+
         // check view controlers
         foreach ($view_ctrl as $pattern => $file) {
             if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {

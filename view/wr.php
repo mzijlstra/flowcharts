@@ -3,7 +3,6 @@
     Created on : May 3, 2014, 6:10:01 PM
     Author     : mzijlstra 
 -->
-<?php var_dump($VIEW_DATA) ?>
 <html>
     <head>
         <meta charset="UTF-8">
