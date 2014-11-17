@@ -1,26 +1,18 @@
-<?php 
-session_start(); 
-if (!isset($_SESSION['user'])) {
-    $_SESSION['error'] = "Please Login First";
-    header("Location: index.php");
-    exit(0);
-} 
-?>
 <!DOCTYPE html>
 <!--
     Created on : May 3, 2014, 6:10:01 PM
     Author     : mzijlstra 
 -->
+<?php var_dump($VIEW_DATA) ?>
 <html>
     <head>
         <meta charset="UTF-8">
         <title>Flow Chart</title>
-        <link rel="stylesheet" href="css/page.css" type="text/css" />
-        <link rel="stylesheet" href="css/extra.css" type="text/css" />
+        <link rel="stylesheet" href="page.css" type="text/css" />
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
-        <script src="js/jquery-2.1.1.js" ></script>
-        <script src="js/wr.js"></script>
+        <script src="jquery-2.1.1.js" ></script>
+        <script src="wr.js"></script>
     </head>
     <body>
         <h1>My Project</h1>
@@ -38,7 +30,7 @@ if (!isset($_SESSION['user'])) {
             </div>
         </div>
 
-        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout.php">logout</a></div>
+        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
 
         <div id="workspace">
             <div id="var_area">

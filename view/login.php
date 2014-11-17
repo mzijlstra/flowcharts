@@ -1,10 +1,3 @@
-<?php
-session_start();
-if (isset($_SESSION['user'])) {
-    header("Location: wr.php");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <!--
     Created on : Aug 29, 2014, 13:00:01 PM

@@ -35,3 +35,6 @@ While in Chicago I finished most of the JS items, and on the train back I starte
 
 2014-09-10:
 Finished user management, and refactored directory structure to clean things up a bit
+
+2014-11-13:
+Decided to refactor all the PHP stuff to build a home-grown Very Simple Framework. This will come in handy when teaching WAP.

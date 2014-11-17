@@ -1,12 +1,18 @@
+# Michael Zijlstra 11/14/2014
+
 # Enable Rewriting
 RewriteEngine on 
 
-# Redirect everything in this directory to "frontController.php" 
+# send css, js, and images to default directories
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule .* frontController.php
+RewriteRule (\w+\.css)$ view/css/$1 [NC,L]
 
-# alternately we could make the conditions based on a file extensions 
-#RewriteCond $1 !\.(js|ico|gif|jpg|png|css|html|swf|mp3|wav|txt)$
-# or dir names
-#RewriteCond $1 !^(css|js|img)/
+RewriteCond %{REQUEST_FILENAME} !-f
+ReWriteRule (\w+\.js)$ view/js/$1 [NC,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+ReWriteRule (\w+\.(png|gif|jpg|jpeg))$ view/img/$1 [NC,L]
+
+# send everything else to the front controller
+RewriteCond %{REQUEST_FILENAME} !\.(css|js|png|gif|jpg|jpeg)$ [NC]
+RewriteRule .* frontController.php

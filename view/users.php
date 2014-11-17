@@ -1,11 +1,3 @@
-<?php
-require '../share/loggedin.php';
-require '../share/admin.php';
-require '../share/dbcon.php';
-
-$stmt = $db->prepare("SELECT * FROM user");
-$stmt->execute();
-?>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.

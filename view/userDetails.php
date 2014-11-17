@@ -3,21 +3,6 @@
  Created on : August 30, 2014, 7:30:00 PM
  Author     : mzijlstra
 -->
-<?php
-require '../share/loggedin.php';
-require '../share/admin.php';
-$uid = filter_input(INPUT_GET, "uid", FILTER_VALIDATE_INT);
-$user = false;
-
-if ($uid) {
-    require '../share/dbcon.php';
-    $stmt = $db->prepare("SELECT firstname, lastname, studentID, email, type, active "
-            . "FROM user "
-            . "WHERE id = :uid");
-    $stmt->execute(array("uid" => $uid));
-    $user = $stmt->fetch();
-}
-?>
 <html>
     <head>
         <title>User Details</title>
