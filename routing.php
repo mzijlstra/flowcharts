@@ -74,7 +74,7 @@ function applyView($view) {
         }
         require "view/$view";
     }
-    // TODO: always exit after displaying the view???
+    // always exit after displaying the view, do we want hook?
     exit();
 }
 
