@@ -2,7 +2,11 @@
     Created on : Aug 29, 2014, 1:08:05 PM
     Author     : mzijlstra
 */
-
+body {
+  font-family: monospace;
+  font-size: 12px;
+  color: #333366; 
+}
 .central {
     position: absolute;
     top: 40%;
@@ -11,8 +15,9 @@
     margin-left: -100px;
 }
 h1 {
+    font-size: 2.7em;
     text-align: center;
-    margin: 5px;
+    margin-bottom: 2px;
 }
 .container {
     border: 1px solid black;
@@ -24,5 +29,7 @@ h1 {
     text-align: center;
 }
 input[type=email], input[type=password] { 
+    font-family: inherit;
+    margin-bottom: 5px;
     width: 170px;
 }

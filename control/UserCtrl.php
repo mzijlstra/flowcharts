@@ -48,6 +48,12 @@ class UserCtrl {
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
+    
+    public function all() {
+        global $VIEW_DATA;
+        $VIEW_DATA['users'] = $this->userDao->all();
+        return "users.php";
+    }
 
     public function details() {
         global $VIEW_DATA;

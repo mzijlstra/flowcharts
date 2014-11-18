@@ -26,13 +26,20 @@ class UserDAO {
         $upd->execute(array("uid" => $id));
     }
     
+    public function all() {
+        // TODO add parameters for constraints and order by
+        $stmt = $this->db->prepare("SELECT * FROM user");
+        $stmt->execute();
+        return $stmt->fetchAll();        
+    }
+    
     public function retrieve($id) {
         $stmt = $this->db->prepare("SELECT * FROM user WHERE id = :id");
         $stmt->execute(array(":id" => $id));
         return $stmt->fetch();
     }
 
-    public function insert($first, $last, $sid, $email, $hash, $type, $active) {
+    public function insert($first, $last, $email, $hash, $type, $active) {
         $stmt = $this->db->prepare("INSERT INTO user values "
                 . "(NULL, :first, :last, :email, :pass, :type,"
                 . " NOW(), NOW(), :active)");
@@ -43,7 +50,7 @@ class UserDAO {
         return $this->db->lastInsertId();
     }
 
-    public function update($first, $last, $sid, $email, $type, $active, $uid, 
+    public function update($first, $last, $email, $type, $active, $uid, 
             $pass) {
         $stmt = $this->db->prepare("UPDATE user SET "
                 . "firstname = :first, lastname = :last, "

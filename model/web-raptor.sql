@@ -147,7 +147,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO user VALUES(null, 'Michael', 'Zijlstra', '997885', 'mzijlstra@mum.edu', 
+INSERT INTO user VALUES(null, 'Michael', 'Zijlstra', 'mzijlstra@mum.edu', 
 '$2y$10$nzHsPgp0BUZ8HH7RQZGlZeAZ1B37SR5YT3xjakaQnPWH39GCvlYfu', 'admin', NOW(), NOW(), 1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;

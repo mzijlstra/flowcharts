@@ -21,9 +21,9 @@
     <body>
         <h1>User Details:</h1>
         <div class="fields">
-            <form method="post" action="<?= $user ? "updateUser.php" : "insertUser.php" ?>">
+            <form method="post" action="user<?= $user ? "/{$user['id']}" : "" ?>">
                 <?php if ($user) : ?>
-                    <input type='hidden' name='uid' value='<?= $uid ?>' />
+                    <input type='hidden' name='uid' value='<?= $user['id'] ?>' />
                 <?php endif; ?>
                 <span>First Name:</span>
                 <input type="text" name="first" value="<?= $user ? $user['firstname'] : "" ?>" /> <br />
