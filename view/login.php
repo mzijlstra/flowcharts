@@ -15,7 +15,7 @@
         <div class="central">
             <h1>Web Raptor</h1>
             <div class="container">
-                <form action="login.php" method="post">
+                <form action="login" method="post">
                     <?php if (isset($_SESSION['error'])) : ?>
                         <span class="error"><?= $_SESSION['error'] ?></span>
                         <br />
