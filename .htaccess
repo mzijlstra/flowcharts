@@ -5,13 +5,13 @@ RewriteEngine on
 
 # send css, js, and images to default directories
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule (\w+\.css)$ view/css/$1 [NC,L]
+RewriteRule ([^/]+\.css)$ view/css/$1 [NC,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-ReWriteRule (\w+\.js)$ view/js/$1 [NC,L]
+ReWriteRule ([^/]+\.js)$ view/js/$1 [NC,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-ReWriteRule (\w+\.(png|gif|jpg|jpeg))$ view/img/$1 [NC,L]
+ReWriteRule ([^/]+\.(png|gif|jpg|jpeg))$ view/img/$1 [NC,L]
 
 # send everything else to the front controller
 RewriteCond %{REQUEST_FILENAME} !\.(css|js|png|gif|jpg|jpeg)$ [NC]
