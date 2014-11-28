@@ -11,11 +11,16 @@ class ProjectCtrl {
     public $functionDao;
 
     public function login() {
+        global $VIEW_DATA;
         $uid = $_SESSION['user']['id'];
         
-        // Retrieve names and ids of recently used projects
-        $_SESSION['recent'] = $this->projectDao->recents($uid);
+        // Retrieve names and ids of projects for this user
+        $_SESSION['projects'] = $this->projectDao->all($uid);
 
+        // retieve function data for most recent project
+        $pid = array_keys($_SESSION['projects'])[0];
+        $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
+        
         return "wr.php";
     }
 

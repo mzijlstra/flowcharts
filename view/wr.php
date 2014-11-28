@@ -20,10 +20,10 @@
             <div id="project_menu" class="menu">
                 <div class="menu_item">New Project</div>
                 <div class="menu_item">Open Project</div>
-                <?php if ($_SESSION['recent']) : ?>
+                <?php if ($_SESSION['projects']) : ?>
                     <div class="menu_label">----Recent----</div>
-                    <?php foreach ($_SESSION['recent'] as $recent) : ?>
-                        <div class="menu_item"><?= $recent ?></div>
+                    <?php foreach ($_SESSION['projects'] as $proj) : ?>
+                        <div class="menu_item"><?= $proj ?></div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
@@ -34,71 +34,38 @@
         <div id="workspace">
             <div id="var_area">
                 <div id="variables">
-                    <div id="vars_main" class="variables active">
-                        <div class="label">Variables:</div>
-                        <div class="variable bottom">
-                            <div class="del">&times;</div>
-                            <div class="type_container">
-                                <div class="menu">
-                                    <div class="menu_item">string</div>
-                                    <div class="menu_item">int</div>
-                                    <div class="menu_item">float</div>
-                                    <div class="menu_item">bool</div>
-                                    <div class="menu_split"></div>
-                                    <div class="menu_item">string[]</div>
-                                    <div class="menu_item">int[]</div>
-                                    <div class="menu_item">float[]</div>
-                                    <div class="menu_item">bool[]</div>
-                                    <div class="menu_split"></div>
-                                    <div class="menu_edit">edit</div>
-                                </div>
-                                <span class="type">string</span>
-                            </div>
-                            <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+                    <?php foreach ($funcs as $name => $fdata) : ?>
+                        <div id="vars_<?= $name ?>" class="variables <?= $name == 'main' ? 'active' : '' ?>">
+                            <?= $fdata['variables'] ?>
                         </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            </div> <!-- end var_area -->
 
             <div id="functions">
                 <div id="fun-names">
                     <span id="add_fun">+</span>
-                    <span class="fun active">
-                        <span class="cornerb">
-                            <span class="cornerw"></span>
+                    <?php foreach ($funcs as $name => $fdata): ?>
+                        <span class="fun <?= $name == 'main' ? 'active' : '' ?>">
+                            <span class="cornerb">
+                                <span class="cornerw"></span>
+                            </span>
+                            <span class="name" id="<?= $fdata['id'] ?>"><?= $name ?></span>
+                            <span class="rem">&times;</span>
                         </span>
-                        <span class="name">main</span>
-                        <span class="rem">&times;</span>
-                    </span>
-                </div>
+                    <?php endforeach; ?>
+                </div> <!-- end fun-names -->
+                
                 <div id="instructions">
-                    <div id="ins_main" class="instructions active">
-                        <div class="statement">
-                            <div class="start">
-                                <div class="text">
-                                    <span>int</span>
-                                    <span class="name">main</span>(<span class="params"></span>)
-                                </div>
-                            </div>
+                    <?php foreach ($funcs as $name => $fdata) : ?>
+                        <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
+                            <?= $fdata['instructions'] ?>
                         </div>
-                        <div class="connection">
-                            <div class="line"></div>
-                            <div class="point"></div>            
-                            <div class="line"></div>
-                        </div>
-                        <div class="statement return">
-                            <div class="arrow_down"></div>                        
-                            <div class="stop">
-                                <div class="text">
-                                    return <span class="exp">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+                    <?php endforeach; ?>
+                </div> <!-- end instructions -->
+            </div> <!-- end functions -->
         </div> <!-- end workspace -->
+        
         <footer>Web-Raptor</footer>
 
         <div id="ins_menu" class="menu">

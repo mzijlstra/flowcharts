@@ -8,13 +8,12 @@ class ProjectDao {
 
     public $db;
 
-    public function recents($uid) {
+    public function all($uid) {
         $recent = $this->db->prepare(
                 "SELECT id, name FROM project "
                 . "WHERE user_id = :uid "
                 . "AND accessed > DATE_SUB(NOW(), INTERVAL 14 DAY) "
-                . "ORDER BY accessed DESC "
-                . "LIMIT 10 ");
+                . "ORDER BY accessed DESC ");
         $recent->execute(array("uid" => $uid));
 
         $projects = array();
