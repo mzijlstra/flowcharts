@@ -43,6 +43,27 @@ CREATE TABLE `function` (
 LOCK TABLES `function` WRITE;
 /*!40000 ALTER TABLE `function` DISABLE KEYS */;
 INSERT INTO function VALUES(NULL, 'main', 
+'<div class="statement">
+    <div class="start">
+        <div class="text">
+            <span>int</span>
+            <span class="name">main</span>(<span class="params"></span>)
+        </div>
+    </div>
+</div>
+<div class="connection">
+    <div class="line"></div>
+    <div class="point"></div>            
+    <div class="line"></div>
+</div>
+<div class="statement return">
+    <div class="arrow_down"></div>                        
+    <div class="stop">
+        <div class="text">
+            return <span class="exp">0</span>
+        </div>
+    </div>
+</div>', 
 '<div class="label">Variables:</div>
 <div class="variable bottom">
     <div class="del">&times;</div>
@@ -64,27 +85,7 @@ INSERT INTO function VALUES(NULL, 'main',
     </div>
     <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
 </div>', 
-'<div class="statement">
-    <div class="start">
-        <div class="text">
-            <span>int</span>
-            <span class="name">main</span>(<span class="params"></span>)
-        </div>
-    </div>
-</div>
-<div class="connection">
-    <div class="line"></div>
-    <div class="point"></div>            
-    <div class="line"></div>
-</div>
-<div class="statement return">
-    <div class="arrow_down"></div>                        
-    <div class="stop">
-        <div class="text">
-            return <span class="exp">0</span>
-        </div>
-    </div>
-</div>', NOW(), NOW(), 1, 1);
+NOW(), NOW(), 1, 1);
 /*!40000 ALTER TABLE `function` ENABLE KEYS */;
 UNLOCK TABLES;
 
