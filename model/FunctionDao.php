@@ -17,9 +17,33 @@ class FunctionDao {
 
         $funcs = array();
         foreach ($stmt as $row) {
-            $funcs[$row['name']] = $row;
+            $funcs[] = $row;
         }
         return $funcs;
     }
+    
+    public function createMain($pid) {
+        $stmt = $this->db->prepare("INSERT INTO `function` VALUES( 
+            SELECT NULL, `name`, instructions, variables, NOW(), NOW(), 1, :pid 
+            FROM `function` WHERE id = 0)");
+        $stmt->execute(array("pid" => $pid));
+        
+        return $this->db->lastInsertId();
+    }
+    
+    public function create($pid) {
+        // TODO
+    }
+    
+    public function updVars($fid, $vdata) {
+        $stmt = $this->db->prepare("UPDATE `function` SET variables = :vdata "
+                . "WHERE id = :fid");
+        $stmt->execute(array("fid" => $fid, "vdata" => $vdata));
+    } 
 
+    public function updIns($fid, $idata) {
+        $stmt = $this->db->prepare("UPDATE `function` SET instructions = :idata"
+                . " WHERE id = :fid");
+        $stmt->execute(array("fid" => $fid, "idata" => $idata));
+    }     
 }

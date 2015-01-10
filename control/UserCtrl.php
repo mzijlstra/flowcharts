@@ -10,6 +10,7 @@ class UserCtrl {
     public $userDao;
     public $projectDao;
 
+    // POST /login
     public function login() {
         // start session, and clean any login errors 
         unset($_SESSION['error']);
@@ -43,18 +44,21 @@ class UserCtrl {
         }
     }
 
+    // GET /logout
     public function logout() {
         session_destroy();
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
     
+    // GET /user
     public function all() {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
         return "users.php";
     }
 
+    // GET /user/(\d+)
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -66,6 +70,7 @@ class UserCtrl {
         return "userDetails.php";
     }
     
+    // POST /user
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
@@ -88,6 +93,7 @@ class UserCtrl {
         return "Location: user/$uid";
     }
 
+    // POST /user/(\d+)
     public function update() {
         global $URI_PARAMS;
         $uid = $URI_PARAMS[1];

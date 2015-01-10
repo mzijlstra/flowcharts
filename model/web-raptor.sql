@@ -42,7 +42,7 @@ CREATE TABLE `function` (
 
 LOCK TABLES `function` WRITE;
 /*!40000 ALTER TABLE `function` DISABLE KEYS */;
-INSERT INTO function VALUES(NULL, 'main', 
+INSERT INTO function VALUES(0, 'main', 
 '<div class="statement">
     <div class="start">
         <div class="text">
@@ -85,7 +85,13 @@ INSERT INTO function VALUES(NULL, 'main',
     </div>
     <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
 </div>', 
-NOW(), NOW(), 1, 1);
+NOW(), NOW(), 0, 0); -- placeholder main 
+
+INSERT INTO `function` VALUES( 
+    SELECT NULL, `name`, instructions, variables, NOW(), NOW(), 1, 1 
+    FROM `function` WHERE id = 0); -- duplicate that data for first project
+
+
 /*!40000 ALTER TABLE `function` ENABLE KEYS */;
 UNLOCK TABLES;
 

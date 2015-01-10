@@ -14,16 +14,16 @@
         <script src="wr.js"></script>
     </head>
     <body>
-        <h1>My Project</h1>
+        <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
                 <div class="menu_item">New Project</div>
                 <div class="menu_item">Open Project</div>
-                <?php if ($_SESSION['projects']) : ?>
-                    <div class="menu_label">----Recent----</div>
-                    <?php foreach ($_SESSION['projects'] as $proj) : ?>
-                        <div class="menu_item"><?= $proj ?></div>
+                <?php if ($projects) : ?>
+                    <div class="menu_label">---Recent---</div>
+                    <?php foreach ($projects as $projid => $projname) : ?>
+                        <div class="menu_item" pid="<?= $projid ?>"><?= $projname ?></div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
@@ -34,34 +34,15 @@
         <div id="workspace">
             <div id="var_area">
                 <div id="variables">
-                    <?php foreach ($funcs as $name => $fdata) : ?>
-                        <div id="vars_<?= $name ?>" class="variables <?= $name == 'main' ? 'active' : '' ?>">
-                            <?= $fdata['variables'] ?>
-                        </div>
-                    <?php endforeach; ?>
                 </div>
             </div> <!-- end var_area -->
 
             <div id="functions">
                 <div id="fun-names">
                     <span id="add_fun">+</span>
-                    <?php foreach ($funcs as $name => $fdata): ?>
-                        <span class="fun <?= $name == 'main' ? 'active' : '' ?>">
-                            <span class="cornerb">
-                                <span class="cornerw"></span>
-                            </span>
-                            <span class="name" id="<?= $fdata['id'] ?>"><?= $name ?></span>
-                            <span class="rem">&times;</span>
-                        </span>
-                    <?php endforeach; ?>
                 </div> <!-- end fun-names -->
                 
                 <div id="instructions">
-                    <?php foreach ($funcs as $name => $fdata) : ?>
-                        <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
-                            <?= $fdata['instructions'] ?>
-                        </div>
-                    <?php endforeach; ?>
                 </div> <!-- end instructions -->
             </div> <!-- end functions -->
         </div> <!-- end workspace -->

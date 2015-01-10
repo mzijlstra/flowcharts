@@ -17,10 +17,17 @@ $(function() {
     wr.insaÏrea = $("#ins_main");
     wr.ins_menu = $('#ins_menu');
     wr.proj_menu = $('#project_menu');
+    
+    /*
+     * Setup AJAX Error Handling
+     */
+    $(document).ajaxError(function(e) {
+        alert("Network Error -- please check your connection and try again.");
+    });
 
-    /************************
+    /*
      * Helper functions
-     ************************/
+     */
     var cloneBlock = function(id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
@@ -63,9 +70,9 @@ $(function() {
         i.focus();
     };
 
-    /************************************
+    /*
      * Variable declaration related code
-     ************************************/
+     */
     // store current var name on focus
     $(".variable .var").focus(function() {
         var t = $(this);
@@ -197,7 +204,7 @@ $(function() {
         var t = $(this);
         var display = t.parents(".type_container").find(".type");
         var oldt = display.text();
-        
+
         inputHere(display, function(t) {
             var n = t.parents(".parameter").children("input.var").val();
             if (t.parents(".parameter") && n) {
@@ -277,9 +284,9 @@ $(function() {
     });
 
 
-    /**********************************
+    /*
      * Statement related code
-     **********************************/
+     */
     // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
         // get the amount of variables declared, compatible with old brwsrs
@@ -392,9 +399,9 @@ $(function() {
         };
     });
 
-    /**************************************
+    /*
      * Expression declaration related code
-     **************************************/
+     */
     $("span.exp, div.exp").click(function() {
         inputHere(this);
     });
@@ -404,9 +411,34 @@ $(function() {
     });
 
 
-    /*************************************
+    /*
      * Function related code
-     *************************************/
+     */
+    // helper function to add a web-raptor function
+    var addFun = function(id, name, idata, vdata) {
+        // create a new scope for the variables
+        wr.functions[name] = {};
+
+        // append a new function name tab
+        var fname = cloneBlock("#fun-name");
+        fname.find(".name").text(name);
+        fname.attr("fid", id);
+        $("#fun-names").append(fname);
+
+        // append a new instructions area
+        var ins = $("<div id='ins_" + name + "' class='instructions'></div>");
+        ins.append(idata);
+        $("#instructions").append(ins);
+
+        // append a new variables area
+        var vs = $("<div id='vars_" + name + "' class='variables'></div>");
+        vs.append(vdata);
+        $("#variables").append(vs);
+
+        // return the fname object so that callers can switch to this function
+        return fname;
+    };
+
     // add a function
     $("#add_fun").click(function() {
 
@@ -426,22 +458,12 @@ $(function() {
             }
         }
 
-        // create a new scope for the variables
-        wr.functions[n] = {};
-
-        // append a new function name tab
-        var fname = cloneBlock("#fun-name");
-        fname.find(".name").text(n);
-        $("#fun-names").append(fname);
-
         // append a new instructions area
-        var ins = $("<div id='ins_" + n + "' class='instructions'></div>");
-        // FIXME function name in start block
-        ins.append(cloneBlock("#start"))
+        var idata = $("<div></div>");
+        idata.append(cloneBlock("#start"))
                 .append(cloneBlock("#connection"))
                 .append(cloneBlock("#return"));
-        ins.find(".name").text(n);
-        $("#instructions").append(ins);
+        idata.find(".name").text(n);
 
         // create a new pramaters area 
         var pm = $("<div class='params'></div>");
@@ -449,16 +471,28 @@ $(function() {
         pm.append(cloneBlock("#declaration").addClass("parameter"));
 
         // append a new variables area
-        var vs = $("<div id='vars_" + n + "' class='variables'></div>");
-        vs.append(pm);
-        vs.append("<div class='label'>Variables:</div>");
-        vs.append(cloneBlock("#declaration"));
-        $("#variables").append(vs);
+        var vdata = $("<div></div>");
+        vdata.append(pm);
+        vdata.append("<div class='label'>Variables:</div>");
+        vdata.append(cloneBlock("#declaration"));
 
-        // TODO AJAX call to create function on server
+        // AJAX call to create function on server
+        var pid = $("h1").attr("pid");
+        $.ajax({
+            "type": "POST",
+            "url": "project/" + pid + "/" + n,
+            "data": {"idata": idata.html(), "vdata": vdata.html()},
+            "success": function(data) {
+                var fid = JSON.parse(data);
+                if ($.isNumeric(result)) {
+                    // add the function to the HTML
+                    var fname = addFun(fid, n, idata.html(), vdata.html());
 
-        // switch to our new function (see below)
-        fname.click();
+                    // switch to our new function (as defined below)
+                    fname.click();
+                }
+            }
+        });
     });
 
     // switching to a different function
@@ -537,4 +571,30 @@ $(function() {
             $("#fun-names .fun")[0].click();
         }
     });
+
+    /*
+     * Startup code
+     */
+    // retrieve function data for the current project
+    (function() {
+        var pid = $("h1").attr("pid");
+        $.get("project/" + pid, function(data) {
+            
+            // data is a JSON array of function objects
+            data = JSON.parse(data);
+            var main = false;
+            for (var i = 0; i < data.length; i++) {
+                var fdata = data[i];
+                if (!main) {
+                    main = addFun(fdata[0], fdata[1], fdata[2], fdata[3]);
+                } else {
+                    addFun(fdata[0], fdata[1], fdata[2], fdata[3]);
+                }
+                
+                // switch to main
+                main.click();
+            }
+        });
+    })();
+
 });
