@@ -17,7 +17,7 @@ $(function() {
     wr.insaÏrea = $("#ins_main");
     wr.ins_menu = $('#ins_menu');
     wr.proj_menu = $('#project_menu');
-    
+
     /*
      * Setup AJAX Error Handling
      */
@@ -73,6 +73,16 @@ $(function() {
     /*
      * Variable declaration related code
      */
+
+    // helper to send changes to the server
+    var postVarUpd = function() {
+        var vdata = $(".variables .active").html();
+        var fid = $(".fun .active").attr("fid");
+        $.post("function/" + fid + "/vars", {
+            "vdata": vdata
+        });
+    };
+
     // store current var name on focus
     $(".variable .var").focus(function() {
         var t = $(this);
@@ -165,7 +175,8 @@ $(function() {
                     added.focus();
                 }
 
-                // TODO AJAX Post variables
+                // AJAX Post variables
+                postVarUpd();
             }
         }
     });
@@ -175,8 +186,8 @@ $(function() {
         var params = $(".active .start .params");
         var ptext = params.text();
 
-        params.text(ptext.replace(
-                new RegExp(oldt), newt));
+        params.text(ptext.replace(new RegExp(oldt), newt));
+        postVarUpd();
     };
 
     // handle type menu clicks
@@ -262,6 +273,7 @@ $(function() {
                     params.text(ptext.replace(/^, /, ""));
                 }
             }
+            postVarUpd();
         } else {
             alert("Cannot remove variable while in use");
         }
@@ -287,6 +299,16 @@ $(function() {
     /*
      * Statement related code
      */
+
+    // helper to send changes to the server
+    var postInsUpd = function() {
+        var idata = $(".instructions .active").html();
+        var fid = $(".fun .active").attr("fid");
+        $.post("function/" + fid + "/ins", {
+            "idata": idata
+        });
+    };
+
     // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
         // get the amount of variables declared, compatible with old brwsrs
@@ -333,7 +355,7 @@ $(function() {
             n.init();
         }
 
-        // TODO AJAX POST instructions
+        postInsUpd();
     });
 
     // repopulate var select menu (in/out/asgn) on mouse enter
@@ -434,6 +456,8 @@ $(function() {
         var vs = $("<div id='vars_" + name + "' class='variables'></div>");
         vs.append(vdata);
         $("#variables").append(vs);
+        
+        // TODO also populate wr.functions to avoid naming conflicts
 
         // return the fname object so that callers can switch to this function
         return fname;
@@ -484,7 +508,7 @@ $(function() {
             "data": {"idata": idata.html(), "vdata": vdata.html()},
             "success": function(data) {
                 var fid = JSON.parse(data);
-                if ($.isNumeric(result)) {
+                if ($.isNumeric(fid)) {
                     // add the function to the HTML
                     var fname = addFun(fid, n, idata.html(), vdata.html());
 
@@ -579,7 +603,7 @@ $(function() {
     (function() {
         var pid = $("h1").attr("pid");
         $.get("project/" + pid, function(data) {
-            
+
             // data is a JSON array of function objects
             data = JSON.parse(data);
             var main = false;
@@ -590,10 +614,11 @@ $(function() {
                 } else {
                     addFun(fdata[0], fdata[1], fdata[2], fdata[3]);
                 }
-                
-                // switch to main
-                main.click();
             }
+            // switch to main
+            main.click();
+            
+            // TODO once the functions have been loaded connect event handlers
         });
     })();
 
