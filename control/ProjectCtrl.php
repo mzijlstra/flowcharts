@@ -66,8 +66,8 @@ class ProjectCtrl {
         
         $pid = $URI_PARAMS[1];
         $name = $URI_PARAMS[2];
-        $idata = filter_input(INPUT_POST, "idata", FILTER_SANITIZE_STRING);
-        $vdata = filter_input(INPUT_POST, "vdata", FILTER_SANITIZE_STRING);
+        $idata = filter_input(INPUT_POST, "idata");
+        $vdata = filter_input(INPUT_POST, "vdata");
         
         $fid = $this->functionDao->create($pid, $name, $idata, $vdata);
         $VIEW_DATA['json'] = $fid;
