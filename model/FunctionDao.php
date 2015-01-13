@@ -31,8 +31,15 @@ class FunctionDao {
         return $this->db->lastInsertId();
     }
     
-    public function create($pid) {
-        // TODO
+    public function create($pid, $name, $idata, $vdata) {
+        $stmt = $this->db->prepare("INSERT INTO `function` VALUES("
+                . "NULL, :name, :idata, :vdata, NOW(), NOW(), 1, :pid)");
+        $stmt->execute(array(
+            "name" => $name, 
+            "idata" => $idata, 
+            "vdata" => $vdata, 
+            "pid" => $pid));
+        return $this->db->lastInsertId();
     }
     
     public function updVars($fid, $vdata) {
