@@ -67,9 +67,9 @@ function applyView($view) {
         }
         header($view);
     } else {
-        if ($MY_METHOD == "POST") {
-            die("Please Use the Post/Redirect/Get Pattern");
-        }
+//        if ($MY_METHOD == "POST") {
+//            die("Please Use the Post/Redirect/Get Pattern");
+//        }
         // make keys in VIEW_DATA available as regular variables
         foreach ($VIEW_DATA as $key => $value) {
             $$key = $value;
