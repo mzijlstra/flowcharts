@@ -13,10 +13,7 @@ $(function() {
     wr.mode = "beginner";
     wr.functions = {'main': {}};
     wr.curvars = wr.functions.main;
-    wr.vararea = $("#vars_main");
-    wr.insaÏrea = $("#ins_main");
     wr.ins_menu = $('#ins_menu');
-    wr.proj_menu = $('#project_menu');
 
     /*
      * Setup AJAX Error Handling
@@ -28,6 +25,23 @@ $(function() {
     /*
      * Helper functions
      */
+    
+    var postVarUpd = function() {
+        var vdata = $(".variables.active").html();
+        var fid = $(".fun.active").attr("fid");
+        $.post("../function/" + fid + "/vars", {
+            "vdata": vdata
+        });
+    };
+
+    var postInsUpd = function() {
+        var idata = $(".instructions.active").html();
+        var fid = $(".fun.active").attr("fid");
+        $.post("../function/" + fid + "/ins", {
+            "idata": idata
+        });
+    };
+
     var cloneBlock = function(id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
@@ -64,6 +78,9 @@ $(function() {
             var exp = t.val();
             var p = t.parent();
             p.empty().text(exp);
+            
+            // send changes to server
+            postInsUpd();
         });
 
         t.append(i);
@@ -73,15 +90,6 @@ $(function() {
     /*
      * Variable declaration related code
      */
-
-    // helper to send changes to the server
-    var postVarUpd = function() {
-        var vdata = $(".variables .active").html();
-        var fid = $(".fun .active").attr("fid");
-        $.post("function/" + fid + "/vars", {
-            "vdata": vdata
-        });
-    };
 
     // store current var name on focus
     $(".variable .var").focus(function() {
@@ -99,7 +107,7 @@ $(function() {
     });
 
     // check if we need to update var name on blur
-    $(".variable .var").blur(function(event) {
+    $(".variable .var, #declaration .var").blur(function(event) {
         var t = $(this);
 
         // cleanly exit fields that are not defined yet
@@ -127,6 +135,10 @@ $(function() {
                 var newn = t.val();
                 var elem = t.parent().get(0);
 
+                // set value attribute to newn 
+                // otherwise .html() doesn't take it on postVarUpd
+                t.attr("value", t.val())
+
                 // remove old name from our vars 
                 if (oldn !== "" && wr.curvars[oldn] === elem) {
                     delete wr.curvars[oldn];
@@ -134,7 +146,6 @@ $(function() {
 
                 // add new name to our vars 
                 wr.curvars[newn] = elem;
-                wr.lastVar = newn;
                 wr.curvars[newn] = t.parent().get(0);
 
                 // update instructions with old name to new name
@@ -160,6 +171,8 @@ $(function() {
                         params.text(ptext.replace(
                                 new RegExp(type + " " + oldn), tn));
                     }
+                    // also update the instruction signature on server
+                    postInsUpd();
                 }
 
                 // append another declration field
@@ -181,15 +194,6 @@ $(function() {
         }
     });
 
-    // helper for the next two functions
-    var updParamType = function(oldt, newt) {
-        var params = $(".active .start .params");
-        var ptext = params.text();
-
-        params.text(ptext.replace(new RegExp(oldt), newt));
-        postVarUpd();
-    };
-
     // handle type menu clicks
     $(".type_container .menu_item").click(function() {
         var t = $(this);
@@ -203,29 +207,21 @@ $(function() {
 
         // if param also update signature (if we have a name / are declared)
         if (t.parents(".parameter") && n) {
-            updParamType(prev + " " + n, type + " " + n);
+            var oldt = prev + " " + n;
+            var newt = type + " " + n;
+            var params = $(".active .start .params");
+            var ptext = params.text();
+
+            params.text(ptext.replace(new RegExp(oldt), newt));
+            // change signature on server
+            postInsUpd();
         }
+
+        // change var type on server
+        postVarUpd();
 
         t.parent().hide();
         return false; // so as not to trigger function rename
-    });
-
-    // special case edit item in type menu
-    $(".type_container .menu_edit").click(function() {
-        var t = $(this);
-        var display = t.parents(".type_container").find(".type");
-        var oldt = display.text();
-
-        inputHere(display, function(t) {
-            var n = t.parents(".parameter").children("input.var").val();
-            if (t.parents(".parameter") && n) {
-                updParamType(oldt, t.val());
-            }
-            return true;
-        });
-
-        t.parent().hide();
-        return false; // so as not to trigger function renme
     });
 
     // reset type menu hide status & add item highlight
@@ -272,7 +268,11 @@ $(function() {
                     ptext = params.text();
                     params.text(ptext.replace(/^, /, ""));
                 }
+                
+                // change signature on server
+                postInsUpd();
             }
+            // post var removal to server
             postVarUpd();
         } else {
             alert("Cannot remove variable while in use");
@@ -299,15 +299,6 @@ $(function() {
     /*
      * Statement related code
      */
-
-    // helper to send changes to the server
-    var postInsUpd = function() {
-        var idata = $(".instructions .active").html();
-        var fid = $(".fun .active").attr("fid");
-        $.post("function/" + fid + "/ins", {
-            "idata": idata
-        });
-    };
 
     // display insertion menu when clicking on a connection block
     $(".connection").click(function(event) {
@@ -379,23 +370,14 @@ $(function() {
     $(".var_container .menu").click(function(event) {
         var t = $(event.target);
         $(this).parent().children("span.var").text(t.text());
-        wr.lastVar = t.text();
         $(this).hide();
+
+        postInsUpd();
     });
 
     // hide var select menu if not clicked
     $(".var_container").mouseleave(function() {
         $(this).children(".menu").hide();
-    });
-
-    // initialize the variable name for input and assignment
-    // to the last used variable name (declared or selected)
-    $('#input, #assignment').each(function(i, o) {
-        o.init = function() {
-            if (wr.mode !== "beginner") {
-                $(this).find(".var").text(wr.lastVar);
-            }
-        };
     });
 
     // hook up delete click handlers
@@ -410,6 +392,7 @@ $(function() {
             c.remove();
             p.remove();
         }
+        postInsUpd();
     });
 
     // add confirmation meessages if and while stmts
@@ -436,32 +419,6 @@ $(function() {
     /*
      * Function related code
      */
-    // helper function to add a web-raptor function
-    var addFun = function(id, name, idata, vdata) {
-        // create a new scope for the variables
-        wr.functions[name] = {};
-
-        // append a new function name tab
-        var fname = cloneBlock("#fun-name");
-        fname.find(".name").text(name);
-        fname.attr("fid", id);
-        $("#fun-names").append(fname);
-
-        // append a new instructions area
-        var ins = $("<div id='ins_" + name + "' class='instructions'></div>");
-        ins.append(idata);
-        $("#instructions").append(ins);
-
-        // append a new variables area
-        var vs = $("<div id='vars_" + name + "' class='variables'></div>");
-        vs.append(vdata);
-        $("#variables").append(vs);
-        
-        // TODO also populate wr.functions to avoid naming conflicts
-
-        // return the fname object so that callers can switch to this function
-        return fname;
-    };
 
     // add a function
     $("#add_fun").click(function() {
@@ -504,13 +461,31 @@ $(function() {
         var pid = $("h1").attr("pid");
         $.ajax({
             "type": "POST",
-            "url": "project/" + pid + "/" + n,
+            "url": pid + "/" + n,
             "data": {"idata": idata.html(), "vdata": vdata.html()},
             "success": function(data) {
                 var fid = JSON.parse(data);
                 if ($.isNumeric(fid)) {
                     // add the function to the HTML
-                    var fname = addFun(fid, n, idata.html(), vdata.html());
+                    wr.functions[n] = {};
+
+                    // append a new function name tab
+                    var fname = cloneBlock("#fun-name");
+                    fname.find(".name").text(n);
+                    fname.attr("fid", fid);
+                    $("#fun-names").append(fname);
+
+                    // append a new instructions area
+                    var ins = $("<div id='ins_" + n +
+                            "' class='instructions'></div>");
+                    ins.append(idata);
+                    $("#instructions").append(ins);
+
+                    // append a new variables area
+                    var vs = $("<div id='vars_" + n +
+                            "' class='variables'></div>");
+                    vs.append(vdata);
+                    $("#variables").append(vs);
 
                     // switch to our new function (as defined below)
                     fname.click();
@@ -534,8 +509,6 @@ $(function() {
 
         // also switch over global vars
         wr.curvars = wr.functions[n];
-        wr.vararea = $("#vars_" + n);
-        wr.insarea = $("#ins_" + n);
     });
 
     // renaming a function
@@ -579,6 +552,8 @@ $(function() {
                 return true;
             }
         });
+
+        // TODO AJAX rename function
     });
 
     // function delete handler
@@ -594,32 +569,25 @@ $(function() {
             t.parent().remove();
             $("#fun-names .fun")[0].click();
         }
+
+        // TODO AJAX delete function
     });
 
     /*
      * Startup code
      */
-    // retrieve function data for the current project
+    // build local variable namespaces in wr.functions
     (function() {
-        var pid = $("h1").attr("pid");
-        $.get("project/" + pid, function(data) {
-
-            // data is a JSON array of function objects
-            data = JSON.parse(data);
-            var main = false;
-            for (var i = 0; i < data.length; i++) {
-                var fdata = data[i];
-                if (!main) {
-                    main = addFun(fdata[0], fdata[1], fdata[2], fdata[3]);
-                } else {
-                    addFun(fdata[0], fdata[1], fdata[2], fdata[3]);
+        $("#workspace .fun .name").each(function() {
+            var name = $(this).text();
+            wr.functions[name] = {};
+            $("#vars_" + name + " input.var").each(function() {
+                var v = $(this).val();
+                if (v) {
+                    wr.functions[name][v] = this;
                 }
-            }
-            // switch to main
-            main.click();
-            
-            // TODO once the functions have been loaded connect event handlers
+            });
         });
+        wr.curvars = wr.functions['main'];
     })();
-
 });
