@@ -17,7 +17,7 @@ class FunctionDao {
 
         $funcs = array();
         foreach ($stmt as $row) {
-            $funcs[] = $row;
+            $funcs[$row['name']] = $row;
         }
         return $funcs;
     }
