@@ -1,11 +1,8 @@
 FEATURES TO ADD:
-- Highlight missing values
-- Highlight current variable in var menu
-- function renaming
-- redo type selection 
 - add returns inside if statements
-- ENTIRE PHP BACKEND
-- INTERPRETER
+- PHP / AJAX for function renaming & deleting
+- Project management
+- INTERPRETER (will connect to JavaScript, easier than implementing an interpreter for a homebrew language)
 
 
 2014-08-12:
@@ -38,3 +35,6 @@ Finished user management, and refactored directory structure to clean things up 
 
 2014-11-13:
 Decided to refactor all the PHP stuff to build a home-grown Very Simple Framework. This will come in handy when teaching WAP.
+
+2015-01-14:
+Implemented most of the AJAX functionality, can now create and properly (with persistence) create variables and functions, still need to finish up renaming and deleting functionsn, and implement creating and switching to new projects.
