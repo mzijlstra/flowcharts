@@ -36,8 +36,9 @@ class UserCtrl {
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);
 
-            // redirect to the Web Raptor SPA
-            return "Location: wr";
+            // redirect to the most recent project
+            $pid = $this->projectDao->recent($row['id']);
+            return "Location: project/$pid";
         } else {
             $_SESSION['error'] = "Invalid email / pass combo";
             return "Location: login";
