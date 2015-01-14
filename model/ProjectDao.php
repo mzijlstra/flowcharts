@@ -7,18 +7,42 @@
 class ProjectDao {
 
     public $db;
-
-    public function all($uid) {
+    
+    public function get($pid) {
+        $access = $this->db->prepare(
+                "UPDATE `project` SET accessed = NOW() "
+                . "WHERE id = :pid");
+        $access->execute(array("pid" => $pid));
+        
+        $stmt = $this->db->prepare(
+                "SELECT * FROM `project` WHERE id = :pid");
+        $stmt->execute(array("pid" => $pid));
+        return $stmt->fetch();
+    }
+    
+    public function recent($uid) {
         $recent = $this->db->prepare(
                 "SELECT id, name FROM project "
                 . "WHERE user_id = :uid "
-//                . "AND accessed > DATE_SUB(NOW(), INTERVAL 14 DAY) "
+                . "ORDER BY accessed DESC "
+                . "LIMIT 1");
+        $recent->execute(array("uid" => $uid));
+        $proj = $recent->fetch();
+        if ($proj) {
+            return $proj['id'];
+        } 
+    }
+
+    public function all($uid) {
+        $recent = $this->db->prepare(
+                "SELECT * FROM project "
+                . "WHERE user_id = :uid "
                 . "ORDER BY accessed DESC ");
         $recent->execute(array("uid" => $uid));
 
         $projects = array();
         foreach ($recent as $row) {
-            $projects[$row['id']] = $row['name'];
+            $projects[] = $row;
         }
         return $projects;
     }
