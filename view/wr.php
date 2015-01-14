@@ -20,12 +20,6 @@
             <div id="project_menu" class="menu">
                 <div class="menu_item">New Project</div>
                 <div class="menu_item">Open Project</div>
-                <?php if ($projects) : ?>
-                    <div class="menu_label">---Recent---</div>
-                    <?php foreach ($projects as $projid => $projname) : ?>
-                        <div class="menu_item" pid="<?= $projid ?>"><?= $projname ?></div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
             </div>
         </div>
 
@@ -34,15 +28,34 @@
         <div id="workspace">
             <div id="var_area">
                 <div id="variables">
+                    <?php foreach ($funcs as $name => $fdata) : ?>
+                        <div id="vars_<?= $name ?>" class="variables <?= $name == 'main' ? 'active' : '' ?>">
+                            <?= $fdata['variables'] ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div> <!-- end var_area -->
 
             <div id="functions">
                 <div id="fun-names">
                     <span id="add_fun">+</span>
+                    <?php foreach ($funcs as $name => $fdata): ?>
+                        <span fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
+                            <span class="cornerb">
+                                <span class="cornerw"></span>
+                            </span>
+                            <span class="name"><?= $name ?></span>
+                            <span class="rem">&times;</span>
+                        </span>
+                    <?php endforeach; ?>
                 </div> <!-- end fun-names -->
                 
                 <div id="instructions">
+                    <?php foreach ($funcs as $name => $fdata) : ?>
+                        <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
+                            <?= $fdata['instructions'] ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div> <!-- end instructions -->
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
@@ -72,16 +85,10 @@
                 <div class="type_container">
                     <div class="menu">
                         <div class="menu_item">string</div>
-                        <div class="menu_item">int</div>
-                        <div class="menu_item">float</div>
-                        <div class="menu_item">bool</div>
-                        <div class="menu_split"></div>
-                        <div class="menu_item">string[]</div>
-                        <div class="menu_item">int[]</div>
-                        <div class="menu_item">float[]</div>
-                        <div class="menu_item">bool[]</div>
-                        <div class="menu_split"></div>
-                        <div class="menu_edit">edit</div>
+                        <div class="menu_item">number</div>
+                        <div class="menu_item">boolean</div>
+                        <div class="menu_item">array</div>
+                        <div class="menu_item">object</div>
                     </div>
                     <span class="type">string</span>
                 </div>
@@ -94,18 +101,12 @@
                         <div class="type_container">
                             <div class="menu">
                                 <div class="menu_item">string</div>
-                                <div class="menu_item">int</div>
-                                <div class="menu_item">float</div>
-                                <div class="menu_item">bool</div>
-                                <div class="menu_split"></div>
-                                <div class="menu_item">string[]</div>
-                                <div class="menu_item">int[]</div>
-                                <div class="menu_item">float[]</div>
-                                <div class="menu_item">bool[]</div>
-                                <div class="menu_split"></div>
-                                <div class="menu_edit">edit</div>
+                                <div class="menu_item">number</div>
+                                <div class="menu_item">boolean</div>
+                                <div class="menu_item">array</div>
+                                <div class="menu_item">object</div>
                             </div>
-                            <span class="type">int</span>
+                            <span class="type">number</span>
                         </div>
                         <span class="name">main</span>(<span class="params"></span>)
                     </div>
