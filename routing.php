@@ -16,11 +16,11 @@ $view_ctrl = array(
 
 // Get requests that need a controller
 $get_ctrl = array(
-    "|/wr|" => "ProjectCtrl@getProjects",
     "|/user$|" => "UserCtrl@all",
     "|/user/(\d+)|" => "UserCtrl@details",
     "|/logout|" => "UserCtrl@logout",
-    "|/project/(\d+)|" => "ProjectCtrl@getFunctions",
+    "|/project$|" => "ProjectCtrl@getProjects",
+    "|/project/(\d+)|" => "ProjectCtrl@getProject",
 );
 
 // Post requests that need a controller
