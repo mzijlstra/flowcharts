@@ -67,6 +67,7 @@ class Context {
         if ($this->userCtrl == NULL) {
             $this->userCtrl = new UserCtrl();
             $this->userCtrl->userDao = $this->getUserDao();
+            $this->userCtrl->projectDao = $this->getProjectDao();
         }
         return $this->userCtrl;
     }
