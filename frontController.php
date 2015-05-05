@@ -8,7 +8,7 @@
  * **************************** */
 $the_uri = filter_input(INPUT_SERVER, "REQUEST_URI", FILTER_SANITIZE_URL);
 $matches = array();
-preg_match("#(.*)web-raptor(/.*)#", $the_uri, $matches);
+preg_match("|(.*)web-raptor(/.*)|", $the_uri, $matches);
 
 // important global variables
 $MY_BASE = $matches[1] . "web-raptor";
