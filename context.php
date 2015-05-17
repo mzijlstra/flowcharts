@@ -23,7 +23,8 @@ class Context {
 
     public function getDB() {
         if ($this->db == NULL) {
-            $this->db = new PDO("mysql:dbname=web_raptor;host=localhost", "root");
+            $this->db = new PDO("mysql:dbname=web_raptor;host=localhost", 
+            "root", "root");
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return $this->db;
