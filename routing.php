@@ -40,63 +40,6 @@ $post_ctrl = array(
  * ************************************** */
 require 'context.php';
 
-function invokeCtrlMethod($class, $method) {
-    $context = new Context();
-    $getControler = new ReflectionMethod("Context", "get" . $class);
-    $controler = $getControler->invoke($context);
-    $doMethod = new ReflectionMethod($class, $method);
-
-    try {
-        return $doMethod->invoke($controler, $method);
-    } catch (Exception $e) {
-        // TODO: have some user setting for debug mode
-        error_log($e->getMessage());
-        http_response_code(500);
-        exit();
-    }
-}
-
-function applyView($view) {
-    global $VIEW_DATA;
-    global $MY_METHOD;
-
-    if (preg_match("/^Location: /", $view)) {
-        if ($VIEW_DATA) {
-            $_SESSION['redirect'] = $view;
-            $_SESSION['flash_data'] = $VIEW_DATA;
-        }
-        header($view);
-    } else {
-//        if ($MY_METHOD == "POST") {
-//            die("Please Use the Post/Redirect/Get Pattern");
-//        }
-        // make keys in VIEW_DATA available as regular variables
-        foreach ($VIEW_DATA as $key => $value) {
-            $$key = $value;
-        }
-        require "view/$view";
-    }
-    // always exit after displaying the view, do we want hook?
-    exit();
-}
-
-function matchUriToCtrl($ctrls) {
-    global $MY_URI;
-    global $URI_PARAMS;
-
-    // check get controlers
-    foreach ($ctrls as $pattern => $dispatch) {
-        if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
-            list($class, $method) = explode("@", $dispatch);
-            $view = invokeCtrlMethod($class, $method);
-            applyView($view);
-        }
-    }
-    // page not found (security mapping exists, but not ctrl mapping)
-    http_response_code(404);
-    exit();
-}
-
 // Dispatch
 switch ($MY_METHOD) {
     case "GET":
@@ -128,3 +71,61 @@ switch ($MY_METHOD) {
         http_response_code(403);
         exit();
 }
+
+function applyView($view) {
+    global $VIEW_DATA;
+    global $MY_METHOD;
+
+    if (preg_match("/^Location: /", $view)) {
+        if ($VIEW_DATA) {
+            $_SESSION['redirect'] = $view;
+            $_SESSION['flash_data'] = $VIEW_DATA;
+        }
+        header($view);
+    } else {
+        // make keys in VIEW_DATA available as regular variables
+        foreach ($VIEW_DATA as $key => $value) {
+            $$key = $value;
+        }
+        require "view/$view";
+    }
+    // always exit after displaying the view, do we want hook?
+    exit();
+}
+
+function matchUriToCtrl($ctrls) {
+    global $MY_URI;
+    global $URI_PARAMS;
+
+    // check controler mappings
+    foreach ($ctrls as $pattern => $dispatch) {
+        if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
+            list($class, $method) = explode("@", $dispatch);
+            $view = invokeCtrlMethod($class, $method);
+            if ($view) {
+                applyView($view);
+            }
+            return; // finding match completes method
+        }
+    }
+    // page not found (security mapping exists, but not ctrl mapping)
+    http_response_code(404);
+    exit();
+}
+
+function invokeCtrlMethod($class, $method) {
+    $context = new Context();
+    $getControler = new ReflectionMethod("Context", "get" . $class);
+    $controler = $getControler->invoke($context);
+    $doMethod = new ReflectionMethod($class, $method);
+
+    try {
+        return $doMethod->invoke($controler, $method);
+    } catch (Exception $e) {
+        // TODO: have some user setting for debug mode
+        error_log($e->getMessage());
+        http_response_code(500);
+        exit();
+    }
+}
+
