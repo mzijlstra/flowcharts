@@ -147,8 +147,8 @@ div.variable.bottom .del {
     z-index: 10;
 }
 
-/* assignment statements input/output/assignment */
-.assignment {
+/* statements input/output/assignment */
+.assignment, .input, .output {
     position: relative;
     padding: 17px;
     margin-left: 22px;

@@ -12,14 +12,14 @@
   color: white;
   background-color: #DD4444;
   padding: 2px 4px;
-  border: 1px solid #333366;
+  border: 1px solid #336;
   display: none;
   cursor: pointer; }
 
 .arrow_down {
   width: 0px;
   height: 0px;
-  border-top: 8px solid #333366;
+  border-top: 8px solid #336;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   margin-left: 52px; }
@@ -43,8 +43,8 @@ div.variable.bottom .del {
 
 .variable.inuse .del {
   background-color: #f8f8f8;
-  border-color: #ddddee;
-  color: #ddddee; }
+  border-color: #dde;
+  color: #dde; }
 
 /* Types in var section and start statement */
 .type_container {
@@ -59,7 +59,7 @@ div.variable.bottom .del {
       width: 65px; }
 
 .type_container:hover .type {
-  border: 1px solid #333366; }
+  border: 1px solid #336; }
 
 .type_container:hover .menu {
   position: absolute;
@@ -72,7 +72,7 @@ div.variable.bottom .del {
   width: 80px;
   height: 80px;
   margin-left: 20px;
-  border: 1px solid #333366;
+  border: 1px solid #336;
   border-radius: 55px; }
   .start .text, .stop .text {
     position: absolute;
@@ -97,12 +97,12 @@ div.variable.bottom .del {
     width: 0px;
     height: 15px;
     margin-left: 59px;
-    border: 1px solid #333366; }
+    border: 1px solid #336; }
   .connection .point {
     width: 0px;
     height: 0px;
     margin-left: 57px;
-    border: 3px solid #333366;
+    border: 3px solid #336;
     border-radius: 3px; }
 
 .connection:hover .point {
@@ -111,7 +111,7 @@ div.variable.bottom .del {
   background-color: white;
   width: 4px;
   height: 4px;
-  border: 1px solid #333366; }
+  border: 1px solid #336; }
 
 /* all statements */
 .statement {
@@ -124,36 +124,36 @@ div.variable.bottom .del {
   display: block;
   z-index: 10; }
 
-/* assignment statements input/output/assignment */
-.assignment {
+/* statements input/output/assignment */
+.assignment, .input, .output {
   position: relative;
   padding: 17px;
   margin-left: 22px; }
-  .assignment .var_container {
+  .assignment .var_container, .input .var_container, .output .var_container {
     float: left; }
-    .assignment .var_container .menu {
+    .assignment .var_container .menu, .input .var_container .menu, .output .var_container .menu {
       position: absolute;
       top: 45px;
       left: 17px;
       min-width: 100px;
       min-height: 10px; }
-  .assignment .var_container:hover .menu {
+  .assignment .var_container:hover .menu, .input .var_container:hover .menu, .output .var_container:hover .menu {
     display: block; }
-  .assignment .var, .assignment .exp, .assignment .io {
+  .assignment .var, .assignment .exp, .assignment .io, .input .var, .input .exp, .input .io, .output .var, .output .exp, .output .io {
     background-color: white;
-    border: 2px solid #333366;
+    border: 2px solid #336;
     padding: 15px; }
-  .assignment .exp {
+  .assignment .exp, .input .exp, .output .exp {
     position: relative; }
-    .assignment .exp input[type=text] {
+    .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text] {
       position: absolute;
       top: -4px;
       left: -1px;
       width: 400px;
-      border: 2px solid #333366;
+      border: 2px solid #336;
       padding: 15px;
       background-color: white; }
-  .assignment .asgn {
+  .assignment .asgn, .input .asgn, .output .asgn {
     font-size: 300%;
     line-height: 0px;
     vertical-align: middle; }
@@ -165,14 +165,14 @@ div.variable.bottom .del {
     width: 0px;
     height: 0px;
     position: relative;
-    border-bottom: 60px solid #333366;
+    border-bottom: 60px solid #336;
     border-left: 60px solid transparent;
     border-right: 60px solid transparent; }
   .diamond .diamond_bot_outside {
     width: 0px;
     height: 0px;
     position: relative;
-    border-top: 60px solid #333366;
+    border-top: 60px solid #336;
     border-left: 60px solid transparent;
     border-right: 60px solid transparent; }
   .diamond .diamond_top_inside {
@@ -204,7 +204,7 @@ div.variable.bottom .del {
       top: -5px;
       left: 0px;
       width: 400px;
-      border: 1px solid #333366;
+      border: 1px solid #336;
       background: white; }
   .diamond .label_stmt {
     position: absolute;
@@ -237,29 +237,29 @@ div.variable.bottom .del {
     bottom: 0px;
     width: 0px;
     margin-left: 59px;
-    border: 1px solid #333366; }
+    border: 1px solid #336; }
   .if .top_connect {
     position: absolute;
     top: -61px;
     right: -61px;
     left: 118px;
     height: 61px;
-    border-top: 2px solid #333366;
-    border-right: 2px solid #333366; }
+    border-top: 2px solid #336;
+    border-right: 2px solid #336; }
   .if .bot_left_connect {
     position: absolute;
     bottom: 0px;
     left: 0px;
     right: 0px;
     margin-left: 61px;
-    border: 1px solid #333366; }
+    border: 1px solid #336; }
     .if .bot_left_connect .arrow_left {
       position: absolute;
       top: -8px;
       left: 0px;
       width: 0px;
       height: 0px;
-      border-right: 8px solid #333366;
+      border-right: 8px solid #336;
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent; }
   .if .bot_right_connect {
@@ -268,7 +268,7 @@ div.variable.bottom .del {
     left: 0px;
     height: 0px;
     width: 59px;
-    border: 1px solid #333366; }
+    border: 1px solid #336; }
 
 /* while statements */
 .while .true_connector {
@@ -277,8 +277,8 @@ div.variable.bottom .del {
   left: 118px;
   width: 56px;
   height: 59px;
-  border-top: 2px solid #333366;
-  border-right: 2px solid #333366; }
+  border-top: 2px solid #336;
+  border-right: 2px solid #336; }
 .while .container {
   position: relative; }
 .while .false_line {
@@ -287,15 +287,15 @@ div.variable.bottom .del {
   bottom: 0px;
   left: 59px;
   width: 0px;
-  border: 1px solid #333366; }
+  border: 1px solid #336; }
 .while .return_line {
   position: absolute;
   top: -8px;
   bottom: -2px;
   left: 79px;
   width: 95px;
-  border-left: 2px solid #333366;
-  border-bottom: 2px solid #333366; }
+  border-left: 2px solid #336;
+  border-bottom: 2px solid #336; }
 .while .loop_body {
   margin-left: 115px; }
 .while .arrow_up {
@@ -304,14 +304,14 @@ div.variable.bottom .del {
   top: -8px;
   width: 0px;
   height: 0px;
-  border-bottom: 8px solid #333366;
+  border-bottom: 8px solid #336;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent; }
 
 body {
   font-family: monospace;
   font-size: 12px;
-  color: #333366; }
+  color: #336; }
 
 input {
   font-family: inherit;
@@ -328,7 +328,7 @@ div#projects {
   left: 10px;
   width: 25px;
   height: 25px;
-  border: 1px solid #333366;
+  border: 1px solid #336;
   cursor: pointer; }
   div#projects div.arrow_down {
     position: relative;
@@ -353,9 +353,9 @@ div#projects:hover #project_menu {
   bottom: 20px;
   left: 10px;
   right: 2px;
-  border-top: 1px solid #333366;
-  border-bottom: 1px solid #333366;
-  border-right: 1px solid #333366; }
+  border-top: 1px solid #336;
+  border-bottom: 1px solid #336;
+  border-right: 1px solid #336; }
 
 #var_area {
   position: absolute;
@@ -365,7 +365,7 @@ div#projects:hover #project_menu {
   bottom: 0px; }
   #var_area .label {
     padding: 3px;
-    border-bottom: 1px dashed #333366; }
+    border-bottom: 1px dashed #336; }
   #var_area .variables {
     display: none; }
   #var_area .variables.active {
@@ -377,11 +377,11 @@ div#projects:hover #project_menu {
   bottom: 0px;
   left: 250px;
   right: 0px;
-  border-left: 1px solid #333366; }
+  border-left: 1px solid #336; }
   #functions #fun-names {
     padding-top: 6px;
     padding-left: 18px;
-    border-bottom: 1px solid #333366; }
+    border-bottom: 1px solid #336; }
     #functions #fun-names #add_fun {
       position: absolute;
       top: 0px;
@@ -390,7 +390,7 @@ div#projects:hover #project_menu {
       cursor: pointer; }
     #functions #fun-names span.fun {
       position: relative;
-      border: 1px solid #333366;
+      border: 1px solid #336;
       padding-top: 2px;
       padding-left: 8px;
       padding-right: 8px;
@@ -403,7 +403,7 @@ div#projects:hover #project_menu {
         width: 0px;
         height: 0px;
         border-right: 5px solid transparent;
-        border-top: 5px solid #333366; }
+        border-top: 5px solid #336; }
       #functions #fun-names span.fun .cornerw {
         top: -6px;
         left: -1px;
@@ -437,7 +437,7 @@ div#projects:hover #project_menu {
 .menu {
   display: none;
   position: absolute;
-  border: 1px solid #333366;
+  border: 1px solid #336;
   background-color: #f8f8f8;
   z-index: 10; }
   .menu .menu_item, .menu .menu_edit {
@@ -446,13 +446,13 @@ div#projects:hover #project_menu {
   .menu .menu_split {
     width: 100%;
     height: 0px;
-    border-bottom: 1px solid #333366; }
+    border-bottom: 1px solid #336; }
   .menu .menu_label {
     text-align: center;
     font-style: italic;
     cursor: auto; }
   .menu .menu_item:hover, .menu .menu_edit:hover, .menu .menu_hl {
-    background-color: #ddddee; }
+    background-color: #dde; }
 
 #project_menu {
   top: 24px;
@@ -465,5 +465,3 @@ footer {
   width: 300px;
   margin-left: -150px;
   text-align: center; }
-
-/*# sourceMappingURL=page.css.map */
