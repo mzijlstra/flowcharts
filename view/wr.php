@@ -85,7 +85,8 @@
                 <div class="type_container">
                     <div class="menu">
                         <div class="menu_item">string</div>
-                        <div class="menu_item">number</div>
+                        <div class="menu_item">int</div>
+                        <div class="menu_item">float</div>
                         <div class="menu_item">boolean</div>
                         <div class="menu_item">array</div>
                         <div class="menu_item">object</div>
@@ -101,12 +102,13 @@
                         <div class="type_container">
                             <div class="menu">
                                 <div class="menu_item">string</div>
-                                <div class="menu_item">number</div>
+                                <div class="menu_item">int</div>
+                                <div class="menu_item">float</div>
                                 <div class="menu_item">boolean</div>
                                 <div class="menu_item">array</div>
                                 <div class="menu_item">object</div>
                             </div>
-                            <span class="type">number</span>
+                            <span class="type">int</span>
                         </div>
                         <span class="name">main</span>(<span class="params"></span>)
                     </div>
@@ -131,7 +133,7 @@
             <div id="input" class="statement" >
                 <div class="del">&times;</div>
                 <div class="arrow_down"></div>                        
-                <div class="assignment">
+                <div class="input">
                     <div class="var_container">
                         <div class="menu"></div>
                         <span class="var">&nbsp;</span>
@@ -144,7 +146,7 @@
             <div id="output" class="statement" >
                 <div class="del">&times;</div>
                 <div class="arrow_down"></div>                        
-                <div class="assignment">
+                <div class="output">
                     <span class="io">OUTPUT</span>
                     <span class="asgn">&#171;</span> 
                     <span class="exp">&nbsp;</span>
