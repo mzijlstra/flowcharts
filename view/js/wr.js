@@ -349,7 +349,7 @@ $(function() {
         postInsUpd();
     });
 
-    // repopulate var select menu (in/out/asgn) on mouse enter
+    // repopulate var select menu (asgn) on mouse enter
     $(".assignment .var_container").mouseenter(function(event) {
         var t = $(this);
         var menu = $(t.children(".menu")[0]);
@@ -358,6 +358,27 @@ $(function() {
         menu.empty();
         for (var k in wr.curvars) {
             menu.append("<div class='menu_item'>" + k + "</div>");
+        }
+        // highlight current
+        if (cur && cur !== " ") {
+            menu.find(".menu_item:contains(" + cur + ")").addClass("menu_hl");
+        }
+        menu.show();
+    });
+
+    // repopulate var select menu (input) on mouse enter
+    // TODO refactory copy-pasted code?
+    $(".input .var_container").mouseenter(function(event) {
+        var t = $(this);
+        var menu = $(t.children(".menu")[0]);
+        var cur = t.find(".var").text();
+
+        menu.empty();
+        for (var k in wr.curvars) {
+            var dtype = $(wr.curvars[k]).parent().find(".type").text();
+            if (dtype === "string") {
+                menu.append("<div class='menu_item'>" + k + "</div>");
+            }
         }
         // highlight current
         if (cur && cur !== " ") {
