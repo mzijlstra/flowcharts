@@ -49,8 +49,8 @@ class ProjectCtrl {
         $pid = $this->projectDao->create($name, $uid);
 
         $this->functionDao->createMain($pid);
-        $VIEW_DATA['value'] = $pid;
-        return "value.php";
+        $VIEW_DATA['json'] = $pid;
+        return "json.php";
     }
 
     // AJAX POST /project/(\d+)/(\w+)
