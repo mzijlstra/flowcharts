@@ -594,7 +594,10 @@ $(function () {
             t.parent().remove();
             $("#fun-names .fun")[0].click();
 
-            // TODO AJAX delete function
+            // AJAX delete function
+            var fid = t.parent().attr("fid");
+            $.post("../function/" + fid + "/delete");
+            return true;
         }
     });
 

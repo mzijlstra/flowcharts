@@ -95,4 +95,13 @@ class ProjectCtrl {
         $name = filter_input(INPUT_POST, "name");
         $this->functionDao->rename($fid, $name);
     }
+    
+    // AJAX POST /function/(\d+)/delete
+    public function deleteFunction() {
+        global $URI_PARAMS;
+        $fid = $URI_PARAMS[1];
+        
+        $this->functionDao->delete($fid);
+    }
+
 }
