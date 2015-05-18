@@ -25,8 +25,9 @@ function isLoggedIn() {
     if (!isset($_SESSION['user'])) {
         // TODO store the original request URL?
         // That way we can go there after logging in
-        $_SESSION['error'] = "Please Login First";
-        header("Location: login");
+        global $MY_BASE;
+        $_SESSION['error'] = "Please Login:";
+        header("Location: ${MY_BASE}/login");
         exit();
     }    
 }

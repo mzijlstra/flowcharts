@@ -25,7 +25,7 @@
                     <br />
                     <input type="password" name="pass" placeholder="Password" />
                     <br />
-                    <input type="submit" value="submit" />
+                    <div id="lgn_right"><input type="submit" value="Login" /></div>
                 </form>
             </div>
         </div>

@@ -22,14 +22,16 @@ h1 {
 .container {
     border: 1px solid black;
     padding: 10px;
-    text-align: right;
 }
 .error {
-    color: red;
-    text-align: center;
+    font-size: 15px;
+    padding-bottom: 3px;
 }
 input[type=email], input[type=password] { 
     font-family: inherit;
     margin-bottom: 5px;
     width: 170px;
+}
+#lgn_right {
+    text-align: right;
 }
