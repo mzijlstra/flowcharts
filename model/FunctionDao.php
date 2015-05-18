@@ -52,5 +52,11 @@ class FunctionDao {
         $stmt = $this->db->prepare("UPDATE `function` SET instructions = :idata"
                 . " WHERE id = :fid");
         $stmt->execute(array("fid" => $fid, "idata" => $idata));
-    }     
+    } 
+    
+    public function rename($fid, $name) {
+        $stmt = $this->db->prepare("UPDATE `function` SET name = :name"
+                . " WHERE id = :fid");
+        $stmt->execute(array("fid" => $fid, "name" => $name));
+    }
 }

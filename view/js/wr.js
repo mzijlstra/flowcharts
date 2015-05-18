@@ -7,7 +7,7 @@
 var wr = {};
 
 // hook up event handlers and frequently used elements
-$(function() {
+$(function () {
     "use strict";
 
     wr.mode = "beginner";
@@ -18,15 +18,15 @@ $(function() {
     /*
      * Setup AJAX Error Handling
      */
-    $(document).ajaxError(function(e) {
+    $(document).ajaxError(function (e) {
         alert("Network Error -- please check your connection and try again.");
     });
 
     /*
      * Helper functions
      */
-    
-    var postVarUpd = function() {
+
+    var postVarUpd = function () {
         var vdata = $(".variables.active").html();
         var fid = $(".fun.active").attr("fid");
         $.post("../function/" + fid + "/vars", {
@@ -34,7 +34,7 @@ $(function() {
         });
     };
 
-    var postInsUpd = function() {
+    var postInsUpd = function () {
         var idata = $(".instructions.active").html();
         var fid = $(".fun.active").attr("fid");
         $.post("../function/" + fid + "/ins", {
@@ -42,7 +42,7 @@ $(function() {
         });
     };
 
-    var cloneBlock = function(id) {
+    var cloneBlock = function (id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
 
@@ -56,16 +56,16 @@ $(function() {
         return result;
     };
 
-    var inputHere = function(elem, blur) {
+    var inputHere = function (elem, blur) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
         i.val(t.text());
-        i.keydown(function(event) {
+        i.keydown(function (event) {
             if (event.which === 13) {
                 this.blur();
             }
         });
-        i.blur(function() {
+        i.blur(function () {
             var t = $(this);
 
             // check if the blur handler needs executing
@@ -78,7 +78,7 @@ $(function() {
             var exp = t.val();
             var p = t.parent();
             p.empty().text(exp);
-            
+
             // send changes to server
             postInsUpd();
         });
@@ -92,13 +92,13 @@ $(function() {
      */
 
     // store current var name on focus
-    $(".variable .var").focus(function() {
+    $(".variable .var").focus(function () {
         var t = $(this);
         t.attr("cur", t.val());
     });
 
     // no spaces in variable names, blur on enter
-    $(".variable .var").keydown(function(event) {
+    $(".variable .var").keydown(function (event) {
         if (event.which === 32) {
             return false;
         } else if (event.which === 13) {
@@ -107,7 +107,7 @@ $(function() {
     });
 
     // check if we need to update var name on blur
-    $(".variable .var, #declaration .var").blur(function(event) {
+    $(".variable .var, #declaration .var").blur(function (event) {
         var t = $(this);
 
         // cleanly exit fields that are not defined yet
@@ -149,7 +149,7 @@ $(function() {
                 wr.curvars[newn] = t.parent().get(0);
 
                 // update instructions with old name to new name
-                $('span.var:contains(' + oldn + ')').text(function(i, s) {
+                $('span.var:contains(' + oldn + ')').text(function (i, s) {
                     return s === oldn ? newn : s;
                 });
 
@@ -195,7 +195,7 @@ $(function() {
     });
 
     // handle type menu clicks
-    $(".type_container .menu_item").click(function() {
+    $(".type_container .menu_item").click(function () {
         var t = $(this);
         var display = t.parents(".type_container").find(".type");
         var type = t.text();
@@ -225,10 +225,10 @@ $(function() {
     });
 
     // reset type menu hide status & add item highlight
-    $(".type").mouseenter(function() {
+    $(".type").mouseenter(function () {
         var t = $(this);
         var m = t.parent().children(".menu");
-        m.find(".menu_item").each(function(i, o) {
+        m.find(".menu_item").each(function (i, o) {
             if ($(o).text() === t.text()) {
                 $(o).addClass("menu_hl");
             }
@@ -237,17 +237,17 @@ $(function() {
     });
 
     // remove item highlight (both type and var menus!)
-    $(".menu").mouseenter(function() {
+    $(".menu").mouseenter(function () {
         $(this).children(".menu_hl").removeClass("menu_hl");
     });
 
     // hide menu when mouse out
-    $(".type_container").mouseleave(function() {
+    $(".type_container").mouseleave(function () {
         $(this).find(".menu").hide();
     });
 
     // variable delete handler
-    $(".variable .del").click(function() {
+    $(".variable .del").click(function () {
         var p = $(this).parent();
         var name = p.children("input").val();
         if (!p.hasClass("inuse")) {
@@ -268,7 +268,7 @@ $(function() {
                     ptext = params.text();
                     params.text(ptext.replace(/^, /, ""));
                 }
-                
+
                 // change signature on server
                 postInsUpd();
             }
@@ -280,11 +280,11 @@ $(function() {
     });
 
     // gray out variable deletes if var in use
-    $(".variable").mouseenter(function() {
+    $(".variable").mouseenter(function () {
         var t = $(this);
         var name = t.children("input").val();
         var inuse = false;
-        $(".statement .var").each(function(i, o) {
+        $(".statement .var").each(function (i, o) {
             if (!inuse && $(o).text() === name) {
                 inuse = true;
                 t.addClass("inuse");
@@ -301,7 +301,7 @@ $(function() {
      */
 
     // display insertion menu when clicking on a connection block
-    $(".connection").click(function(event) {
+    $(".connection").click(function (event) {
         // get the amount of variables declared, compatible with old brwsrs
         var size = 0;
         if (Object.keys) {
@@ -327,14 +327,14 @@ $(function() {
     });
 
     // hide insertion menu when clicking elsewhere
-    $("body").click(function() {
+    $("body").click(function () {
         if (wr.ins_menu.css("display") !== "none") {
             wr.ins_menu.hide();
         }
     });
 
     // menu clicks trigger insertions based on id clicked
-    wr.ins_menu.click(function(event) {
+    wr.ins_menu.click(function (event) {
         var t = $(event.target);
         var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.after(cloneBlock("#connection"))
@@ -350,7 +350,7 @@ $(function() {
     });
 
     // repopulate var select menu (asgn) on mouse enter
-    $(".assignment .var_container").mouseenter(function(event) {
+    $(".assignment .var_container").mouseenter(function (event) {
         var t = $(this);
         var menu = $(t.children(".menu")[0]);
         var cur = t.find(".var").text();
@@ -368,7 +368,7 @@ $(function() {
 
     // repopulate var select menu (input) on mouse enter
     // TODO refactory copy-pasted code?
-    $(".input .var_container").mouseenter(function(event) {
+    $(".input .var_container").mouseenter(function (event) {
         var t = $(this);
         var menu = $(t.children(".menu")[0]);
         var cur = t.find(".var").text();
@@ -388,7 +388,7 @@ $(function() {
     });
 
     // handle var select menu clicks
-    $(".var_container .menu").click(function(event) {
+    $(".var_container .menu").click(function (event) {
         var t = $(event.target);
         $(this).parent().children("span.var").text(t.text());
         $(this).hide();
@@ -397,12 +397,12 @@ $(function() {
     });
 
     // hide var select menu if not clicked
-    $(".var_container").mouseleave(function() {
+    $(".var_container").mouseleave(function () {
         $(this).children(".menu").hide();
     });
 
     // hook up delete click handlers
-    $(".statement .del").click(function() {
+    $(".statement .del").click(function () {
         var p = $(this).parent();
         if (!p.hasClass("statement")) {
             p = p.parents(".statement");
@@ -417,8 +417,8 @@ $(function() {
     });
 
     // add confirmation meessages if and while stmts
-    $("#if, #while").each(function(i, o) {
-        o.destroy = function() {
+    $("#if, #while").each(function (i, o) {
+        o.destroy = function () {
             return confirm("Are you sure you want to delete this "
                     + o.getAttribute("id") + " statement and everything "
                     + "inside it?");
@@ -428,11 +428,11 @@ $(function() {
     /*
      * Expression declaration related code
      */
-    $("span.exp, div.exp").click(function() {
+    $("span.exp, div.exp").click(function () {
         inputHere(this);
     });
 
-    $(".diamond").click(function(event) {
+    $(".diamond").click(function (event) {
         inputHere($(this).find(".exp").get(0));
     });
 
@@ -442,7 +442,7 @@ $(function() {
      */
 
     // add a function
-    $("#add_fun").click(function() {
+    $("#add_fun").click(function () {
 
         // ask for new function name
         var bad = true;
@@ -484,7 +484,7 @@ $(function() {
             "type": "POST",
             "url": pid + "/" + n,
             "data": {"idata": idata.html(), "vdata": vdata.html()},
-            "success": function(data) {
+            "success": function (data) {
                 var fid = JSON.parse(data);
                 if ($.isNumeric(fid)) {
                     // add the function to the HTML
@@ -516,7 +516,7 @@ $(function() {
     });
 
     // switching to a different function
-    $(".fun").click(function() {
+    $(".fun").click(function () {
         var t = $(this);
         var n = t.find(".name").text();
 
@@ -533,10 +533,10 @@ $(function() {
     });
 
     // renaming a function
-    $(".start").click(function() {
+    $(".start").click(function () {
         var n = $(this).find(".name");
         n.attr("cur", n.text());
-        inputHere(n.get(0), function(t) {
+        inputHere(n.get(0), function (t) {
             var cur = n.attr("cur");
             if (cur === "main") {
                 alert("Cannot rename function main");
@@ -570,15 +570,19 @@ $(function() {
                 $("#vars_" + cur).attr("id", "vars_" + upd);
                 $("#ins_" + cur).attr("id", "ins_" + upd);
                 $("#fun-names .active .name").text(upd);
+
+                // AJAX rename function
+                var fid = $(".fun.active").attr("fid");
+                $.post("../function/" + fid + "/rename", {
+                    "name": upd
+                });
                 return true;
             }
         });
-
-        // TODO AJAX rename function
     });
 
     // function delete handler
-    $(".rem").click(function() {
+    $(".rem").click(function () {
         var t = $(this);
         var n = t.parent().children(".name").text();
         if (n === "main") {
@@ -589,20 +593,20 @@ $(function() {
             $("#ins_" + n).remove();
             t.parent().remove();
             $("#fun-names .fun")[0].click();
-        }
 
-        // TODO AJAX delete function
+            // TODO AJAX delete function
+        }
     });
 
     /*
      * Startup code
      */
     // build local variable namespaces in wr.functions
-    (function() {
-        $("#workspace .fun .name").each(function() {
+    (function () {
+        $("#workspace .fun .name").each(function () {
             var name = $(this).text();
             wr.functions[name] = {};
-            $("#vars_" + name + " input.var").each(function() {
+            $("#vars_" + name + " input.var").each(function () {
                 var v = $(this).val();
                 if (v) {
                     wr.functions[name][v] = this;

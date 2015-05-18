@@ -31,6 +31,7 @@ $post_ctrl = array(
     "|/project/(\w+)|" => "ProjectCtrl@create",
     "|/function/(\d+)/vars|" => "ProjectCtrl@updVars",
     "|/function/(\d+)/ins|" => "ProjectCtrl@updIns",
+    "|/function/(\d+)/rename|" => "ProjectCtrl@renameFunction",
     "|/user$|" => "UserCtrl@create",
     "|/user/(\d+)|" => "UserCtrl@update",
 );

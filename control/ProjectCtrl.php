@@ -87,4 +87,12 @@ class ProjectCtrl {
         $this->functionDao->updIns($fid, $idata);
     }
 
+    // AJAX POST /function/(\d+)/rename
+    public function renameFunction() {
+        global $URI_PARAMS;
+        $fid = $URI_PARAMS[1];
+        
+        $name = filter_input(INPUT_POST, "name");
+        $this->functionDao->rename($fid, $name);
+    }
 }
