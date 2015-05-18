@@ -12,8 +12,8 @@ preg_match("|(.*)/frontController.php|", $__self, $matches);
 $MY_BASE = $matches[1];   
 
 $the_uri = filter_input(INPUT_SERVER, "REQUEST_URI", FILTER_SANITIZE_URL);
-preg_match("|(.*)web-raptor(/.*)|", $the_uri, $matches);
-$MY_URI = $matches[2];
+preg_match("|$MY_BASE(/.*)|", $the_uri, $matches);
+$MY_URI = $matches[1];
 
 $MY_METHOD = filter_input(INPUT_SERVER, "REQUEST_METHOD", FILTER_SANITIZE_STRING);
 $URI_PARAMS = array(); // populated with URI parameters on URI match in routing

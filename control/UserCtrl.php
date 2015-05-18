@@ -12,6 +12,7 @@ class UserCtrl {
 
     // POST /login
     public function login() {
+        global $MY_BASE;
         // start session, and clean any login errors 
         unset($_SESSION['error']);
 
@@ -36,9 +37,17 @@ class UserCtrl {
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);
 
-            // redirect to the most recent project
-            $pid = $this->projectDao->recent($row['id']);
-            return "Location: project/$pid";
+            $redirect = "Location: $MY_BASE/";
+            if (isset($_SESSION['login_to'])) {
+                // redirect to original requested URL
+                $redirect .= $_SESSION['login_to'];
+                unset($_SESSION['login_to']);
+            } else {
+                // redirect to the most recent project
+                $pid = $this->projectDao->recent($row['id']);
+                $redirect .= "project/$pid";
+            }
+            return $redirect;
         } else {
             $_SESSION['error'] = "Invalid email / pass combo";
             return "Location: login";

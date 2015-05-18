@@ -23,9 +23,16 @@ $sec = array(
 
 function isLoggedIn() {
     if (!isset($_SESSION['user'])) {
-        // TODO store the original request URL?
-        // That way we can go there after logging in
         global $MY_BASE;
+        global $MY_URI;
+
+        // If the user requests a specific project store the request URL
+        // That way we can go there after logging in
+        if (preg_match("|project/(\d+)|", $MY_URI)) {
+            $_SESSION['login_to'] = $MY_URI;
+        }
+
+        // Then show login page
         $_SESSION['error'] = "Please Login:";
         header("Location: ${MY_BASE}/login");
         exit();
