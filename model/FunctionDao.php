@@ -23,9 +23,11 @@ class FunctionDao {
     }
 
     public function createMain($pid) {
-        $stmt = $this->db->prepare("INSERT INTO `function` VALUES( 
+        // create a 'main' by duplicating function 0
+        $stmt = $this->db->prepare("INSERT INTO `function` 
+            (id, `name`, instructions, variables, created, modified, active, project_id)
             SELECT NULL, `name`, instructions, variables, NOW(), NOW(), 1, :pid 
-            FROM `function` WHERE id = 0)");
+            FROM `function` WHERE id = 0");
         $stmt->execute(array("pid" => $pid));
 
         return $this->db->lastInsertId();

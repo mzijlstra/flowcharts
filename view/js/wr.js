@@ -602,6 +602,22 @@ $(function () {
     });
 
     /*
+     * Project related code
+     */
+    $("#new_proj").click(function () {
+        var name = prompt("Project Name:");
+        $.ajax({
+            "type": "POST",
+            "url": name,
+            "success": function (data) {
+                var pid = JSON.parse(data);
+                window.location.assign(pid);
+            }
+        });
+    });
+
+
+    /*
      * Startup code
      */
     // build local variable namespaces in wr.functions

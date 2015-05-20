@@ -18,7 +18,7 @@ class ProjectCtrl {
 
         $pid = $URI_PARAMS[1];
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
-        
+
         $proj = $this->projectDao->get($pid);
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
@@ -46,9 +46,18 @@ class ProjectCtrl {
 
         $name = $URI_PARAMS[1];
         $uid = $_SESSION['user']['id'];
-        $pid = $this->projectDao->create($name, $uid);
 
-        $this->functionDao->createMain($pid);
+        try {
+            $this->projectDao->db->beginTransaction();
+
+            $pid = $this->projectDao->create($name, $uid);
+            $this->functionDao->createMain($pid);
+
+            $this->projectDao->db->commit();
+        } catch (PDOException $e) {
+            $this->projectDao->db->rollBack();
+            throw $e;
+        }
         $VIEW_DATA['json'] = $pid;
         return "json.php";
     }
@@ -91,16 +100,16 @@ class ProjectCtrl {
     public function renameFunction() {
         global $URI_PARAMS;
         $fid = $URI_PARAMS[1];
-        
+
         $name = filter_input(INPUT_POST, "name");
         $this->functionDao->rename($fid, $name);
     }
-    
+
     // AJAX POST /function/(\d+)/delete
     public function deleteFunction() {
         global $URI_PARAMS;
         $fid = $URI_PARAMS[1];
-        
+
         $this->functionDao->delete($fid);
     }
 

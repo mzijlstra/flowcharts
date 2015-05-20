@@ -18,8 +18,8 @@
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
-                <div class="menu_item">New Project</div>
-                <div class="menu_item">Open Project</div>
+                <div id="new_proj" class="menu_item">New Project</div>
+                <div id="open_proj" class="menu_item">Open Project</div>
             </div>
         </div>
 
