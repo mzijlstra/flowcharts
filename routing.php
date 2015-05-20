@@ -76,7 +76,6 @@ switch ($MY_METHOD) {
 
 function applyView($view) {
     global $VIEW_DATA;
-    global $MY_METHOD;
 
     if (preg_match("/^Location: /", $view)) {
         if ($VIEW_DATA) {
