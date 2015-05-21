@@ -21,17 +21,23 @@ $(function () {
     $(document).ajaxError(function (e) {
         alert("Network Error -- please check your connection and try again.");
     });
+    var shouldNotHaveData = function (data) {
+        // if it has data it's probably because of a redirect to the login page
+        // due to a session timeout
+        if (data !== "") {
+            window.location.assign("../login");
+        }
+    }
 
     /*
      * Helper functions
-     */
-
+     */    
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
         var fid = $(".fun.active").attr("fid");
         $.post("../function/" + fid + "/vars", {
             "vdata": vdata
-        });
+        }, shouldNotHaveData);
     };
 
     var postInsUpd = function () {
@@ -39,7 +45,7 @@ $(function () {
         var fid = $(".fun.active").attr("fid");
         $.post("../function/" + fid + "/ins", {
             "idata": idata
-        });
+        }, shouldNotHaveData);
     };
 
     var cloneBlock = function (id) {
@@ -484,8 +490,8 @@ $(function () {
             "type": "POST",
             "url": pid + "/" + n,
             "data": {"idata": idata.html(), "vdata": vdata.html()},
-            "success": function (data) {
-                var fid = JSON.parse(data);
+            "dataType": "json",
+            "success": function (fid) {
                 if ($.isNumeric(fid)) {
                     // add the function to the HTML
                     wr.functions[n] = {};
@@ -608,15 +614,15 @@ $(function () {
         var name = prompt("Project Name:");
         $.ajax({
             "type": "POST",
-            "url": name,
+            "url": encodeURIComponent(name),
             "success": function (data) {
                 var pid = JSON.parse(data);
                 window.location.assign(pid);
             }
         });
     });
-    
-    $("#open_proj").click(function() {
+
+    $("#open_proj").click(function () {
         window.location.assign("../project");
     });
 
