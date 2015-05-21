@@ -39,12 +39,12 @@ class ProjectCtrl {
         return "projects.php";
     }
 
-    // AJAX POST /project/(\w+)
+    // AJAX POST /project/([^/]+)$
     public function create() {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
-        $name = $URI_PARAMS[1];
+        $name = urldecode($URI_PARAMS[1]);
         $uid = $_SESSION['user']['id'];
 
         try {
