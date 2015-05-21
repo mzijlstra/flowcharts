@@ -615,6 +615,10 @@ $(function () {
             }
         });
     });
+    
+    $("#open_proj").click(function() {
+        window.location.assign("../project");
+    });
 
 
     /*

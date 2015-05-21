@@ -26,7 +26,7 @@ class ProjectCtrl {
         return "wr.php";
     }
 
-    // AJAX GET /project$
+    // GET /project$
     public function getProjects() {
         global $VIEW_DATA;
 
@@ -34,9 +34,9 @@ class ProjectCtrl {
 
         // Retrieve all projects for this user
         $projects = $this->projectDao->all($uid);
-        $VIEW_DATA['json'] = $projects;
+        $VIEW_DATA['data'] = $projects;
 
-        return "json.php";
+        return "projects.php";
     }
 
     // AJAX POST /project/(\w+)

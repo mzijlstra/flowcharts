@@ -465,3 +465,37 @@ footer {
   width: 300px;
   margin-left: -150px;
   text-align: center; }
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-color: #eee;
+  opacity: 0.5; }
+
+#project_list {
+  min-height: 200px;
+  margin: 5em; }
+  #project_list table {
+    width: 100%;
+    border-collapse: collapse; }
+    #project_list table .pname {
+      width: 50%; }
+    #project_list table .left {
+      text-align: left; }
+    #project_list table .center {
+      text-align: center; }
+    #project_list table td {
+      border: 1px solid #336;
+      padding: 0.3em 1em; }
+    #project_list table .project:nth-child(odd) {
+      background-color: #f8f8f8; }
+    #project_list table .project:hover {
+      background-color: #dde;
+      cursor: pointer; }
+
+/*# sourceMappingURL=page.css.map */

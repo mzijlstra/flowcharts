@@ -88,7 +88,7 @@ div#projects:hover #project_menu {
         padding: 3px;
         border-bottom: $line dashed $fg;
     }
-    
+
     .variables {
         display: none;
     }
@@ -109,7 +109,7 @@ div#projects:hover #project_menu {
         padding-top: 6px;
         padding-left: 18px;
         border-bottom: $line $border;
-        
+
         #add_fun {
             position: absolute;
             top: 0px;
@@ -143,7 +143,7 @@ div#projects:hover #project_menu {
                 left: -1px;
                 border-top: 5px solid white;                                
             }
-            
+
             .rem {
                 position: absolute;
                 top: -3px;
@@ -170,7 +170,7 @@ div#projects:hover #project_menu {
         right: 0px;
         bottom: 0px;
         overflow: auto;
-        
+
         .instructions {
             display: none;
         }
@@ -178,7 +178,7 @@ div#projects:hover #project_menu {
             display: block;
         }
     }
-    
+
 }
 
 /* all custom menus */
@@ -222,4 +222,45 @@ footer {
     text-align: center;
 }
 
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: #eee;
+    opacity: 0.5;
+}
 
+#project_list {
+    min-height: 200px;
+    margin: 5em;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        .pname {
+            width: 50%;
+        }
+        .left {
+            text-align: left;
+        }
+        .center {
+            text-align: center;
+        }
+        td {
+            border: $line $border;
+            padding: 0.3em 1em;
+        }
+        .project:nth-child(odd) {
+            background-color: $menu;
+        }
+        .project:hover {
+            background-color: $hl;
+            cursor: pointer;
+        }
+    }
+}
