@@ -49,7 +49,7 @@ class UserCtrl {
             }
             return $redirect;
         } else {
-            $_SESSION['error'] = "Invalid email / pass combo";
+            $_SESSION['error'] = "Error: try again";
             return "Location: login";
         }
     }
