@@ -77,39 +77,11 @@ div#projects:hover #project_menu {
     border-right: $line $border;
 }
 
-#controls {
-    border-bottom: $line $border;
-    padding: 3px;
-    text-align: center;
-    
-    .play_btn {
-        display: inline-block;
-        width: 0px;
-        height: 0px;
-        border-left: 9px $border;
-        border-top: 5px $hide;
-        border-bottom: 5px $hide;
-    }
-    
-    .pause_btn {
-        display: inline-block;
-        .pause_bar {
-            width: 0px;
-            height: 0px;
-            display: inline-block;
-            border-left: 3px $border;
-            border-top: 5px $border;
-            border-bottom: 5px $border;
-            margin-left: -6px;
-        }
-    }
-}
-
 #var_area {
     position: absolute;
     left: 0px;
     width: 250px;
-    top: 21px;
+    top: 0px;
     bottom: 0px;
 
     .label {
@@ -127,7 +99,7 @@ div#projects:hover #project_menu {
 
 #functions {
     position: absolute;
-    top: 21px;
+    top: 0px;
     bottom: 0px;
     left: 250px;
     right: 0px;

@@ -26,15 +26,6 @@
         <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
 
         <div id="workspace">
-            <div id="controls">
-                STEP
-                <div class="play_btn"></div>
-                <div class="pause_btn">
-                    <div class="pause_bar pright"></div>
-                    <div class="pause_bar pright"></div>
-                </div>
-                RESET
-            </div>
             <div id="var_area">
                 <div id="variables">
                     <?php foreach ($funcs as $name => $fdata) : ?>

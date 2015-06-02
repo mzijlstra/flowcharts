@@ -357,33 +357,11 @@ div#projects:hover #project_menu {
   border-bottom: 1px solid #336;
   border-right: 1px solid #336; }
 
-#controls {
-  border-bottom: 1px solid #336;
-  padding: 3px;
-  text-align: center; }
-  #controls .play_btn {
-    display: inline-block;
-    width: 0px;
-    height: 0px;
-    border-left: 9px solid #336;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent; }
-  #controls .pause_btn {
-    display: inline-block; }
-    #controls .pause_btn .pause_bar {
-      width: 0px;
-      height: 0px;
-      display: inline-block;
-      border-left: 3px solid #336;
-      border-top: 5px solid #336;
-      border-bottom: 5px solid #336;
-      margin-left: -6px; }
-
 #var_area {
   position: absolute;
   left: 0px;
   width: 250px;
-  top: 21px;
+  top: 0px;
   bottom: 0px; }
   #var_area .label {
     padding: 3px;
@@ -395,7 +373,7 @@ div#projects:hover #project_menu {
 
 #functions {
   position: absolute;
-  top: 21px;
+  top: 0px;
   bottom: 0px;
   left: 250px;
   right: 0px;
