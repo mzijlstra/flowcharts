@@ -1,9 +1,10 @@
 FEATURES TO ADD:
-- add returns inside if statements
-- PHP / AJAX for function renaming & deleting
-- Project management
+- In the variable selection drop down only list variables that have the correct type. For example input should only be able to select string type variables.
+- add returns inside if statements?
 - INTERPRETER (will connect to JavaScript, easier than implementing an interpreter for a homebrew language)
 
+2015-05:
+Finished AJAX stuff for functions and project management
 
 2014-08-12:
 Stayed home all day to work on web-raptor. Was able to implement a good amount of features including variable selection in assignment and input statement, and expressions in output, assignment, if and while statements.
