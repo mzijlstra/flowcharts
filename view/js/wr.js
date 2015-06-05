@@ -11,6 +11,7 @@ $(function () {
     "use strict";
 
     wr.functions = {'main': {}};
+    wr.curfun = 'main';
     wr.curvars = wr.functions.main;
     wr.ins_menu = $('#ins_menu');
     wr.state; //gets set by the control button initialization code
@@ -515,6 +516,7 @@ $(function () {
 
         // also switch over global vars
         wr.curvars = wr.functions[n];
+        wr.curfun = n;
     });
 
     // renaming a function
@@ -555,6 +557,7 @@ $(function () {
                 $("#vars_" + cur).attr("id", "vars_" + upd);
                 $("#ins_" + cur).attr("id", "ins_" + upd);
                 $("#fun-names .active .name").text(upd);
+                wr.curfun = upd;
 
                 // AJAX rename function
                 var fid = $(".fun.active").attr("fid");
@@ -577,6 +580,7 @@ $(function () {
             $("#vars_" + n).remove();
             $("#ins_" + n).remove();
             t.parent().remove();
+            delete wr.functions[n];
             $("#fun-names .fun")[0].click();
 
             // AJAX delete function
