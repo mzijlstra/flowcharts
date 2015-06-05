@@ -21,7 +21,7 @@
                         <br />
                         <?php unset($_SESSION['error']) ?>
                     <?php endif; ?>
-                    <input type="email" name="email" placeholder="Email Address" />
+                    <input type="email" name="email" placeholder="Email Address" autofocus />
                     <br />
                     <input type="password" name="pass" placeholder="Password" />
                     <br />
