@@ -357,6 +357,76 @@ div#projects:hover #project_menu {
   border-bottom: 1px solid #336;
   border-right: 1px solid #336; }
 
+#controls {
+  z-index: 100;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 75px;
+  height: 75px;
+  border-left: 1px solid #336;
+  border-bottom: 1px solid #336;
+  cursor: pointer; }
+  #controls #play_pause {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: radial-gradient(circle, #99D 1%, #336 57%, #f8f8f8 60%); }
+    #controls #play_pause #play_btn {
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      border-left: 22px solid white;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent; }
+    #controls #play_pause #pause_btn {
+      display: none;
+      position: absolute;
+      top: 23px;
+      left: 28px; }
+      #controls #play_pause #pause_btn .pause_bar {
+        width: 0px;
+        height: 0px;
+        display: inline-block;
+        border-left: 10px solid white;
+        border-top: 25px solid white;
+        margin-left: -3px; }
+  #controls .control {
+    width: 75px;
+    text-align: center;
+    border: 1px solid #336;
+    position: absolute;
+    background-color: #f8f8f8; }
+  #controls #reset {
+    left: -16px;
+    top: 76px;
+    transform: rotate(-90deg);
+    transform-origin: 0 0; }
+  #controls #step_btn, #controls #delay_disp {
+    bottom: -16px;
+    left: -1px;
+    border-right: none; }
+  #controls #step_btn {
+    display: none; }
+  #controls #corner_ctrl {
+    position: absolute;
+    left: -17px;
+    bottom: -17px;
+    width: 0px;
+    height: 0px;
+    border-right: 16px solid #336;
+    border-bottom: 16px solid transparent; }
+    #controls #corner_ctrl #corner_menu {
+      position: absolute;
+      top: 0px;
+      right: -16px;
+      border-right: 15px solid #f8f8f8;
+      border-bottom: 15px solid transparent; }
+
 #var_area {
   position: absolute;
   left: 0px;
@@ -381,7 +451,8 @@ div#projects:hover #project_menu {
   #functions #fun-names {
     padding-top: 6px;
     padding-left: 18px;
-    border-bottom: 1px solid #336; }
+    border-bottom: 1px solid #336;
+    padding-right: 4px; }
     #functions #fun-names #add_fun {
       position: absolute;
       top: 0px;
@@ -390,12 +461,16 @@ div#projects:hover #project_menu {
       cursor: pointer; }
     #functions #fun-names span.fun {
       position: relative;
+      display: inline-block;
       border: 1px solid #336;
+      background-color: #f8f8f8;
+      cursor: default;
       padding-top: 2px;
       padding-left: 8px;
       padding-right: 8px;
-      cursor: default;
-      margin-right: 1px; }
+      margin-right: -6px;
+      margin-bottom: -2px;
+      margin-top: 2px; }
       #functions #fun-names span.fun .cornerb, #functions #fun-names span.fun .cornerw {
         position: absolute;
         top: 0px;
@@ -421,9 +496,9 @@ div#projects:hover #project_menu {
     #functions #fun-names span.fun:hover .rem {
       display: inline; }
   #functions #instructions {
-    position: absolute;
+    position: relative;
     padding: 5px;
-    top: 21px;
+    top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;

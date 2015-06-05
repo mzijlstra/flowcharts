@@ -25,7 +25,7 @@
 
         <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
 
-        <div id="workspace">
+        <div id="workspace">            
             <div id="var_area">
                 <div id="variables">
                     <?php foreach ($funcs as $name => $fdata) : ?>
@@ -49,8 +49,31 @@
                         </span>
                     <?php endforeach; ?>
                 </div> <!-- end fun-names -->
-                
+
                 <div id="instructions">
+                    <div id="controls">
+                        <div id="play_pause">
+                            <div id="play_btn">
+                            </div>
+                            <div id="pause_btn">
+                                <div class="pause_bar"></div>
+                                <div class="pause_bar"></div>
+                            </div>
+                        </div>
+                        <div id="reset" class="control">
+                            RESET
+                        </div>
+                        <div id="delay_disp" class="control">
+                            DELAY <span>0.1</span>
+                        </div>
+                        <div id="step_btn" class="control">
+                            STEP
+                        </div>
+                        <div id="corner_ctrl">
+                            <div id="corner_menu"></div>
+                        </div>
+                    </div>
+
                     <?php foreach ($funcs as $name => $fdata) : ?>
                         <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
                             <?= $fdata['instructions'] ?>
@@ -59,7 +82,7 @@
                 </div> <!-- end instructions -->
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
-        
+
         <footer>Web-Raptor</footer>
 
         <div id="ins_menu" class="menu">

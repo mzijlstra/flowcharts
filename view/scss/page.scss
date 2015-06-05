@@ -77,6 +77,94 @@ div#projects:hover #project_menu {
     border-right: $line $border;
 }
 
+#controls {
+    z-index: 100;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 75px;
+    height: 75px;
+    border-left: $line $border;
+    border-bottom: $line $border;
+    cursor: pointer;    
+
+    #play_pause {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        background: radial-gradient(circle, #99D 1%, $fg 57%, $menu 60%);
+
+        #play_btn {
+            width: 0px;
+            height: 0px;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            border-left: 22px solid $bg;
+            border-top: 15px $hide;
+            border-bottom: 15px $hide;
+        }
+
+        #pause_btn {
+            display: none;
+            position: absolute;
+            top: 23px;
+            left: 28px;
+
+            .pause_bar {
+                width: 0px;
+                height: 0px;
+                display: inline-block;
+                border-left: 10px solid $bg;
+                border-top: 25px solid $bg;
+                margin-left: -3px;
+            }
+        }        
+    }
+
+    .control {
+        width: 75px;
+        text-align: center;
+        border: $line $border;
+        position: absolute;        
+        background-color: $menu;
+    }
+    #reset {
+        left: -15px - $line;
+        top: 75px + $line;
+        transform: rotate(-90deg);
+        transform-origin: 0 0;
+    }
+    #step_btn, #delay_disp {
+        bottom: -15px -$line;
+        left: -$line;
+        border-right: none;
+    }
+    #step_btn {
+        display: none;
+    }
+
+    #corner_ctrl {
+        position: absolute;
+        left: -17px;
+        bottom: -17px;
+        width: 0px;
+        height: 0px;
+        border-right: 16px solid $fg;
+        border-bottom: 16px $hide;
+
+        #corner_menu {
+            position: absolute;
+            top: 0px;
+            right: -16px;
+            border-right: 15px solid $menu;
+            border-bottom: 15px $hide;
+        }
+    }
+}
+
 #var_area {
     position: absolute;
     left: 0px;
@@ -109,6 +197,7 @@ div#projects:hover #project_menu {
         padding-top: 6px;
         padding-left: 18px;
         border-bottom: $line $border;
+        padding-right: 4px;
 
         #add_fun {
             position: absolute;
@@ -120,12 +209,16 @@ div#projects:hover #project_menu {
 
         span.fun {
             position: relative;
+            display: inline-block;
             border: $line $border;
+            background-color: $menu;
+            cursor: default; 
             padding-top: 2px;
             padding-left: 8px;
             padding-right: 8px;
-            cursor: default; 
-            margin-right: 1px;
+            margin-right: -6px;
+            margin-bottom: -2px;
+            margin-top: 2px;
 
             .cornerb {
                 position: absolute;
@@ -163,9 +256,9 @@ div#projects:hover #project_menu {
     }
 
     #instructions {
-        position: absolute;
+        position: relative;
         padding: 5px;
-        top: 21px;
+        top: 0px;
         left: 0px;
         right: 0px;
         bottom: 0px;
