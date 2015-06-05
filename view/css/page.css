@@ -406,6 +406,8 @@ div#projects:hover #project_menu {
     top: 76px;
     transform: rotate(-90deg);
     transform-origin: 0 0; }
+  #controls #reset:hover {
+    color: red; }
   #controls #step_btn, #controls #delay_disp {
     bottom: -16px;
     left: -1px;

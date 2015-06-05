@@ -137,6 +137,9 @@ div#projects:hover #project_menu {
         transform: rotate(-90deg);
         transform-origin: 0 0;
     }
+    #reset:hover {
+        color: red;
+    }
     #step_btn, #delay_disp {
         bottom: -15px -$line;
         left: -$line;

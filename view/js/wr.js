@@ -606,6 +606,20 @@ $(function () {
     });
 
 
+    $("#play_pause").click(function () {
+        var play_btn = $("#play_btn");
+        var pause_btn = $("#pause_btn");
+        if (pause_btn.css("display") === undefined 
+                || pause_btn.css("display") === "none") {
+            pause_btn.css("display", "block");
+            play_btn.css("display", "none");
+        } else {
+            pause_btn.css("display", "none");
+            play_btn.css("display", "block");
+        }
+    });
+
+
     /*
      * Startup code
      */
