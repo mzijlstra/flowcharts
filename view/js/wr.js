@@ -6,14 +6,14 @@
 // wr namespace
 var wr = {};
 
-// hook up event handlers and frequently used elements
+// hook up event handlers and frequently used elements on page init
 $(function () {
     "use strict";
 
-    wr.mode = "beginner";
     wr.functions = {'main': {}};
     wr.curvars = wr.functions.main;
     wr.ins_menu = $('#ins_menu');
+    wr.state; //gets set by the control button initialization code
 
     /*
      * Setup AJAX Error Handling
@@ -27,11 +27,11 @@ $(function () {
         if (data !== "") {
             window.location.assign("../login");
         }
-    }
+    };
 
     /*
      * Helper functions
-     */    
+     */
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
         var fid = $(".fun.active").attr("fid");
@@ -143,7 +143,7 @@ $(function () {
 
                 // set value attribute to newn 
                 // otherwise .html() doesn't take it on postVarUpd
-                t.attr("value", t.val())
+                t.attr("value", t.val());
 
                 // remove old name from our vars 
                 if (oldn !== "" && wr.curvars[oldn] === elem) {
@@ -606,17 +606,70 @@ $(function () {
     });
 
 
-    $("#play_pause").click(function () {
+    /*
+     * Execution Control code
+     */
+    /*
+     * The 3 different states that the program can be in
+     * The code below uses the state pattern for the states
+     * and the module pattern so as not to pollute the namespace
+     * of this very large initialization function
+     */
+    (function () {
         var play_btn = $("#play_btn");
         var pause_btn = $("#pause_btn");
-        if (pause_btn.css("display") === undefined 
-                || pause_btn.css("display") === "none") {
+        var delay_disp = $('#delay_disp');
+        var step_btn = $('#step_btn');
+
+        var toPlayState = function () {
             pause_btn.css("display", "block");
             play_btn.css("display", "none");
-        } else {
+            step_btn.css("display", "none");
+            delay_disp.css("display", "block");
+            wr.state = states.run;
+        };
+        var toEditState = function () {
             pause_btn.css("display", "none");
             play_btn.css("display", "block");
-        }
+            step_btn.css("display", "none");
+            delay_disp.css("display", "block");
+            wr.state = states.edit;
+        };
+        var toPauseState = function () {
+            // change to the pause state
+            pause_btn.css("display", "none");
+            play_btn.css("display", "play");
+            step_btn.css("display", "block");
+            delay_disp.css("display", "none");
+            wr.state = states.pause;
+        };
+
+        var states = {
+            "edit": {
+                "playpause": toPlayState,
+                "reset": function () {
+                    // does nothing in this state
+                }
+            },
+            "run": {
+                "playpause": toPauseState,
+                "reset": toEditState
+            },
+            "pause": {
+                "playpause": toPlayState,
+                "reset": toEditState
+            }
+        };
+
+        // we start in the edit state
+        wr.state = states.edit;
+    }());
+
+    $("#play_pause").click(function () {
+        wr.state.playpause();
+    });
+    $("#reset").click(function () {
+        wr.state.reset();
     });
 
 

@@ -258,20 +258,24 @@ div#projects:hover #project_menu {
         }
     }
 
-    #instructions {
+    #instruction-area {
         position: relative;
-        padding: 5px;
-        top: 0px;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
-        overflow: auto;
+        
+        #instructions {
+            position: relative;
+            padding: 5px;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            overflow: auto;
 
-        .instructions {
-            display: none;
-        }
-        .instructions.active {
-            display: block;
+            .instructions {
+                display: none;
+            }
+            .instructions.active {
+                display: block;
+            }
         }
     }
 
