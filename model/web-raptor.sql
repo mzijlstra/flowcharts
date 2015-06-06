@@ -79,7 +79,7 @@ INSERT INTO function VALUES(0, 'main',
         </div>
         <span class="type">string</span>
     </div>
-    <input class="var" autofocus pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
+    <input class="var" pattern="[_a-zA-Z]([_0-9a-zA-Z]+)?"/>
 </div>', 
 NOW(), NOW(), 0, 0); -- placeholder main 
 
