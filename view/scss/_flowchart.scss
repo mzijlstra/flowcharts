@@ -2,6 +2,24 @@
     Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
+
+$exec: greenyellow;
+
+// color for currently executing item
+.exec .executing {
+    border-color: $exec !important;
+}
+
+// pointer on all elements while executing is always default
+.exec div {
+    cursor: default !important;
+}
+
+// delete and menu items should not apear while executing
+.exec div:hover .del, .exec div:hover .menu, .exec div:hover .type {
+    display: none !important;
+}
+
 /* General components */
 .del {
     position: absolute;
@@ -55,7 +73,7 @@ div.variable.bottom .del {
     .type {
         position: relative;
         padding: 3px;
-        
+
         input {
             position: absolute;
             top: -2px;

@@ -48,9 +48,7 @@
                             <span class="rem">&times;</span>
                         </span>
                     <?php endforeach; ?>
-                </div> <!-- end fun-names -->
 
-                <div id="instruction-area">
                     <div id="controls">
                         <div id="play_pause">
                             <div id="play_btn">
@@ -74,15 +72,15 @@
                         </div>
                     </div>
 
+                </div> <!-- end fun-names -->
 
-                    <div id="instructions">
-                        <?php foreach ($funcs as $name => $fdata) : ?>
-                            <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
-                                <?= $fdata['instructions'] ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div> <!-- end instructions -->
-                </div> <!-- end instruction-area -->
+                <div id="instructions">
+                    <?php foreach ($funcs as $name => $fdata) : ?>
+                        <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
+                            <?= $fdata['instructions'] ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div> <!-- end instructions -->
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
 

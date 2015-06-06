@@ -6,6 +6,15 @@
     Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
+.exec .executing {
+  border-color: greenyellow !important; }
+
+.exec div {
+  cursor: default !important; }
+
+.exec div:hover .del, .exec div:hover .menu, .exec div:hover .type {
+  display: none !important; }
+
 /* General components */
 .del {
   position: absolute;
@@ -378,7 +387,7 @@ div#projects:hover #project_menu {
 #controls {
   z-index: 100;
   position: absolute;
-  top: 0px;
+  bottom: -77px;
   right: 0px;
   width: 75px;
   height: 75px;
@@ -471,10 +480,13 @@ div#projects:hover #project_menu {
   right: 0px;
   border-left: 1px solid #336; }
   #functions #fun-names {
+    z-index: 2;
+    position: relative;
     padding-top: 6px;
     padding-left: 18px;
     border-bottom: 1px solid #336;
-    padding-right: 4px; }
+    padding-right: 4px;
+    background-color: white; }
     #functions #fun-names #add_fun {
       position: absolute;
       top: 0px;
@@ -517,20 +529,19 @@ div#projects:hover #project_menu {
       background-color: white; }
     #functions #fun-names span.fun:hover .rem {
       display: inline; }
-  #functions #instruction-area {
-    position: relative; }
-    #functions #instruction-area #instructions {
-      position: relative;
-      padding: 5px;
-      top: 0px;
-      left: 0px;
-      right: 0px;
-      bottom: 0px;
-      overflow: auto; }
-      #functions #instruction-area #instructions .instructions {
-        display: none; }
-      #functions #instruction-area #instructions .instructions.active {
-        display: block; }
+  #functions #instructions {
+    z-index: 1;
+    position: absolute;
+    padding: 5px;
+    top: 25px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto; }
+    #functions #instructions .instructions {
+      display: none; }
+    #functions #instructions .instructions.active {
+      display: block; }
 
 /* all custom menus */
 .menu {

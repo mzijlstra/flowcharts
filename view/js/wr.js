@@ -319,7 +319,9 @@ $(function () {
         }
 
         // check if we should insert
-        if (size === 0) {
+        if ($('#workspace').hasClass("exec")) {
+            // silently inore request to show menu
+        } else if (size === 0) {
             alert("Please declare a variable first.");
             $('.variable .var').focus();
         } else if (wr.ins_menu.css("display") === "none") {
@@ -358,6 +360,10 @@ $(function () {
 
     // repopulate var select menu (asgn) on mouse enter
     $(".var_container").mouseenter(function (event) {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
+
         var t = $(this);
         var menu = $(t.children(".menu")[0]);
         var cur = t.find(".var").text();
@@ -415,10 +421,16 @@ $(function () {
      * Expression declaration related code
      */
     $("span.exp, div.exp").click(function () {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
         inputHere(this);
     });
 
     $(".diamond").click(function (event) {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
         inputHere($(this).find(".exp").get(0));
     });
 
@@ -615,9 +627,9 @@ $(function () {
      */
     /*
      * The 3 different states that the program can be in
-     * The code below uses the state pattern for the states
-     * and the module pattern so as not to pollute the namespace
-     * of this very large initialization function
+     * The code below uses the state pattern for the states;
+     * plus also the module pattern so as not to pollute the 
+     * namespace of this very large initialization function
      */
     (function () {
         var play_btn = $("#play_btn");
@@ -652,6 +664,7 @@ $(function () {
 
         var states = {
             "edit": {
+                "name": "edit",
                 "playpause": function () {
                     toPlayState();
                     workspace.removeClass("edit");
@@ -662,10 +675,12 @@ $(function () {
                 }
             },
             "run": {
+                "name": "run",
                 "playpause": toPauseState,
                 "reset": toEditState
             },
             "pause": {
+                "name": "pause",
                 "playpause": toPlayState,
                 "reset": toEditState
             }

@@ -80,7 +80,7 @@ div#projects:hover #project_menu {
 #controls {
     z-index: 100;
     position: absolute;
-    top: 0px;
+    bottom: -77px;
     right: 0px;
     width: 75px;
     height: 75px;
@@ -199,10 +199,13 @@ div#projects:hover #project_menu {
     border-left: $line $border;
 
     #fun-names { 
+        z-index: 2;
+        position: relative;
         padding-top: 6px;
         padding-left: 18px;
         border-bottom: $line $border;
         padding-right: 4px;
+        background-color: $bg;
 
         #add_fun {
             position: absolute;
@@ -260,24 +263,22 @@ div#projects:hover #project_menu {
         }
     }
 
-    #instruction-area {
-        position: relative;
-        
-        #instructions {
-            position: relative;
-            padding: 5px;
-            top: 0px;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
-            overflow: auto;
 
-            .instructions {
-                display: none;
-            }
-            .instructions.active {
-                display: block;
-            }
+    #instructions {
+        z-index: 1;
+        position: absolute;
+        padding: 5px;
+        top: 25px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        overflow: auto;
+
+        .instructions {
+            display: none;
+        }
+        .instructions.active {
+            display: block;
         }
     }
 
