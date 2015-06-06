@@ -417,7 +417,9 @@ div#projects:hover #project_menu {
     text-align: center;
     border: 1px solid #336;
     position: absolute;
-    background-color: #f8f8f8; }
+    background-color: #f8f8f8;
+    border-left: none;
+    border-right: none; }
   #controls #reset {
     left: -16px;
     top: 76px;
@@ -433,12 +435,12 @@ div#projects:hover #project_menu {
     display: none; }
   #controls #corner_ctrl {
     position: absolute;
-    left: -17px;
-    bottom: -17px;
+    left: -16px;
+    bottom: -16px;
     width: 0px;
     height: 0px;
-    border-right: 16px solid #336;
-    border-bottom: 16px solid transparent; }
+    border-right: 15px solid #336;
+    border-bottom: 15px solid transparent; }
     #controls #corner_ctrl #corner_menu {
       position: absolute;
       top: 0px;

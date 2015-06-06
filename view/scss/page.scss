@@ -130,6 +130,8 @@ div#projects:hover #project_menu {
         border: $line $border;
         position: absolute;        
         background-color: $menu;
+        border-left: none;
+        border-right: none;
     }
     #reset {
         left: -15px - $line;
@@ -151,12 +153,12 @@ div#projects:hover #project_menu {
 
     #corner_ctrl {
         position: absolute;
-        left: -17px;
-        bottom: -17px;
+        left: -16px;
+        bottom: -16px;
         width: 0px;
         height: 0px;
-        border-right: 16px solid $fg;
-        border-bottom: 16px $hide;
+        border-right: 15px solid $fg;
+        border-bottom: 15px $hide;
 
         #corner_menu {
             position: absolute;
