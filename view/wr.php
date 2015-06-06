@@ -25,7 +25,7 @@
 
         <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
 
-        <div id="workspace">            
+        <div id="workspace" class="edit">            
             <div id="var_area">
                 <div id="variables">
                     <?php foreach ($funcs as $name => $fdata) : ?>
@@ -152,7 +152,8 @@
 
             <div id="connection" class="connection">
                 <div class="line"></div>
-                <div class="point"></div>            
+                <div class="point"></div>
+                <div class="sline"></div>
                 <div class="line"></div>
             </div>
 
@@ -218,7 +219,8 @@
 
                                 <div class="connection">
                                     <div class="line"></div>
-                                    <div class="point"></div>            
+                                    <div class="point"></div>  
+                                    <div class="sline"></div>
                                     <div class="line"></div>
                                 </div>
 
@@ -231,7 +233,8 @@
 
                                 <div class="connection">
                                     <div class="line"></div>
-                                    <div class="point"></div>            
+                                    <div class="point"></div>
+                                    <div class="sline"></div>
                                     <div class="line"></div>
                                 </div>
 
@@ -269,7 +272,8 @@
                         <div class="loop_body">
                             <div class="connection">
                                 <div class="line"></div>
-                                <div class="point"></div>            
+                                <div class="point"></div>
+                                <div class="sline"></div>
                                 <div class="line"></div>
                             </div>
                         </div>

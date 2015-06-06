@@ -121,6 +121,25 @@ div.variable.bottom .del {
         border: $point $border;
         border-radius: $point;
     }
+    .sline {
+        width: 0px;
+        height: 4px;
+        margin-left: $size - $line;
+        border: $line $border;
+    }
+}
+
+.edit .connection .point {
+    display: block;
+}
+.edit .connection .sline {
+    display: none;
+}
+.exec .connection .point {
+    display: none;
+}
+.exec .connection .sline {
+    display: block;
 }
 
 .connection:hover .point {

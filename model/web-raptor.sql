@@ -53,7 +53,8 @@ INSERT INTO function VALUES(0, 'main',
 </div>
 <div class="connection">
     <div class="line"></div>
-    <div class="point"></div>            
+    <div class="point"></div>
+    <div class="sline"></div>
     <div class="line"></div>
 </div>
 <div class="statement return">

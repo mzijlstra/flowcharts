@@ -624,6 +624,7 @@ $(function () {
         var pause_btn = $("#pause_btn");
         var delay_disp = $('#delay_disp');
         var step_btn = $('#step_btn');
+        var workspace = $("#workspace");
 
         var toPlayState = function () {
             pause_btn.css("display", "block");
@@ -637,12 +638,13 @@ $(function () {
             play_btn.css("display", "block");
             step_btn.css("display", "none");
             delay_disp.css("display", "block");
+            workspace.removeClass("exec");
+            workspace.addClass("edit");
             wr.state = states.edit;
         };
         var toPauseState = function () {
-            // change to the pause state
             pause_btn.css("display", "none");
-            play_btn.css("display", "play");
+            play_btn.css("display", "block");
             step_btn.css("display", "block");
             delay_disp.css("display", "none");
             wr.state = states.pause;
@@ -650,7 +652,11 @@ $(function () {
 
         var states = {
             "edit": {
-                "playpause": toPlayState,
+                "playpause": function () {
+                    toPlayState();
+                    workspace.removeClass("edit");
+                    workspace.addClass("exec");
+                },
                 "reset": function () {
                     // does nothing in this state
                 }
