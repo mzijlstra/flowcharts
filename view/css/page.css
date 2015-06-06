@@ -106,9 +106,10 @@ div.variable.bottom .del {
     border-radius: 3px; }
   .connection .sline {
     width: 0px;
-    height: 4px;
+    height: 6px;
     margin-left: 59px;
-    border: 1px solid #336; }
+    border-left: 2px solid #336;
+    padding-left: 2px; }
 
 .edit .connection .point {
   display: block; }

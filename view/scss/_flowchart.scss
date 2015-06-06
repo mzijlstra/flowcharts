@@ -123,9 +123,10 @@ div.variable.bottom .del {
     }
     .sline {
         width: 0px;
-        height: 4px;
+        height: 6px;
         margin-left: $size - $line;
-        border: $line $border;
+        border-left: 2*$line $border;
+        padding-left: 2px;
     }
 }
 
