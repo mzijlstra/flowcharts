@@ -12,7 +12,7 @@
 .exec div {
   cursor: default !important; }
 
-.exec div:hover .del, .exec div:hover .menu, .exec div:hover .type {
+.exec div:hover .del, .exec div:hover .menu {
   display: none !important; }
 
 /* General components */

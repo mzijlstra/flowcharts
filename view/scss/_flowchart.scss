@@ -16,7 +16,7 @@ $exec: greenyellow;
 }
 
 // delete and menu items should not apear while executing
-.exec div:hover .del, .exec div:hover .menu, .exec div:hover .type {
+.exec div:hover .del, .exec div:hover .menu {
     display: none !important;
 }
 

@@ -533,6 +533,10 @@ $(function () {
 
     // renaming a function
     $(".start").click(function () {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
+
         var n = $(this).find(".name");
         n.attr("cur", n.text());
         inputHere(n.get(0), function (t) {
@@ -576,8 +580,8 @@ $(function () {
                 $.post("../function/" + fid + "/rename", {
                     "name": upd
                 });
-                return true;
             }
+            return true;
         });
     });
 
