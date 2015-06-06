@@ -140,7 +140,6 @@
             </div>
 
             <div id="return" class="statement">
-                <div class="arrow_down"></div>                        
                 <div class="stop">
                     <div class="text">
                         return <span class="exp">0</span>
@@ -153,11 +152,11 @@
                 <div class="point"></div>
                 <div class="sline"></div>
                 <div class="line"></div>
+                <div class="arrow_down"></div>
             </div>
 
             <div id="input" class="statement" >
                 <div class="del">&times;</div>
-                <div class="arrow_down"></div>                        
                 <div class="input">
                     <div class="var_container">
                         <div class="menu"></div>
@@ -170,7 +169,6 @@
 
             <div id="output" class="statement" >
                 <div class="del">&times;</div>
-                <div class="arrow_down"></div>                        
                 <div class="output">
                     <span class="io">OUTPUT</span>
                     <span class="asgn">&#171;</span> 
@@ -180,7 +178,6 @@
 
             <div id="assignment" class="statement" >
                 <div class="del">&times;</div>
-                <div class="arrow_down"></div>                        
                 <div class="assignment">
                     <div class="var_container">
                         <div class="menu"></div>
@@ -192,7 +189,6 @@
             </div>
 
             <div id="if" class="statement" >
-                <div class="arrow_down"></div>                        
                 <div class="if">
                     <div class="diamond">
                         <div class="del">&times;</div>
@@ -244,7 +240,6 @@
             </div>
 
             <div id="while" class="statement">
-                <div class="arrow_down"></div>                        
                 <div class="while">
                     <div class="diamond">
                         <div class="del">&times;</div>

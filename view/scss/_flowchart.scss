@@ -38,7 +38,9 @@ $exec: greenyellow;
     border-right: $arrow $hide; 
     margin-left: $size - $arrow;
 }
-
+.statement .connection .arrow_down {
+    display: none;
+}
 
 /* variables section */
 .variable {

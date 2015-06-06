@@ -33,6 +33,9 @@
   border-right: 8px solid transparent;
   margin-left: 52px; }
 
+.statement .connection .arrow_down {
+  display: none; }
+
 /* variables section */
 .variable {
   padding-left: 15px;

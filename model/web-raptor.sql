@@ -56,9 +56,9 @@ INSERT INTO function VALUES(0, 'main',
     <div class="point"></div>
     <div class="sline"></div>
     <div class="line"></div>
+    <div class="arrow_down"></div>                        
 </div>
 <div class="statement return">
-    <div class="arrow_down"></div>                        
     <div class="stop">
         <div class="text">
             return <span class="exp">0</span>
