@@ -346,8 +346,8 @@ $(function () {
     wr.ins_menu.click(function (event) {
         var t = $(event.target);
         var toLoad = '#' + t.attr('id').substr(4);
-        wr.clicked.after(cloneBlock("#connection"))
-                .after(cloneBlock(toLoad));
+        wr.clicked.before(cloneBlock("#connection"))
+                .before(cloneBlock(toLoad));
 
         // trigger initializer code
         var n = wr.clicked.next().get(0);
