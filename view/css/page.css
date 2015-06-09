@@ -6,15 +6,6 @@
     Created on : Aug 1, 2014, 6:55:27 PM
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
-.exec .executing {
-  border-color: greenyellow !important; }
-
-.exec div {
-  cursor: default !important; }
-
-.exec div:hover .del, .exec div:hover .menu {
-  display: none !important; }
-
 /* General components */
 .del {
   position: absolute;
@@ -334,6 +325,29 @@ div.variable.bottom .del {
   border-bottom: 8px solid #336;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent; }
+
+/* 
+    Created on : Jun 8, 2015, 2:59:16 PM
+    Author     : mzijlstra
+*/
+.exec .del, .exec .connection {
+  cursor: default !important; }
+
+.exec div:hover .del, .exec div:hover .menu {
+  display: none !important; }
+
+.exec .executing .start, .exec .executing .stop {
+  border-color: greenyellow; }
+
+.exec .executing.connection div.line, .exec .executing.connection div.sline, .exec .executing.connection div.start, .exec .executing.connection div.stop {
+  border-color: greenyellow; }
+.exec .executing.connection div.arrow_down {
+  border-top-color: greenyellow; }
+
+.exec div.statement span.executing,
+.exec .executing.statement .input .io,
+.exec .executing.statement .exp {
+  border-color: greenyellow; }
 
 body {
   font-family: monospace;

@@ -15,6 +15,13 @@ $(function () {
     wr.curvars = wr.functions.main;
     wr.ins_menu = $('#ins_menu');
     wr.state; //gets set by the control button initialization code
+    wr.playing; // will hold the timeout variable when playing
+    wr.steps = []; // execution steps (statements, connections, & more)
+    wr.step = function () {
+        var item = wr.steps.pop();
+        $(".executing").removeClass("executing");
+        item.exec();
+    };
 
     /*
      * Setup AJAX Error Handling
@@ -63,6 +70,7 @@ $(function () {
         return result;
     };
 
+    // TODO refactor to have dynamicly widening input field (always on top)
     var inputHere = function (elem, blur) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
@@ -627,13 +635,12 @@ $(function () {
 
 
     /*
-     * Execution Control code
+     * State Control code
      */
     /*
      * The 3 different states that the program can be in
      * The code below uses the state pattern for the states;
-     * plus also the module pattern so as not to pollute the 
-     * namespace of this very large initialization function
+     * plus also the JS module pattern so as not to pollute 
      */
     (function () {
         var play_btn = $("#play_btn");
@@ -643,11 +650,34 @@ $(function () {
         var workspace = $("#workspace");
 
         var toPlayState = function () {
+            // TODO check that we are ready to exec (no errors in flowchart!)
+
             pause_btn.css("display", "block");
             play_btn.css("display", "none");
             step_btn.css("display", "none");
             delay_disp.css("display", "block");
-            wr.state = states.run;
+            wr.state = states.play;
+
+            // if at beginning or end of executing, start again
+            if (wr.steps.length === 0) {
+                $($("#ins_main").children().get().reverse()).each(function () {
+                    wr.steps.push(this);
+                });
+            }
+
+            // start executing
+            $(".executing").removeClass("executing");
+            var recurse = function () {
+                if (wr.steps.length === 0) {
+                    $('#play_pause').click();
+                } else if (wr.state.name === "play") {
+                    wr.step();
+                    var delay = parseFloat($("#delay").text()) * 1000;
+                    wr.playing = setTimeout(recurse, delay);
+                }
+            };
+            var delay = parseFloat($("#delay").text()) * 1000;
+            wr.playing = setTimeout(recurse, delay);
         };
         var toEditState = function () {
             pause_btn.css("display", "none");
@@ -656,6 +686,9 @@ $(function () {
             delay_disp.css("display", "block");
             workspace.removeClass("exec");
             workspace.addClass("edit");
+            
+            clearTimeout(wr.playing);
+            wr.steps = [];
             wr.state = states.edit;
         };
         var toPauseState = function () {
@@ -663,23 +696,30 @@ $(function () {
             play_btn.css("display", "block");
             step_btn.css("display", "block");
             delay_disp.css("display", "none");
+            clearTimeout(wr.playing);
             wr.state = states.pause;
         };
 
+        // the different states that application can be in
         var states = {
             "edit": {
                 "name": "edit",
                 "playpause": function () {
-                    toPlayState();
+                    // do css changes to exit edit mode
                     workspace.removeClass("edit");
                     workspace.addClass("exec");
+
+                    // switch to the main function (always first in fun-names)
+                    $("#fun-names span.fun")[0].click();
+
+                    toPlayState();
                 },
                 "reset": function () {
                     // does nothing in this state
                 }
             },
-            "run": {
-                "name": "run",
+            "play": {
+                "name": "play",
                 "playpause": toPauseState,
                 "reset": toEditState
             },
@@ -699,6 +739,65 @@ $(function () {
     });
     $("#reset").click(function () {
         wr.state.reset();
+    });
+    $("#step_btn").click(wr.step);
+
+
+    /*
+     * Execution Code for the different elements
+     */
+    $(".connection, .statement").each(function () {
+        this.exec = function () {
+            $(this).addClass("executing");
+        };
+    });
+    $(".statement > .input").each(function () {
+        $(this).parent()[0].exec = function () {
+            var t = $(this);
+            t.addClass("executing");
+            var input = window.prompt("Please enter input:");
+
+            // second step, assign the input 
+            wr.steps.push({"exec": function () {
+                    t.find(".var").addClass("executing");
+                    // TODO do things with the input
+                    //wr.curvars[t.find(".var").text()] = input;
+                }});
+        };
+    });
+    $(".statement > .output").each(function () {
+        $(this).parent()[0].exec = function () {
+            var t = $(this);
+            t.addClass("executing");
+
+            // TODO eval expression
+            // TODO show result value in exp span?
+            var output = $(this).find(".exp").text();
+
+            // second step, show result
+            wr.steps.push({"exec": function () {
+                    t.find(".io").addClass("executing");
+                    window.alert(output);
+                }});
+        };
+    });
+
+    $(".statement > .assignment").each(function () {
+        $(this).parent()[0].exec = function () {
+            var t = $(this);
+            t.addClass("executing");
+
+            // TODO eval expression
+            // TODO show result value in exp span?
+            var result = $(this).find(".exp").text();
+
+            // second step, assign to variable
+            wr.steps.push({"exec": function () {
+                    t.find(".var").addClass("executing");
+                    // TODO do things with the result
+                    //wr.curvars[t.find(".var").text()] = result;
+                }});
+        };
     });
 
 

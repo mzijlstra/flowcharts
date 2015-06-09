@@ -1,0 +1,44 @@
+/* 
+    Created on : Jun 8, 2015, 2:59:16 PM
+    Author     : mzijlstra
+*/
+
+// color for currently executing item
+$exec: greenyellow;
+
+// pointer on all elements while executing is always default
+.exec .del, .exec .connection {
+    cursor: default !important;
+}
+
+// delete and menu items should not apear while executing
+.exec div:hover .del, .exec div:hover .menu {
+    display: none !important;
+}
+
+// start and stop statements
+.exec .executing {
+    .start, .stop {
+        border-color: $exec;
+    }
+}
+
+// connection element
+.exec .executing.connection { 
+    div.line, div.sline, div.start, div.stop {
+        border-color: $exec;
+    }
+    div.arrow_down {
+        border-top-color: $exec;
+    }
+}
+
+// input, output, and assingment
+.exec div.statement span.executing,  
+.exec .executing.statement .input .io,
+.exec .executing.statement .exp
+{
+    border-color: $exec ;
+}
+
+

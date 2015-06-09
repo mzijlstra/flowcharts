@@ -62,7 +62,7 @@
                             RESET
                         </div>
                         <div id="delay_disp" class="control">
-                            DELAY <span>0.5</span>
+                            DELAY <span id="delay">0.5</span>
                         </div>
                         <div id="step_btn" class="control">
                             STEP
