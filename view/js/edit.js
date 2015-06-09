@@ -3,32 +3,45 @@
  Author     : mzijlstra
  */
 
-// wr namespace
-var wr = {};
+/*
+ * This file contains the code for the edit state, because it is so big I've put
+ * effort into creating clearly delinated sections with block comment headers 
+ */
 
-// hook up event handlers and frequently used elements on page init
+var wr; // wr namespace is created inside controls.js
+
 $(function () {
     "use strict";
 
-    wr.functions = {'main': {}};
-    wr.curfun = 'main';
-    wr.curvars = wr.functions.main;
-    wr.ins_menu = $('#ins_menu');
-    wr.state; //gets set by the control button initialization code
-    wr.playing; // will hold the timeout variable when playing
-    wr.steps = []; // execution steps (statements, connections, & more)
-    wr.step = function () {
-        var item = wr.steps.pop();
-        $(".executing").removeClass("executing");
-        item.exec();
-    };
+    /********************************************************
+     * Application State Setup Code (after flow chart loaded from DB)
+     ********************************************************/
+    // build local variable namespaces in wr.functions
+    (function () {
+        $("#workspace .fun .name").each(function () {
+            var name = $(this).text();
+            wr.functions[name] = {};
+            $("#vars_" + name + " input.var").each(function () {
+                var v = $(this).val();
+                if (v) {
+                    wr.functions[name][v] = this;
+                }
+            });
+        });
+        wr.curvars = wr.functions['main'];
+    })();
 
-    /*
-     * Setup AJAX Error Handling
-     */
+    // Setup AJAX Error Handling
     $(document).ajaxError(function (e) {
         alert("Network Error -- please check your connection and try again.");
     });
+
+
+
+
+    /********************************************************
+     * Helper functions
+     ********************************************************/
     var shouldNotHaveData = function (data) {
         // if it has data it's probably because of a redirect to the login page
         // due to a session timeout
@@ -37,9 +50,6 @@ $(function () {
         }
     };
 
-    /*
-     * Helper functions
-     */
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
         var fid = $(".fun.active").attr("fid");
@@ -102,10 +112,13 @@ $(function () {
         i.focus();
     };
 
-    /*
-     * Variable declaration related code
-     */
 
+
+
+
+    /********************************************************
+     * Variable declaration related code
+     ********************************************************/
     // store current var name on focus
     $(".variable .var").focus(function () {
         var t = $(this);
@@ -311,9 +324,13 @@ $(function () {
     });
 
 
-    /*
+
+
+
+    /********************************************************
      * Statement related code
-     */
+     ********************************************************/
+    var ins_menu = $('#ins_menu');
 
     // display insertion menu when clicking on a connection block
     $(".connection").click(function (event) {
@@ -332,26 +349,26 @@ $(function () {
         } else if (size === 0) {
             alert("Please declare a variable first.");
             $('.variable .var').focus();
-        } else if (wr.ins_menu.css("display") === "none") {
-            wr.ins_menu.css("top", event.pageY);
-            wr.ins_menu.css("left", event.pageX);
-            wr.ins_menu.show();
+        } else if (ins_menu.css("display") === "none") {
+            ins_menu.css("top", event.pageY);
+            ins_menu.css("left", event.pageX);
+            ins_menu.show();
             wr.clicked = $(this);
         } else {
-            wr.ins_menu.hide();
+            ins_menu.hide();
         }
         return false;
     });
 
     // hide insertion menu when clicking elsewhere
     $("body").click(function () {
-        if (wr.ins_menu.css("display") !== "none") {
-            wr.ins_menu.hide();
+        if (ins_menu.css("display") !== "none") {
+            ins_menu.hide();
         }
     });
 
     // menu clicks trigger insertions based on id clicked
-    wr.ins_menu.click(function (event) {
+    ins_menu.click(function (event) {
         var t = $(event.target);
         var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.before(cloneBlock("#connection"))
@@ -416,18 +433,25 @@ $(function () {
         postInsUpd();
     });
 
-    // add confirmation meessages if and while stmts
-    $("#if, #while").each(function (i, o) {
-        o.destroy = function () {
+    // add confirmation messages if and while stmts
+    $(".if, .while").each(function () {
+        var t = $(this);
+        var p = t.parent().get(0);
+        
+        p.destroy = function (i, o) {
             return confirm("Are you sure you want to delete this "
-                    + o.getAttribute("id") + " statement and everything "
+                    + t.attr("class") + " statement and everything "
                     + "inside it?");
         };
     });
 
-    /*
+
+
+
+
+    /********************************************************
      * Expression declaration related code
-     */
+     ********************************************************/
     $("span.exp, div.exp").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
@@ -443,10 +467,12 @@ $(function () {
     });
 
 
-    /*
-     * Function related code
-     */
 
+
+
+    /********************************************************
+     * Function related code
+     ********************************************************/
     // add a function
     $("#add_fun").click(function () {
 
@@ -614,9 +640,13 @@ $(function () {
         }
     });
 
-    /*
+
+
+
+
+    /********************************************************
      * Project related code
-     */
+     ********************************************************/
     $("#new_proj").click(function () {
         var name = prompt("Project Name:");
         $.ajax({
@@ -632,190 +662,4 @@ $(function () {
     $("#open_proj").click(function () {
         window.location.assign("../project");
     });
-
-
-    /*
-     * State Control code
-     */
-    /*
-     * The 3 different states that the program can be in
-     * The code below uses the state pattern for the states;
-     * plus also the JS module pattern so as not to pollute 
-     */
-    (function () {
-        var play_btn = $("#play_btn");
-        var pause_btn = $("#pause_btn");
-        var delay_disp = $('#delay_disp');
-        var step_btn = $('#step_btn');
-        var workspace = $("#workspace");
-
-        var toPlayState = function () {
-            // TODO check that we are ready to exec (no errors in flowchart!)
-
-            pause_btn.css("display", "block");
-            play_btn.css("display", "none");
-            step_btn.css("display", "none");
-            delay_disp.css("display", "block");
-            wr.state = states.play;
-
-            // if at beginning or end of executing, start again
-            if (wr.steps.length === 0) {
-                $($("#ins_main").children().get().reverse()).each(function () {
-                    wr.steps.push(this);
-                });
-            }
-
-            // start executing
-            $(".executing").removeClass("executing");
-            var recurse = function () {
-                if (wr.steps.length === 0) {
-                    $('#play_pause').click();
-                } else if (wr.state.name === "play") {
-                    wr.step();
-                    var delay = parseFloat($("#delay").text()) * 1000;
-                    wr.playing = setTimeout(recurse, delay);
-                }
-            };
-            var delay = parseFloat($("#delay").text()) * 1000;
-            wr.playing = setTimeout(recurse, delay);
-        };
-        var toEditState = function () {
-            pause_btn.css("display", "none");
-            play_btn.css("display", "block");
-            step_btn.css("display", "none");
-            delay_disp.css("display", "block");
-            workspace.removeClass("exec");
-            workspace.addClass("edit");
-            
-            clearTimeout(wr.playing);
-            wr.steps = [];
-            wr.state = states.edit;
-        };
-        var toPauseState = function () {
-            pause_btn.css("display", "none");
-            play_btn.css("display", "block");
-            step_btn.css("display", "block");
-            delay_disp.css("display", "none");
-            clearTimeout(wr.playing);
-            wr.state = states.pause;
-        };
-
-        // the different states that application can be in
-        var states = {
-            "edit": {
-                "name": "edit",
-                "playpause": function () {
-                    // do css changes to exit edit mode
-                    workspace.removeClass("edit");
-                    workspace.addClass("exec");
-
-                    // switch to the main function (always first in fun-names)
-                    $("#fun-names span.fun")[0].click();
-
-                    toPlayState();
-                },
-                "reset": function () {
-                    // does nothing in this state
-                }
-            },
-            "play": {
-                "name": "play",
-                "playpause": toPauseState,
-                "reset": toEditState
-            },
-            "pause": {
-                "name": "pause",
-                "playpause": toPlayState,
-                "reset": toEditState
-            }
-        };
-
-        // we start in the edit state
-        wr.state = states.edit;
-    }());
-
-    $("#play_pause").click(function () {
-        wr.state.playpause();
-    });
-    $("#reset").click(function () {
-        wr.state.reset();
-    });
-    $("#step_btn").click(wr.step);
-
-
-    /*
-     * Execution Code for the different elements
-     */
-    $(".connection, .statement").each(function () {
-        this.exec = function () {
-            $(this).addClass("executing");
-        };
-    });
-    $(".statement > .input").each(function () {
-        $(this).parent()[0].exec = function () {
-            var t = $(this);
-            t.addClass("executing");
-            var input = window.prompt("Please enter input:");
-
-            // second step, assign the input 
-            wr.steps.push({"exec": function () {
-                    t.find(".var").addClass("executing");
-                    // TODO do things with the input
-                    //wr.curvars[t.find(".var").text()] = input;
-                }});
-        };
-    });
-    $(".statement > .output").each(function () {
-        $(this).parent()[0].exec = function () {
-            var t = $(this);
-            t.addClass("executing");
-
-            // TODO eval expression
-            // TODO show result value in exp span?
-            var output = $(this).find(".exp").text();
-
-            // second step, show result
-            wr.steps.push({"exec": function () {
-                    t.find(".io").addClass("executing");
-                    window.alert(output);
-                }});
-        };
-    });
-
-    $(".statement > .assignment").each(function () {
-        $(this).parent()[0].exec = function () {
-            var t = $(this);
-            t.addClass("executing");
-
-            // TODO eval expression
-            // TODO show result value in exp span?
-            var result = $(this).find(".exp").text();
-
-            // second step, assign to variable
-            wr.steps.push({"exec": function () {
-                    t.find(".var").addClass("executing");
-                    // TODO do things with the result
-                    //wr.curvars[t.find(".var").text()] = result;
-                }});
-        };
-    });
-
-
-    /*
-     * Startup code
-     */
-    // build local variable namespaces in wr.functions
-    (function () {
-        $("#workspace .fun .name").each(function () {
-            var name = $(this).text();
-            wr.functions[name] = {};
-            $("#vars_" + name + " input.var").each(function () {
-                var v = $(this).val();
-                if (v) {
-                    wr.functions[name][v] = this;
-                }
-            });
-        });
-        wr.curvars = wr.functions['main'];
-    })();
 });
