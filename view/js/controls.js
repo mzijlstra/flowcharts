@@ -24,6 +24,22 @@ $(function () {
     wr.steps = []; // execution steps (statements, connections, & more)
     wr.step = function () {
         var item = wr.steps.pop();
+        
+        // scroll executing item to the top of the page
+        if (item.nodeType) { // as long as item is an actual DOM element
+            var pos = $(item).offset().top;
+            var ins = $("#instructions");
+            if (pos > 100) {
+                ins.animate({
+                    "scrollTop": ins.scrollTop() + (pos - 100)
+                }, parseFloat($("#delay").text()) * 1000);
+            } else if ( pos < 70) {
+                ins.animate({
+                    "scrollTop": ins.scrollTop() + (pos - 70)
+                }, parseFloat($("#delay").text()) * 1000);
+            }
+        }
+        
         $(".executing").removeClass("executing");
         item.exec();
     };
@@ -54,6 +70,8 @@ $(function () {
                 wr.steps.push(this);
             });
         }
+        
+        $("#instructions").scrollTop(0);
 
         // start executing
         $(".executing").removeClass("executing");
@@ -64,11 +82,10 @@ $(function () {
                 $("#delay_disp").css("display", "block");
             } else if (wr.state.name === "play") {
                 wr.step();
-                var delay = parseFloat($("#delay").text()) * 1000;
-                wr.playing = setTimeout(recurse, delay);
+                wr.playing = setTimeout(recurse,
+                        parseFloat($("#delay").text()) * 1000);
             }
         };
-        var delay = parseFloat($("#delay").text()) * 1000;
         recurse();
     };
     var toEditState = function () {
