@@ -307,6 +307,9 @@ div.variable.bottom .del {
         padding: 0px;
         position: relative;
     }
+    td.left {
+        min-width: 113px;
+    }
     .absolute_left, .absolute_right {
         z-index: -1;
         position: absolute;

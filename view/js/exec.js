@@ -75,46 +75,58 @@ $(function () {
 
             // TODO eval expression
             var exp = t.find(".exp").first().text();
-            exp = true;
+            exp = false;
 
             var elems;
-            var next = wr.steps.pop(); // connect after if (used in both exits)
             if (exp) {
                 // get all the elements on the right branch
                 elems = $(document).find(
-                        ".statement.executing > .if > table > tbody > tr > .right"
+                        ".executing > .if > table > tbody > tr > .right"
                         ).children().get().reverse();
-                
-                // TODO FIXME: entrance and exit are one and same when empty
 
-                // setup entrance to the branch
-                var absolute_right = elems.pop();
+                var absolute_right = elems.pop(); // needed for exit
                 var first = elems.pop(); // pops first connection in right
-                // replace with single entry item 
-                elems.push({"exec": function () {
-                        t.find(".top_connect").first().addClass("executing");
-                        $(first).addClass("executing");
-                    }});
-
-                // setup exit from the branch
                 var bot_right = elems.shift(); // bot_right_connect
-                var last = elems.shift(); // last connection on right side
-                // replace with single exit item 
-                elems.unshift({"exec": function () {
-                        $([next, bot_right, last, absolute_right])
-                                .addClass("executing");
-                        // find bot_left_connect
-                        t.find(".left").first().children().last()
-                                .addClass("executing");
-                    }});
+                var last = elems.shift(); // may be undefined
 
-                $(elems).each(function () {
-                    wr.steps.push(this);
-                });
+                var enter_right = function () {
+                    $(first).addClass("executing");
+                    t.find(".top_connect").first().addClass("executing");
+                };
+                var exit_right = function () {
+                    $([bot_right, absolute_right])
+                            .addClass("executing");
+                    $(last).addClass("executing"); // does nothing if undef
+                    // find bot_left_connect
+                    t.find(".left").first().children().last()
+                            .addClass("executing");
+                };
+
+                if (elems.length === 0) {
+                    // if no statements in branch, do both enter and exit in one
+                    wr.steps.push({"exec": function () {
+                            enter_right();
+                            exit_right();
+                        }});
+                } else {
+                    // setup entrance to the branch
+                    // replace with single entry item 
+                    elems.push({"exec": function () {
+                            enter_right();
+                        }});
+
+                    // setup exit from the branch
+                    // replace with single exit item 
+                    elems.unshift({"exec": function () {
+                            exit_right();
+                        }});
+
+                    $(elems).each(function () {
+                        wr.steps.push(this);
+                    });
+                }
             } else {
                 elems = t.find(".left").first().children().get().reverse();
-
-                // TODO FIXME: exit of an if inside an if is not clean
 
                 // clean up entry into left branch
                 elems.pop(); // remves top_connect
@@ -123,7 +135,7 @@ $(function () {
                 elems.shift(); // removes bot_left_connect
                 var last = elems.shift(); // last connection on left side
                 elems.unshift({"exec": function () {
-                        $([last, absolute_left, next]).addClass("executing");
+                        $([last, absolute_left]).addClass("executing");
                     }});
 
                 $(elems).each(function () {
@@ -132,24 +144,54 @@ $(function () {
             }
         };
     });
-    
+
     $(".statement > .while").each(function () {
         $(this).parent()[0].exec = function () {
             var t = $(this);
             t.addClass("executing");
-            
+
             // TODO eval expression
             var exp = $(t.find(".exp")[0]).text();
             exp = false;
 
             if (exp) {
-                // TODO implement the loop body code
+                // always come back to diamond after entering loop
+                wr.steps.push(this);
+                
+                var elems = t.find(".loop_body").first().children().get()
+                        .reverse();
+                var first = elems.pop();
+                var last = elems.shift(); // may be undefined
+                var enter = function () {
+                    t.find(".true_connector").first().addClass("executing");
+                    $(first).addClass("executing");
+                };
+                var exit = function () {
+                    t.find(".return_line").first().addClass("executing");
+                    $(last).addClass("executing"); // does nothing if undef
+                };
+                if (elems.length === 0) {
+                    wr.steps.push({"exec": function () {
+                            enter();
+                            exit();
+                        }});
+                } else {
+                    elems.push({"exec": function () {
+                            enter();
+                        }});
+                    elems.unshift({"exec": function () {
+                            exit();
+                        }});
+                    $(elems).each(function () {
+                        wr.steps.push(this);
+                    });
+                }
             } else {
                 var next = wr.steps.pop();
-                wr.steps.push({"exec": function() {
+                wr.steps.push({"exec": function () {
                         t.find(".false_line").addClass("executing");
                         $(next).addClass("executing");
-                }});
+                    }});
             }
         };
     });

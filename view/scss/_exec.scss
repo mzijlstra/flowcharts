@@ -6,6 +6,15 @@
 // color for currently executing item
 $exec: greenyellow;
 
+.exec #controls {
+    #reset {
+        color: $fg;
+    }
+    #reset:hover {
+        color: red;
+    }
+}
+
 // pointer on all elements while executing is always default
 .exec .del, .exec .connection {
     cursor: default !important;
@@ -59,6 +68,12 @@ $exec: greenyellow;
 }
 
 // while statement
-.exec .false_line.executing {
+.exec .false_line.executing,
+.exec .true_connector.executing,
+.exec .return_line.executing
+{
     border-color: $exec;
+}
+.exec .return_line.executing .arrow_up {
+    border-bottom-color: $exec;
 }

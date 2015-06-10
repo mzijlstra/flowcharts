@@ -248,6 +248,8 @@ div.variable.bottom .del {
     vertical-align: top;
     padding: 0px;
     position: relative; }
+  .if td.left {
+    min-width: 113px; }
   .if .absolute_left, .if .absolute_right {
     z-index: -1;
     position: absolute;
@@ -330,6 +332,11 @@ div.variable.bottom .del {
     Created on : Jun 8, 2015, 2:59:16 PM
     Author     : mzijlstra
 */
+.exec #controls #reset {
+  color: #336; }
+.exec #controls #reset:hover {
+  color: red; }
+
 .exec .del, .exec .connection {
   cursor: default !important; }
 
@@ -365,8 +372,13 @@ div.variable.bottom .del {
 .exec .bot_left_connect.executing .arrow_left {
   border-right-color: greenyellow; }
 
-.exec .false_line.executing {
+.exec .false_line.executing,
+.exec .true_connector.executing,
+.exec .return_line.executing {
   border-color: greenyellow; }
+
+.exec .return_line.executing .arrow_up {
+  border-bottom-color: greenyellow; }
 
 body {
   font-family: monospace;
@@ -467,9 +479,8 @@ div#projects:hover #project_menu {
     left: -16px;
     top: 76px;
     transform: rotate(-90deg);
-    transform-origin: 0 0; }
-  #controls #reset:hover {
-    color: red; }
+    transform-origin: 0 0;
+    color: #ccc; }
   #controls #step_btn, #controls #delay_disp {
     bottom: -16px;
     left: -1px;

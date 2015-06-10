@@ -8,6 +8,7 @@ $bg: white;
 $fg: #336;
 $menu: #f8f8f8;
 $hl: #dde;
+$disable: #ccc;
 $border: solid $fg;
 $hide: solid transparent;
 
@@ -139,9 +140,7 @@ div#projects:hover #project_menu {
         top: 75px + $line;
         transform: rotate(-90deg);
         transform-origin: 0 0;
-    }
-    #reset:hover {
-        color: red;
+        color: $disable;
     }
     #step_btn, #delay_disp {
         bottom: -15px -$line;

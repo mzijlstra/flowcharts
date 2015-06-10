@@ -70,8 +70,7 @@ $(function () {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
 
-        // also copy init, destroy, and exec methods
-        result.get(0).init = elem.get(0).init;
+        // also copy destroy and exec methods
         result.get(0).destroy = elem.get(0).destroy;
         result.get(0).exec = elem.get(0).exec;
         return result;
@@ -370,12 +369,6 @@ $(function () {
         var toLoad = '#' + t.attr('id').substr(4);
         wr.clicked.before(cloneBlock("#connection"))
                 .before(cloneBlock(toLoad));
-
-        // trigger initializer code
-        var n = wr.clicked.next().get(0);
-        if (n.init && typeof n.init === "function") {
-            n.init();
-        }
 
         postInsUpd();
     });

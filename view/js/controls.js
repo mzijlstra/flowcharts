@@ -60,6 +60,8 @@ $(function () {
         var recurse = function () {
             if (wr.steps.length === 0) {
                 $('#play_pause').click();
+                $("#step_btn").css("display", "none");
+                $("#delay_disp").css("display", "block");
             } else if (wr.state.name === "play") {
                 wr.step();
                 var delay = parseFloat($("#delay").text()) * 1000;
