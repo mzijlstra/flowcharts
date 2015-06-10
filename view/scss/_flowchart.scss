@@ -308,7 +308,7 @@ div.variable.bottom .del {
         position: relative;
     }
     .absolute_left, .absolute_right {
-        z-index: 0;
+        z-index: -1;
         position: absolute;
         top: 0px;
         bottom: 0px;

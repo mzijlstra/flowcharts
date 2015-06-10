@@ -19,7 +19,7 @@ $(function () {
     wr.functions = {'main': {}};
     wr.curfun = 'main';
     wr.curvars = wr.functions.main;
-    wr.state; //gets set by the control button initialization code
+    wr.state; //gets set below by the control button initialization code
     wr.playing; // will hold the timeout variable when playing
     wr.steps = []; // execution steps (statements, connections, & more)
     wr.step = function () {
@@ -38,6 +38,7 @@ $(function () {
     var step_btn = $('#step_btn');
     var workspace = $("#workspace");
 
+    // helper functions to switch between states
     var toPlayState = function () {
         // TODO check that we are ready to exec (no errors in flowchart!)
 
@@ -66,7 +67,7 @@ $(function () {
             }
         };
         var delay = parseFloat($("#delay").text()) * 1000;
-        wr.playing = setTimeout(recurse, delay);
+        recurse();
     };
     var toEditState = function () {
         pause_btn.css("display", "none");

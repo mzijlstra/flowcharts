@@ -249,7 +249,7 @@ div.variable.bottom .del {
     padding: 0px;
     position: relative; }
   .if .absolute_left, .if .absolute_right {
-    z-index: 0;
+    z-index: -1;
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -336,17 +336,36 @@ div.variable.bottom .del {
 .exec div:hover .del, .exec div:hover .menu {
   display: none !important; }
 
-.exec .executing .start, .exec .executing .stop {
-  border-color: greenyellow; }
-
-.exec .executing.connection div.line, .exec .executing.connection div.sline, .exec .executing.connection div.start, .exec .executing.connection div.stop {
+.exec .executing.connection div.line, .exec .executing.connection div.sline {
   border-color: greenyellow; }
 .exec .executing.connection div.arrow_down {
   border-top-color: greenyellow; }
 
+.exec .executing .start,
+.exec .executing .stop,
 .exec div.statement span.executing,
-.exec .executing.statement .input .io,
-.exec .executing.statement .exp {
+.exec .executing.statement > .input > .io,
+.exec .executing.statement > .output > .exp,
+.exec .executing.statement > .assignment > .exp {
+  border-color: greenyellow; }
+
+.exec .executing > div > .diamond > .diamond_top_outside {
+  border-bottom-color: greenyellow; }
+
+.exec .executing > div > .diamond > .diamond_bot_outside {
+  border-top-color: greenyellow; }
+
+.exec .top_connect.executing,
+.exec .absolute_right.executing,
+.exec .absolute_left.executing,
+.exec .bot_right_connect.executing,
+.exec .bot_left_connect.executing {
+  border-color: greenyellow; }
+
+.exec .bot_left_connect.executing .arrow_left {
+  border-right-color: greenyellow; }
+
+.exec .false_line.executing {
   border-color: greenyellow; }
 
 body {

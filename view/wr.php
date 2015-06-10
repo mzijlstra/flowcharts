@@ -157,6 +157,7 @@
                 <div class="arrow_down"></div>
             </div>
 
+            <!-- TODO FIXME: can we replace these &nbsp;'s with min-widht? -->
             <div id="input" class="statement" >
                 <div class="del">&times;</div>
                 <div class="input">

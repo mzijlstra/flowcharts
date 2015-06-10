@@ -16,16 +16,9 @@ $exec: greenyellow;
     display: none !important;
 }
 
-// start and stop statements
-.exec .executing {
-    .start, .stop {
-        border-color: $exec;
-    }
-}
-
 // connection element
 .exec .executing.connection { 
-    div.line, div.sline, div.start, div.stop {
+    div.line, div.sline {
         border-color: $exec;
     }
     div.arrow_down {
@@ -33,12 +26,39 @@ $exec: greenyellow;
     }
 }
 
-// input, output, and assingment
-.exec div.statement span.executing,  
-.exec .executing.statement .input .io,
-.exec .executing.statement .exp
+// border color for simple statements
+.exec .executing .start,
+.exec .executing .stop,
+.exec div.statement span.executing,  // input, output, and assingment
+.exec .executing.statement > .input > .io,
+.exec .executing.statement > .output > .exp, 
+.exec .executing.statement > .assignment > .exp 
 {
-    border-color: $exec ;
+    border-color: $exec;
 }
 
+// border color for if and while conditions
+.exec .executing > div > .diamond > .diamond_top_outside {
+    border-bottom-color: $exec;
+}
+.exec .executing > div > .diamond > .diamond_bot_outside {
+    border-top-color: $exec;
+}
 
+// left and right branchs of the if statement
+.exec .top_connect.executing,
+.exec .absolute_right.executing,
+.exec .absolute_left.executing,
+.exec .bot_right_connect.executing,
+.exec .bot_left_connect.executing
+{
+    border-color: $exec;
+}
+.exec .bot_left_connect.executing .arrow_left {
+    border-right-color: $exec;
+}
+
+// while statement
+.exec .false_line.executing {
+    border-color: $exec;
+}

@@ -70,13 +70,10 @@ $(function () {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
 
-        // also copy init and destroy methods
-        if (elem.get(0).init) {
-            result.get(0).init = elem.get(0).init;
-        }
-        if (elem.get(0).destroy) {
-            result.get(0).destroy = elem.get(0).destroy;
-        }
+        // also copy init, destroy, and exec methods
+        result.get(0).init = elem.get(0).init;
+        result.get(0).destroy = elem.get(0).destroy;
+        result.get(0).exec = elem.get(0).exec;
         return result;
     };
 
@@ -422,10 +419,10 @@ $(function () {
     $(".statement .del").click(function () {
         var p = $(this).parent();
         if (!p.hasClass("statement")) {
-            p = p.parents(".statement");
+            p = p.closest(".statement");
         }
         var pelem = p.get(0);
-        var c = p.next(); // connector
+        var c = p.prev(); // connector
         if (!pelem.destroy || pelem.destroy()) {
             c.remove();
             p.remove();
