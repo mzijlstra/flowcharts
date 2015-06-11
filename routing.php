@@ -12,6 +12,7 @@ $view_ctrl = array(
     "|^/$|" => "login.php",
     "|/login|" => "login.php",
     "|/user/add|" => "userDetails.php",
+    "|sandbox$|" => "sandbox.html"
 );
 
 // Get requests that need a controller

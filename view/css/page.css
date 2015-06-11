@@ -393,6 +393,9 @@ h1 {
   margin-left: 35px;
   margin-top: 0px; }
 
+iframe {
+  display: none !important; }
+
 div#projects {
   background-color: #f8f8f8;
   position: absolute;

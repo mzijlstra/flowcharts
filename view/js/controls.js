@@ -16,15 +16,22 @@ var wr = {};
 $(function () {
     "use strict";
 
-    wr.functions = {'main': {}};
+    /*****************************************************
+     * These are our global wr namespace vars and funcs
+     *****************************************************/
+    wr.functions = {'main': {}}; // the flowcharts the user has made
     wr.curfun = 'main';
     wr.curvars = wr.functions.main;
-    wr.state; //gets set below by the control button initialization code
+    wr.state; //gets set below by the control buttons [edit,play,pause]
     wr.playing; // will hold the timeout variable when playing
     wr.steps = []; // execution steps (statements, connections, & more)
+    /**
+     * The function use to take a flowchart execution step
+     * @returns {undefined}
+     */
     wr.step = function () {
         var item = wr.steps.pop();
-        
+
         // scroll executing item to the top of the page
         if (item.nodeType) { // as long as item is an actual DOM element
             var pos = $(item).offset().top;
@@ -33,15 +40,25 @@ $(function () {
                 ins.animate({
                     "scrollTop": ins.scrollTop() + (pos - 100)
                 }, parseFloat($("#delay").text()) * 1000);
-            } else if ( pos < 70) {
+            } else if (pos < 70) {
                 ins.animate({
                     "scrollTop": ins.scrollTop() + (pos - 70)
                 }, parseFloat($("#delay").text()) * 1000);
             }
         }
-        
+
         $(".executing").removeClass("executing");
         item.exec();
+    };
+    /**
+     * The function used to evaluate code in a sandbox
+     * @param {type} id The id of the sandbox to use
+     * @param {type} code The code we want evaluated
+     * @returns {undefined} The result comes back when the sandbox executes
+     * our main window's onMessage() method
+     */
+    wr.evaluate = function (id, code) {
+        $(id)[0].contentWindow.postMessage(code, '*');
     };
 
     /*
@@ -70,7 +87,7 @@ $(function () {
                 wr.steps.push(this);
             });
         }
-        
+
         $("#instructions").scrollTop(0);
 
         // start executing

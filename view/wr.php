@@ -278,5 +278,7 @@
             </div>
         </div> <!-- end building blocks -->
 
+        <!-- Sandbox for testing JS expressions while editing -->
+        <iframe sandbox="allow-scripts" id="sandbox" src="sandbox"></iframe>
     </body>
 </html>

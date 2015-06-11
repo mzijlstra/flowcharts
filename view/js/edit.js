@@ -42,6 +42,13 @@ $(function () {
     /********************************************************
      * Helper functions
      ********************************************************/
+    /**
+     * Internal helper function for ajax calls that should not return data
+     * If they do return data the session has probably timed out, and the
+     * browser will be redirected to the login page
+     * @param {type} data
+     * @returns {undefined}
+     */
     var shouldNotHaveData = function (data) {
         // if it has data it's probably because of a redirect to the login page
         // due to a session timeout
@@ -50,6 +57,10 @@ $(function () {
         }
     };
 
+    /**
+     * Will ajax POST the variables for the current flowchart to the server
+     * @returns {undefined}
+     */
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
         var fid = $(".fun.active").attr("fid");
@@ -58,6 +69,10 @@ $(function () {
         }, shouldNotHaveData);
     };
 
+    /**
+     * Will ajax POST the instructions for the current flowchart to the server
+     * @returns {undefined}
+     */
     var postInsUpd = function () {
         var idata = $(".instructions.active").html();
         var fid = $(".fun.active").attr("fid");
@@ -66,6 +81,11 @@ $(function () {
         }, shouldNotHaveData);
     };
 
+    /**
+     * Deep clones the flow chart block indicated by the given id
+     * @param {string} id
+     * @returns {Element} cloned element
+     */
     var cloneBlock = function (id) {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
@@ -77,6 +97,14 @@ $(function () {
     };
 
     // TODO refactor to have dynamicly widening input field (always on top)
+    /**
+     * Creates an input field on top of the given element, containing the text
+     * of the given element, ready to be edited
+     * @param {Element} elem The element that contains the text
+     * @param {Function} blur optional validation function, if it returns false
+     * we cancel the blur and continue editing
+     * @returns {undefined}
+     */
     var inputHere = function (elem, blur) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
@@ -427,8 +455,8 @@ $(function () {
     $(".if, .while").each(function () {
         var t = $(this);
         var p = t.parent().get(0);
-        
-        p.destroy = function (i, o) {
+
+        p.destroy = function () {
             return confirm("Are you sure you want to delete this "
                     + t.attr("class") + " statement and everything "
                     + "inside it?");
@@ -442,6 +470,28 @@ $(function () {
     /********************************************************
      * Expression declaration related code
      ********************************************************/
+    /**
+     * Verifies that the extracted expression has the given data type.
+     * 
+     * This function is expected to be passed as the blur argument to inputHere
+     * and will find the expression that the user entered in inputHere
+     * 
+     * @param {Function} typefn The function that will provide the type string
+     * @returns {boolean} true if matches desired type
+     */
+    var verifyDataType = function (typefn) {
+        var desired = typefn();
+
+    };
+    // TODO test IE if we need onmessage or can remove it
+    $(window).on("message onmessage", function (e) {
+        // based on code from: 
+        // http://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/
+        var sandbox = $('#sandbox')[0];
+        var oe = e.originalEvent; // jQuery doesn't properly process event
+        if (oe.origin === "null" && oe.source === sandbox.contentWindow)
+            alert('Result: ' + oe.data);
+    });
     $("span.exp, div.exp").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing

@@ -36,6 +36,12 @@ h1 {
     margin-top: 0px;
 }
 
+// iframes will be used for sandboxed JS evaluation
+// they will never have content, and should never show
+iframe {
+    display: none !important;
+}
+
 div#projects {
     background-color: $menu;
     position: absolute; 
