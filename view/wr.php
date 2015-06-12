@@ -157,7 +157,6 @@
                 <div class="arrow_down"></div>
             </div>
 
-            <!-- TODO FIXME: can we replace these &nbsp;'s with min-widht? -->
             <div id="input" class="statement" >
                 <div class="del">&times;</div>
                 <div class="input">
@@ -165,7 +164,7 @@
                         <div class="menu"></div>
                         <span class="var">&nbsp;</span>
                     </div>
-                    &nbsp;<span class="asgn">&#171;</span> 
+                    <span class="asgn">&#171;</span> 
                     <span class="io">INPUT</span>
                 </div>
             </div>
@@ -186,7 +185,7 @@
                         <div class="menu"></div>
                         <span class="var">&nbsp;</span>
                     </div>
-                    &nbsp;<span class="asgn">&#171;</span> 
+                    <span class="asgn">&#171;</span> 
                     <span class="exp">&nbsp;</span>
                 </div>
             </div>
@@ -278,7 +277,7 @@
             </div>
         </div> <!-- end building blocks -->
 
-        <!-- Sandbox for testing JS expressions while editing -->
+        <!-- Sandbox for executing JS expressions -->
         <iframe sandbox="allow-scripts allow-same-origin" id="sandbox"></iframe>
     </body>
 </html>

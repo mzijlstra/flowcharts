@@ -82,7 +82,7 @@ div.variable.bottom .del {
     width: 80px;
     height: 80px;
     margin-left: 20px; 
-    border: $line $border;
+    border: 2*$line $border;
     border-radius: 55px;
 
     .text {
@@ -172,11 +172,13 @@ div.variable.bottom .del {
 /* statements input/output/assignment */
 .assignment, .input, .output {
     position: relative;
-    padding: 17px;
+    padding: 0px 17px;
     margin-left: 22px;
 
     .var_container {
-        float: left;
+        //float: left;
+        display: inline-block;
+        margin-right: 9px;
 
         .menu {
             position: absolute;
@@ -194,6 +196,8 @@ div.variable.bottom .del {
         background-color: $bg;
         border: 2*$line $border;
         padding: 15px;
+        display: inline-block;
+        min-width: 13px;
     }
 
     .exp {
@@ -202,9 +206,9 @@ div.variable.bottom .del {
 
         input[type=text] {
             position: absolute;
-            top: -4px;
-            left: -1px;
-            width: 400px;
+            top: -2px;
+            left: -2px;
+            //width: 400px;
             border: 2*$line $border;
             padding: 15px;
             background-color: $bg;
@@ -212,6 +216,7 @@ div.variable.bottom .del {
     }
 
     .asgn {
+        display: inline-block;
         font-size: 300%;
         line-height: 0px;
         vertical-align: middle;

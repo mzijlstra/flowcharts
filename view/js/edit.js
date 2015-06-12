@@ -106,7 +106,7 @@ $(function () {
     var inputHere = function (elem, blur) {
         var t = $(elem);
         var i = $($("<input type='text' />"));
-        i.val(t.text());
+        i.val(t.text().trim());
         i.keydown(function (event) {
             if (event.which === 13) {
                 this.blur();
@@ -179,8 +179,14 @@ $(function () {
         if (t.attr("cur") !== t.val()) {
             if (wr.curvars[t.val()]) {
                 alert("Duplicate variable name " + t.val() + "\n" +
-                        "Please change one to keep them unique");
+                        "Please change one to keep them unique.");
                 this.focus();
+                return false;
+            } else if (wr.functions[t.val()]) {
+                alert("Conflict with function name " + t.val() + "\n" +
+                        "Please change your variable name to keep it unique");
+                this.focus();
+                return false;
             } else {
                 var oldn = t.attr('cur');
                 var newn = t.val();
@@ -326,7 +332,7 @@ $(function () {
             // post var removal to server
             postVarUpd();
         } else {
-            alert("Cannot remove variable while in use");
+            alert("Cannot remove variable while in use.");
         }
     });
 
@@ -505,7 +511,8 @@ $(function () {
             var data = wr.eval(exp, ctx);
         } catch (exception) {
             stmt.addClass("exp_error");
-            alert("Error in expression, please check syntax");
+            alert("Error in expression, please check syntax.");
+            e.find("input").focus();
             return false;
         }
 
@@ -539,12 +546,26 @@ $(function () {
         stmt.removeClass("type_error exp_error"); // in case it has it
         return true;
     };
-    // output and assignment expressions
-    $(".output .exp, .assignment .exp").click(function () {
+    // output expressions
+    $(".output .exp").click(function (event) {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
+        var exp = this;
+        inputHere(exp, function (t) {
+            return verifyDataType(t, "string");
+        });
+    });
+    // assignment expressions
+    $(".assignment .exp").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
         var name = $(this).siblings(".var_container").children(".var").text();
+        if (name.trim() === "") {
+            alert("Please select a variable first.");
+            return false;
+        }
         var type = "undefined";
         if (name.trim() !== "") {
             type = $(wr.curvars[name]).prev().find(".type").text();
@@ -599,7 +620,7 @@ $(function () {
                         "Then didigts, underscores, and letters are allowed.");
             } else if (wr.functions[n]) {
                 alert("Duplicate Function Name\n\n" +
-                        "Please change the name to keep the functions unique");
+                        "Please change the name to keep the functions unique.");
             } else {
                 bad = false;
             }
@@ -737,7 +758,7 @@ $(function () {
         var t = $(this);
         var n = t.parent().children(".name").text();
         if (n === "main") {
-            alert("Cannot delete main, the program cannot start without it");
+            alert("Cannot delete main, the program cannot start without it.");
             return false;
         } else if (confirm("Delete the function: " + n + "?")) {
             $("#vars_" + n).remove();

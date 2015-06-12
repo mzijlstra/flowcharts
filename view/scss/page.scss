@@ -4,11 +4,11 @@
 */
 
 // global variables
-$bg: white;
-$fg: #336;
-$menu: #f8f8f8;
-$hl: #dde;
-$disable: #ccc;
+$bg: #336; // white;
+$fg: white;// #336;
+$menu: #282858; //#f8f8f8;
+$hl: #556; //#dde;
+$disable: #444; //#ccc;
 $border: solid $fg;
 $hide: solid transparent;
 
@@ -24,6 +24,7 @@ body {
     font-family: monospace;
     font-size: 12px;
     color: $fg;
+    background-color: $bg;
 }
 
 input {
@@ -102,7 +103,8 @@ div#projects:hover #project_menu {
         left: 0px;
         right: 0px;
         bottom: 0px;
-        background: radial-gradient(circle, #99D 1%, $fg 57%, $menu 60%);
+        //background: radial-gradient(circle, #99D 1%, $fg 57%, $menu 60%);
+        background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
 
         #play_btn {
             width: 0px;
@@ -248,7 +250,7 @@ div#projects:hover #project_menu {
                 @extend .cornerb;
                 top: -6px;
                 left: -1px;
-                border-top: 5px solid white;                                
+                border-top: 5px solid $bg;                                
             }
 
             .rem {
