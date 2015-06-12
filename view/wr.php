@@ -279,6 +279,6 @@
         </div> <!-- end building blocks -->
 
         <!-- Sandbox for testing JS expressions while editing -->
-        <iframe sandbox="allow-scripts" id="sandbox" src="sandbox"></iframe>
+        <iframe sandbox="allow-scripts allow-same-origin" id="sandbox"></iframe>
     </body>
 </html>
