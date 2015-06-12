@@ -50,8 +50,6 @@ $(function () {
      * @returns {undefined}
      */
     var shouldNotHaveData = function (data) {
-        // if it has data it's probably because of a redirect to the login page
-        // due to a session timeout
         if (data !== "") {
             window.location.assign("../login");
         }
@@ -101,7 +99,7 @@ $(function () {
      * Creates an input field on top of the given element, containing the text
      * of the given element, ready to be edited
      * @param {Element} elem The element that contains the text
-     * @param {Function} blur optional validation function, if it returns false
+     * @param {Function} [blur] validation function, if it returns false
      * we cancel the blur and continue editing
      * @returns {undefined}
      */
@@ -120,6 +118,7 @@ $(function () {
             // check if the blur handler needs executing
             if (typeof blur === "function") {
                 if (!blur(t)) {
+                    i.focus();
                     return false;
                 }
             }
@@ -475,35 +474,111 @@ $(function () {
      * 
      * This function is expected to be passed as the blur argument to inputHere
      * and will find the expression that the user entered in inputHere
-     * 
-     * @param {Function} typefn The function that will provide the type string
+     *
+     * @param {Element} elem The element that holds the expression
+     * @param {string} type  The desired type that the exp should have
      * @returns {boolean} true if matches desired type
      */
-    var verifyDataType = function (typefn) {
-        var desired = typefn();
+    var verifyDataType = function (elem, type) {
+        var e = $(elem);
+        var stmt = e.closest(".statement");
+        var exp = e.val();
 
+        // create an evaluation context with defaults for current variables
+        var defaults = {
+            "string": "''",
+            "int": "1",
+            "float": "0.1",
+            "boolean": "true",
+            "array": "[]",
+            "object": "{}"
+        };
+        var context = "(function () {\n";
+        var key, vtype;
+        for (key in wr.curvars) {
+            vtype = $(wr.curvars[key]).prev().find(".type").text();
+            context += "var " + key + " = " + defaults[vtype]+";\n";
+        }
+        context += "return " + exp + ";\n";
+        context += "\n})();";
+
+        // do the actual evaluation
+        try {
+            var data = wr.eval(context);
+        } catch (exception) {
+            stmt.addClass("exp_error");
+            alert("Error in expression, please check syntax");
+            return false;
+        }
+
+        // check the resulting type
+        var result = typeof (data);
+        var match = false;
+        if (result === 'number') {
+            if (type === 'int' && data % 1 === 0) {
+                match = true;
+            } else if (type === 'float') {
+                match = true;
+            }
+        } else if (result === 'object') {
+            if (type === 'array' && data.length) {
+                match = true;
+            } else if (type === 'object') {
+                match = true;
+            }
+        } else if (result === type) {
+            match = true;
+        }
+
+        if (!match) {
+            stmt.addClass("type_error");
+            alert("Your expression has type: " + result + " instead of \n" +
+                    "the expected type: " + type);
+            return false;
+        }
+
+        // clean up when things go correctly
+        stmt.removeClass("type_error exp_error"); // in case it has it
+        return true;
     };
-    // TODO test IE if we need onmessage or can remove it
-    $(window).on("message onmessage", function (e) {
-        // based on code from: 
-        // http://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/
-        var sandbox = $('#sandbox')[0];
-        var oe = e.originalEvent; // jQuery doesn't properly process event
-        if (oe.origin === "null" && oe.source === sandbox.contentWindow)
-            alert('Result: ' + oe.data);
-    });
-    $("span.exp, div.exp").click(function () {
+    // output and assignment expressions
+    $(".output .exp, .assignment .exp").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        inputHere(this);
+        var name = $(this).siblings(".var_container").children(".var").text();
+        var type = "undefined";
+        if (name.trim() !== "") {
+            type = $(wr.curvars[name]).prev().find(".type").text();
+        }
+        inputHere(this, function (t) {
+            return verifyDataType(t, type);
+        }); 
     });
-
+    // if and while condition expressions
     $(".diamond").click(function (event) {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        inputHere($(this).find(".exp").get(0));
+        event.stopPropagation(); // in case we clicked .exp inside diamond
+        var exp = this;
+        if ($(this).hasClass("diamond")) {
+            exp = $(this).find(".exp")[0];
+        }
+        inputHere(exp, function (t) {
+            return verifyDataType(t, "boolean");
+        });
+    });
+    // return expressions
+    $(".stop").click(function () {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
+        var exp = $(this).find(".exp")[0];
+        var type = $('#ins_'+wr.curfun).find('.start .type').text();
+        inputHere(exp, function (t) {
+            return verifyDataType(t, type);
+        });        
     });
 
 

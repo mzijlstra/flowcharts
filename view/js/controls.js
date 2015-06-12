@@ -25,25 +25,26 @@ $(function () {
     wr.state; //gets set below by the control buttons [edit,play,pause]
     wr.playing; // will hold the timeout variable when playing
     wr.steps = []; // execution steps (statements, connections, & more)
+
     /**
-     * The function use to take a flowchart execution step
-     * @returns {undefined}
+     * The function used to take a flowchart execution step
      */
     wr.step = function () {
         var item = wr.steps.pop();
 
         // scroll executing item to the top of the page
         if (item.nodeType) { // as long as item is an actual DOM element
+            var delay = parseFloat($("#delay").text()) * 1000;
             var pos = $(item).offset().top;
             var ins = $("#instructions");
             if (pos > 100) {
                 ins.animate({
                     "scrollTop": ins.scrollTop() + (pos - 100)
-                }, parseFloat($("#delay").text()) * 1000);
+                }, delay);
             } else if (pos < 70) {
                 ins.animate({
                     "scrollTop": ins.scrollTop() + (pos - 70)
-                }, parseFloat($("#delay").text()) * 1000);
+                }, delay);
             }
         }
 
@@ -52,19 +53,25 @@ $(function () {
     };
     /**
      * The function used to evaluate code in a sandbox
-     * @param {type} id The id of the sandbox to use
-     * @param {type} code The code we want evaluated
-     * @returns {undefined} The result comes back when the sandbox executes
-     * our main window's onMessage() method
+     * @param {string} code The code we want evaluated
+     * @param {string} [id] id of the sandbox to use (defualt: sandbox)
+     * @returns {undefined} The result of the evaluation
      */
-    wr.evaluate = function (id, code) {
-        $(id)[0].contentWindow.postMessage(code, '*');
+    wr.eval = function (code, id) {
+        if (!id) {
+            id = "sandbox";
+        }
+        return $('#' + id)[0].contentWindow.eval(code);
     };
 
-    /*
+
+
+
+
+    /*****************************************************
      * The 3 different states that the program can be in
      * The code below uses the state pattern for the states
-     */
+     *****************************************************/
     var play_btn = $("#play_btn");
     var pause_btn = $("#pause_btn");
     var delay_disp = $('#delay_disp');
@@ -159,6 +166,7 @@ $(function () {
     // we start in the edit state
     wr.state = states.edit;
 
+    // Hook up button clicks
     $("#play_pause").click(function () {
         wr.state.playpause();
     });
