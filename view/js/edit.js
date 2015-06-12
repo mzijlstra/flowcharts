@@ -88,13 +88,13 @@ $(function () {
         var elem = $(id);
         var result = elem.clone(true).removeAttr("id");
 
-        // also copy destroy and exec methods
-        result.get(0).destroy = elem.get(0).destroy;
-        result.get(0).exec = elem.get(0).exec;
+        // also copy destroy, ready, and exec methods
+        result[0].destroy = elem[0].destroy;
+        result[0].ready   = elem[0].ready;
+        result[0].exec    = elem[0].exec;
         return result;
     };
 
-    // TODO refactor to have dynamicly widening input field (always on top)
     /**
      * Creates an input field on top of the given element, containing the text
      * of the given element, ready to be edited
@@ -104,28 +104,43 @@ $(function () {
      * @returns {undefined}
      */
     var inputHere = function (elem, blur) {
+        // create input element and set text
         var t = $(elem);
         var i = $($("<input type='text' />"));
-        i.val(t.text().trim());
+        var old = t.text().trim();
+        i.val(old);
+        t.text("_"); // so that block doesn't show (weird)
+
+        // dynamically resize field based on contents
+        var resize = function () {
+            var length = i.val().length * 7 + 7;
+            if (length < 150) {
+                length = 150;
+            }
+            i.css("width", length);
+        };
+        i.focus(resize);
+
+        // onkeydown resize and also blur when enter is pressed
         i.keydown(function (event) {
+            resize();
             if (event.which === 13) {
                 this.blur();
             }
         });
-        i.blur(function () {
-            var t = $(this);
 
+        // on call optional fun (that can block blur), and assign new val
+        i.blur(function () {
             // check if the blur handler needs executing
             if (typeof blur === "function") {
-                if (!blur(t)) {
+                if (!blur(i)) {
                     i.focus();
                     return false;
                 }
             }
 
-            var exp = t.val();
-            var p = t.parent();
-            p.empty().text(exp);
+            var exp = i.val();
+            t.empty().text(exp);
 
             // send changes to server
             postInsUpd();
@@ -134,7 +149,7 @@ $(function () {
         t.append(i);
         i.focus();
     };
-
+    
 
 
 
@@ -475,85 +490,14 @@ $(function () {
     /********************************************************
      * Expression declaration related code
      ********************************************************/
-    /**
-     * Verifies that the extracted expression has the given data type.
-     * 
-     * This function is expected to be passed as the blur argument to inputHere
-     * and will find the expression that the user entered in inputHere
-     *
-     * @param {Element} elem The element that holds the expression
-     * @param {string} type  The desired type that the exp should have
-     * @returns {boolean} true if matches desired type
-     */
-    var verifyDataType = function (elem, type) {
-        var e = $(elem);
-        var stmt = e.closest(".statement");
-        var exp = e.val();
-
-        // create an evaluation context with defaults for current variables
-        var defaults = {
-            "string": "''",
-            "int": "1",
-            "float": "0.1",
-            "boolean": "true",
-            "array": "[]",
-            "object": "{}"
-        };
-        var ctx = {};
-        var key, vtype;
-        for (key in wr.curvars) {
-            vtype = $(wr.curvars[key]).prev().find(".type").text();
-            ctx[key] = defaults[vtype];
-        }
-
-        // do the actual evaluation
-        try {
-            var data = wr.eval(exp, ctx);
-        } catch (exception) {
-            stmt.addClass("exp_error");
-            alert("Error in expression, please check syntax.");
-            e.find("input").focus();
-            return false;
-        }
-
-        // check the resulting type
-        var result = typeof (data);
-        var match = false;
-        if (result === 'number') {
-            if (type === 'int' && data % 1 === 0) {
-                match = true;
-            } else if (type === 'float') {
-                match = true;
-            }
-        } else if (result === 'object') {
-            if (type === 'array' && data.length) {
-                match = true;
-            } else if (type === 'object') {
-                match = true;
-            }
-        } else if (result === type) {
-            match = true;
-        }
-
-        if (!match) {
-            stmt.addClass("type_error");
-            alert("Your expression has type: " + result + " instead of \n" +
-                    "the expected type: " + type);
-            return false;
-        }
-
-        // clean up when things go correctly
-        stmt.removeClass("type_error exp_error"); // in case it has it
-        return true;
-    };
     // output expressions
-    $(".output .exp").click(function (event) {
+    $(".output .exp").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
         var exp = this;
         inputHere(exp, function (t) {
-            return verifyDataType(t, "string");
+            return wr.verifyType(t, "string");
         });
     });
     // assignment expressions
@@ -561,18 +505,16 @@ $(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        var name = $(this).siblings(".var_container").children(".var").text();
-        if (name.trim() === "") {
+        var name = $(this).siblings(".var_container").children(".var")
+                .text().trim();
+        if (name === "") {
             alert("Please select a variable first.");
             return false;
         }
-        var type = "undefined";
-        if (name.trim() !== "") {
-            type = $(wr.curvars[name]).prev().find(".type").text();
-        }
+        var type = type = $(wr.curvars[name]).prev().find(".type").text();            
         inputHere(this, function (t) {
-            return verifyDataType(t, type);
-        }); 
+            return wr.verifyType(t, type);
+        });
     });
     // if and while condition expressions
     $(".diamond").click(function (event) {
@@ -585,7 +527,7 @@ $(function () {
             exp = $(this).find(".exp")[0];
         }
         inputHere(exp, function (t) {
-            return verifyDataType(t, "boolean");
+            return wr.verifyType(t, "boolean");
         });
     });
     // return expressions
@@ -594,10 +536,10 @@ $(function () {
             return false; // don't show if we're executing
         }
         var exp = $(this).find(".exp")[0];
-        var type = $('#ins_'+wr.curfun).find('.start .type').text();
+        var type = $('#ins_' + wr.curfun).find('.start .type').text();
         inputHere(exp, function (t) {
-            return verifyDataType(t, type);
-        });        
+            return wr.verifyType(t, type);
+        });
     });
 
 

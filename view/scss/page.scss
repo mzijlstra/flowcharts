@@ -30,6 +30,9 @@ body {
 input {
     font-family: inherit;
     font-size: inherit;
+    background-color: $bg;
+    border-color: $fg;
+    color: $fg;
 }
 
 h1 {

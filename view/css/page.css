@@ -167,6 +167,7 @@ div.variable.bottom .del {
   .assignment .exp, .input .exp, .output .exp {
     position: relative; }
     .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text] {
+      z-index: 100;
       position: absolute;
       top: -2px;
       left: -2px;
@@ -221,10 +222,10 @@ div.variable.bottom .del {
     background: #336;
     padding-top: 3px; }
     .diamond .exp input {
+      z-index: 100;
       position: absolute;
       top: -5px;
       left: 0px;
-      width: 400px;
       border: 1px solid white;
       background: #336; }
   .diamond .label_stmt {
@@ -348,6 +349,8 @@ div.variable.bottom .del {
 .statement.exp_error .assignment .exp {
   border-color: red; }
 
+.statement.type_error .stop,
+.statement.exp_error .stop,
 .stop.type_error,
 .stop.exp_error {
   border-color: red; }
@@ -412,7 +415,10 @@ body {
 
 input {
   font-family: inherit;
-  font-size: inherit; }
+  font-size: inherit;
+  background-color: #336;
+  border-color: white;
+  color: white; }
 
 h1 {
   margin-left: 35px;

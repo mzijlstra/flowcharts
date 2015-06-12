@@ -73,6 +73,82 @@ $(function () {
 
         return $('#sandbox')[0].contentWindow.eval(code);
     };
+    /**
+     * Verifies that the extracted expression has the given data type.
+     * 
+     * This function can also be passed as the blur argument to inputHere.
+     * Since this is used by different parts I had to put it into the wr obj.
+     *
+     * @param {Element} elem The element that holds the expression
+     * @param {string} type  The desired type that the exp should have
+     * @param {boolean} [silent] If true only highlight, no alert()
+     * @returns {boolean} true if matches desired type
+     */
+    wr.verifyType = function (elem, type, silent) {
+        var e = $(elem);
+        var exp = e.val() || e.text();
+        var stmt = e.closest(".statement");
+
+        // create an evaluation context with defaults for current variables
+        var defaults = {
+            "string": "''",
+            "int": "1",
+            "float": "0.1",
+            "boolean": "true",
+            "array": "[]",
+            "object": "{}"
+        };
+        var ctx = {};
+        var key, vtype;
+        for (key in wr.curvars) {
+            vtype = $(wr.curvars[key]).prev().find(".type").text();
+            ctx[key] = defaults[vtype];
+        }
+
+        // do the actual evaluation
+        try {
+            var data = wr.eval(exp, ctx);
+        } catch (exception) {
+            stmt.addClass("exp_error");
+            if (!silent) {
+                alert("Error in expression, please check syntax.");
+            }
+            e.find("input").focus();
+            return false;
+        }
+
+        // check the resulting type
+        var result = typeof (data);
+        var match = false;
+        if (result === 'number') {
+            if (type === 'int' && data % 1 === 0) {
+                match = true;
+            } else if (type === 'float') {
+                match = true;
+            }
+        } else if (result === 'object') {
+            if (type === 'array' && data.length) {
+                match = true;
+            } else if (type === 'object') {
+                match = true;
+            }
+        } else if (result === type) {
+            match = true;
+        }
+
+        if (!match) {
+            stmt.addClass("type_error");
+            if (!silent) {
+                alert("Your expression has type: " + result + " instead of \n" +
+                        "the expected type: " + type);
+            }
+            return false;
+        }
+
+        // clean up when things go correctly
+        stmt.removeClass("type_error exp_error"); // in case it has it
+        return true;
+    };
 
 
 
@@ -90,8 +166,6 @@ $(function () {
 
     // helper functions to switch between states
     var toPlayState = function () {
-        // TODO check that we are ready to exec (no errors in flowchart!)
-
         pause_btn.css("display", "block");
         play_btn.css("display", "none");
         step_btn.css("display", "none");
@@ -148,6 +222,22 @@ $(function () {
         "edit": {
             "name": "edit",
             "playpause": function () {
+                // check that everything is good to go ('compile' check)
+                var stmts = $("#instructions .statement").get();
+                var ready = true;
+                for (var i = 0; i < stmts.length; i++) {
+                    if (!stmts[i].ready()) {
+                        ready = false;
+                    }
+                }
+                if (!ready) {
+                    alert("Cannot start execution, there are errors in this "
+                            +"project\n\nThe problems have been highligted, "
+                            +"please check all functions");
+                    return;
+                }
+                // TODO clear all css error classes if we make it here
+
                 // do css changes to exit edit mode
                 workspace.removeClass("edit");
                 workspace.addClass("exec");
@@ -176,7 +266,7 @@ $(function () {
     // we start in the edit state
     wr.state = states.edit;
 
-    // Hook up button clicks
+    // Hook up button clicks that move us between the states
     $("#play_pause").click(function () {
         wr.state.playpause();
     });
@@ -184,4 +274,73 @@ $(function () {
         wr.state.reset();
     });
     $("#step_btn").click(wr.step);
+
+
+
+
+
+    /*****************************************************
+     * The 'compile' check for the different statements
+     *****************************************************/
+    $(".statement > .start").each(function () {
+        $(this).parent()[0].ready = function () {
+            return true; // start is always ready
+        };
+    });
+    // stop is only ready if it returns an expression of the correct type
+    $(".statement > .stop").each(function () {
+        $(this).parent()[0].ready = function () {
+            var t = $(this);
+            var func = t.closest(".instructions").attr("id").substring(4);
+            var type = $('#ins_' + func).find('.start .type').text();
+            return wr.verifyType(t.find(".exp")[0], type, "silent");
+        };
+    });
+    // inputs are ready if they have a variable name and it's of type string
+    $(".statement > .input").each(function () {
+        $(this).parent()[0].ready = function () {
+            var t = $(this);
+            var func = t.closest(".instructions").attr("id").substring(4);
+            var name = t.find(".var").text().trim();
+            var type = "undefined";
+            if (name !== "") {
+                type = $(wr.functions[func][name]).prev().find(".type").text();
+            }
+            var result = name !== "" && type === "string";
+            if (!result) {
+                t.addClass("type_error");
+            }
+            return result;
+        };
+    });
+    // outputs are ready if their expression evaluates to a string
+    $(".statement > .output").each(function () {
+        $(this).parent()[0].ready = function () {
+            return wr.verifyType($(this).find(".exp")[0], "string", "silent");
+        };
+    });
+    // assignments are ready if their variable and expression have same type
+    $(".statement > .assignment").each(function () {
+        $(this).parent()[0].ready = function () {
+            // function that the statement is in
+            var func = $(this).closest(".instructions").attr("id").substring(4);
+            // name and type of the variable
+            var name = $(this).find(".var").text().trim();
+            var type = "undefined";
+            if (name !== "") {
+                type = $(wr.functions[func][name]).prev().find(".type").text();
+            }
+            // TODO doesn't highlight anything if neither var nor exp exists
+            return  name !== ""
+                    && wr.verifyType($(this).find(".exp")[0], type, "silent");
+            ;
+        };
+    });
+    // if statements and while statements should have boolean expresssions
+    $(".statement > .if, .statement > .while").each(function () {
+        $(this).parent()[0].ready = function () {
+            return wr.verifyType($(this).find(".exp")[0], "boolean", "silent");
+        };
+    });
+
 });

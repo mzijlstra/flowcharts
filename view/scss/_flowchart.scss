@@ -205,10 +205,10 @@ div.variable.bottom .del {
         position: relative;
 
         input[type=text] {
+            z-index: 100;
             position: absolute;
             top: -2px;
             left: -2px;
-            //width: 400px;
             border: 2*$line $border;
             padding: 15px;
             background-color: $bg;
@@ -274,10 +274,10 @@ div.variable.bottom .del {
         padding-top: 3px;
 
         input {
+            z-index: 100;
             position: absolute;
             top: -5px;
             left: 0px;
-            width: 400px;
             border: $line $border;
             background: $bg;
         }
@@ -436,6 +436,8 @@ div.variable.bottom .del {
     }
 }
 // type_error and exp_error for return statement
+.statement.type_error .stop,
+.statement.exp_error .stop,
 .stop.type_error,
 .stop.exp_error {
     border-color: $error;
