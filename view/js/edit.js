@@ -493,18 +493,16 @@ $(function () {
             "array": "[]",
             "object": "{}"
         };
-        var context = "(function () {\n";
+        var ctx = {};
         var key, vtype;
         for (key in wr.curvars) {
             vtype = $(wr.curvars[key]).prev().find(".type").text();
-            context += "var " + key + " = " + defaults[vtype]+";\n";
+            ctx[key] = defaults[vtype];
         }
-        context += "return " + exp + ";\n";
-        context += "\n})();";
 
         // do the actual evaluation
         try {
-            var data = wr.eval(context);
+            var data = wr.eval(exp, ctx);
         } catch (exception) {
             stmt.addClass("exp_error");
             alert("Error in expression, please check syntax");

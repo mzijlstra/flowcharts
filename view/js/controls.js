@@ -52,16 +52,26 @@ $(function () {
         item.exec();
     };
     /**
-     * The function used to evaluate code in a sandbox
-     * @param {string} code The code we want evaluated
-     * @param {string} [id] id of the sandbox to use (defualt: sandbox)
+     * This function will evaluate the given expression in the context of the 
+     * provided object
+     * @param {string} exp The expression we want evaluated
+     * @param {object} [ctx] variables with wich code will be evaluated
      * @returns {undefined} The result of the evaluation
      */
-    wr.eval = function (code, id) {
-        if (!id) {
-            id = "sandbox";
+    wr.eval = function (exp, ctx) {
+        if (!ctx) {
+            ctx = {};
         }
-        return $('#' + id)[0].contentWindow.eval(code);
+        var code = "(function () {\n";
+        var key, val;
+        for (key in ctx) {
+            val = ctx[key];
+            code += "var " + key + " = " + val + ";\n";
+        }
+        code += "return " + exp + ";\n";
+        code += "\n})();";
+
+        return $('#sandbox')[0].contentWindow.eval(code);
     };
 
 
