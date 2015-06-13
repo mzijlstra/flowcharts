@@ -236,7 +236,9 @@ $(function () {
                             +"please check all functions");
                     return;
                 }
-                // TODO clear all css error classes if we make it here
+                // if we're here any error highlights are old / not valid
+                $('.type_error, .exp_error, .name_error')
+                        .removeClass('type_error exp_error name_error');
 
                 // do css changes to exit edit mode
                 workspace.removeClass("edit");
@@ -302,15 +304,16 @@ $(function () {
             var t = $(this);
             var func = t.closest(".instructions").attr("id").substring(4);
             var name = t.find(".var").text().trim();
-            var type = "undefined";
-            if (name !== "") {
-                type = $(wr.functions[func][name]).prev().find(".type").text();
+            if (name === "") {
+                t.addClass("name_error");
+                return false;
             }
-            var result = name !== "" && type === "string";
-            if (!result) {
+            var type = $(wr.functions[func][name]).prev().find(".type").text();
+            if (type !== "string") {
                 t.addClass("type_error");
+                return false;
             }
-            return result;
+            return true;
         };
     });
     // outputs are ready if their expression evaluates to a string
@@ -322,18 +325,22 @@ $(function () {
     // assignments are ready if their variable and expression have same type
     $(".statement > .assignment").each(function () {
         $(this).parent()[0].ready = function () {
+            var t = $(this);
             // function that the statement is in
-            var func = $(this).closest(".instructions").attr("id").substring(4);
+            var func = t.closest(".instructions").attr("id").substring(4);
             // name and type of the variable
-            var name = $(this).find(".var").text().trim();
-            var type = "undefined";
-            if (name !== "") {
-                type = $(wr.functions[func][name]).prev().find(".type").text();
+            var name = t.find(".var").text().trim();
+            if (name === "") {
+                t.addClass("name_error");
+                return false;
             }
-            // TODO doesn't highlight anything if neither var nor exp exists
-            return  name !== ""
-                    && wr.verifyType($(this).find(".exp")[0], type, "silent");
-            ;
+            var type = $(wr.functions[func][name]).prev().find(".type").text();
+            var exp = t.find(".exp");
+            if (exp.text().trim() === "") {
+                t.addClass("exp_error");
+                return false;
+            }
+            return wr.verifyType(exp[0], type, "silent");
         };
     });
     // if statements and while statements should have boolean expresssions
