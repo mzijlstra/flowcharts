@@ -104,9 +104,16 @@ $(function () {
      * @returns {undefined}
      */
     var inputHere = function (elem, blur) {
-        // create input element and set text
+        // see if there is an existing input element (due to double click)
         var t = $(elem);
-        var i = $($("<input type='text' />"));
+        var i = t.find("input");
+        if (i.length) {
+            i.focus();
+            return;
+        }
+        
+        // create input element and set text
+        i = $($("<input type='text' />"));
         var old = t.text().trim();
         i.val(old);
         t.text("_"); // so that block doesn't show (weird)
@@ -173,7 +180,7 @@ $(function () {
     });
 
     // check if we need to update var name on blur
-    $(".variable .var, #declaration .var").blur(function (event) {
+    $(".variable .var, #declaration .var").blur(function () {
         var t = $(this);
 
         // cleanly exit fields that are not defined yet
@@ -268,6 +275,7 @@ $(function () {
 
     // handle type menu clicks
     $(".type_container .menu_item").click(function () {
+        // TODO if there is an expression we should verifyType
         var t = $(this);
         var display = t.parents(".type_container").find(".type");
         var type = t.text();
@@ -654,7 +662,7 @@ $(function () {
             if (cur === "main") {
                 alert("Cannot rename function main");
                 n.text("main");
-                return true;
+                return false;
             }
 
             if (cur !== t.val()) {

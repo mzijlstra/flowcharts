@@ -51,7 +51,7 @@ div.variable.bottom .del {
   display: inline-block; }
   .type_container .type {
     position: relative;
-    padding: 3px; }
+    padding: 3px 0px; }
     .type_container .type input {
       position: absolute;
       top: -2px;
@@ -83,12 +83,12 @@ div.variable.bottom .del {
     white-space: nowrap; }
   .start input, .stop input {
     position: absolute;
-    top: 0px;
-    left: 25px;
+    top: 2px;
+    left: 29px;
     background-color: #336; }
 
 .stop input {
-  left: 42px; }
+  left: 48px; }
 
 /* connections between statements */
 .connection {
@@ -148,8 +148,7 @@ div.variable.bottom .del {
   padding: 0px 17px;
   margin-left: 22px; }
   .assignment .var_container, .input .var_container, .output .var_container {
-    display: inline-block;
-    margin-right: 9px; }
+    display: inline-block; }
     .assignment .var_container .menu, .input .var_container .menu, .output .var_container .menu {
       position: absolute;
       top: 45px;
@@ -224,7 +223,7 @@ div.variable.bottom .del {
     .diamond .exp input {
       z-index: 100;
       position: absolute;
-      top: -5px;
+      top: 0px;
       left: 0px;
       border: 1px solid white;
       background: #336; }
@@ -339,6 +338,9 @@ div.variable.bottom .del {
 .statement.type_error > div > .diamond > .diamond_bot_outside,
 .statement.exp_error > div > .diamond > .diamond_bot_outside {
   border-top-color: red; }
+
+.statement.name_error .input .var, .statement.name_error .input .exp, .statement.name_error .assignment .var, .statement.name_error .assignment .exp {
+  border-color: red; }
 
 .statement.type_error .input .asgn,
 .statement.type_error .assignment .asgn,
