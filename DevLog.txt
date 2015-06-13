@@ -1,6 +1,10 @@
 FEATURES TO ADD:
+- Beginner mode with interactive parse tree during execution, and black box parseInt() and parseFloat() flow charts
+- Advanced mode with for loop, foreach loop, and objects?
+- Turtle Graphics module
+- Image manipulation module
 - In the variable selection drop down only list variables that have the correct type. For example input should only be able to select string type variables.
-- add returns inside if statements?
+- The ability to add returns inside if statements?
 - INTERPRETER (will connect to JavaScript, easier than implementing an interpreter for a homebrew language)
 
 2015-05:
