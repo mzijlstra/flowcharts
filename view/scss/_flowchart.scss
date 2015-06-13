@@ -56,7 +56,7 @@ div.variable.bottom .del {
 
     .type {
         position: relative;
-        padding: 3px;
+        padding: 3px 0px;
 
         input {
             position: absolute;
@@ -96,14 +96,14 @@ div.variable.bottom .del {
 
     input {
         position: absolute;
-        top: 0px;
-        left: 25px;
+        top: 2px;
+        left: 29px;
         background-color: $bg;    
 
     }
 }
 .stop input {
-    left: 42px;
+    left: 48px;
 }
 
 /* connections between statements */
@@ -178,7 +178,6 @@ div.variable.bottom .del {
     .var_container {
         //float: left;
         display: inline-block;
-        margin-right: 9px;
 
         .menu {
             position: absolute;
@@ -276,7 +275,7 @@ div.variable.bottom .del {
         input {
             z-index: 100;
             position: absolute;
-            top: -5px;
+            top: 0px;
             left: 0px;
             border: $line $border;
             background: $bg;
@@ -419,6 +418,14 @@ div.variable.bottom .del {
 .statement.type_error > div > .diamond > .diamond_bot_outside,
 .statement.exp_error > div > .diamond > .diamond_bot_outside {
     border-top-color: $error;
+}
+// name_error for input and assignment
+.statement.name_error {
+    .input, .assignment {
+        .var {
+            border-color: $error;
+        }
+    }
 }
 // type_error for output and assignment
 .statement.type_error {

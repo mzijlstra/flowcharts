@@ -46,7 +46,7 @@ INSERT INTO function VALUES(0, 'main',
 '<div class="statement">
     <div class="start">
         <div class="text">
-            <span>int</span>
+            <span class="type">int</span>
             <span class="name">main</span>(<span class="params"></span>)
         </div>
     </div>
