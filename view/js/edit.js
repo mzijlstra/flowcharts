@@ -460,7 +460,7 @@ $(function () {
         
         if (gp.hasClass("input") && type !== "string" 
                 || gp.hasClass("assignment") 
-                && wr.verifyType(gp.children(".exp")[0], type)) {
+                && !wr.verifyType(gp.children(".exp")[0], type, "silent")) {
             gp.parent().addClass("name_error");
         } else {
             gp.parent().removeClass("name_error");
