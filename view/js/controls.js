@@ -69,7 +69,7 @@ $(function () {
             code += "var " + key + " = " + val + ";\n";
         }
         code += "return " + exp + ";\n";
-        code += "\n})();";
+        code += "})();";
 
         return $('#sandbox')[0].contentWindow.eval(code);
     };
@@ -100,7 +100,14 @@ $(function () {
         };
         var ctx = {};
         var key, vtype;
-        for (key in wr.curvars) {
+        // add in functions that return default values based on their type
+        for (key in wr.functions) {
+            vtype = $('#ins_' + key).find('.start .type').text();
+            ctx[key] = "function () { return "+ defaults[vtype] +"};"; 
+        }
+        // add variables for the function that the elem is inside of
+        var fun = $(elem).closest(".instructions").attr("id").substring(4);
+        for (key in wr.functions[fun]) {
             vtype = $(wr.curvars[key]).prev().find(".type").text();
             ctx[key] = defaults[vtype];
         }
