@@ -90,8 +90,8 @@ $(function () {
 
         // also copy destroy, ready, and exec methods
         result[0].destroy = elem[0].destroy;
-        result[0].ready   = elem[0].ready;
-        result[0].exec    = elem[0].exec;
+        result[0].ready = elem[0].ready;
+        result[0].exec = elem[0].exec;
         return result;
     };
 
@@ -111,7 +111,7 @@ $(function () {
             i.focus();
             return;
         }
-        
+
         // create input element and set text
         i = $($("<input type='text' />"));
         var old = t.text().trim();
@@ -156,7 +156,7 @@ $(function () {
         t.append(i);
         i.focus();
     };
-    
+
 
 
 
@@ -275,7 +275,6 @@ $(function () {
 
     // handle type menu clicks
     $(".type_container .menu_item").click(function () {
-        // TODO if there is an expression we should verifyType
         var t = $(this);
         var display = t.parents(".type_container").find(".type");
         var type = t.text();
@@ -452,8 +451,23 @@ $(function () {
 
     // handle var select menu clicks
     $(".var_container .menu").click(function (event) {
-        var t = $(event.target);
-        $(this).parent().children("span.var").text(t.text());
+        // check to see if the selected var has the right type
+        var t = $(this);
+        var gp = t.parent().parent();
+        var name = $(event.target).text();
+        var type = $(wr.curvars[name]).siblings(".type_container")
+                .find(".type").text();
+        
+        if (gp.hasClass("input") && type !== "string" 
+                || gp.hasClass("assignment") 
+                && wr.verifyType(gp.children(".exp")[0], type)) {
+            gp.parent().addClass("name_error");
+        } else {
+            gp.parent().removeClass("name_error");
+        }
+
+        // set variable name into var span
+        $(this).parent().children("span.var").text(name);
         $(this).hide();
 
         postInsUpd();
@@ -519,7 +533,7 @@ $(function () {
             alert("Please select a variable first.");
             return false;
         }
-        var type = type = $(wr.curvars[name]).prev().find(".type").text();            
+        var type = type = $(wr.curvars[name]).prev().find(".type").text();
         inputHere(this, function (t) {
             return wr.verifyType(t, type);
         });
