@@ -461,9 +461,9 @@ $(function () {
         if (gp.hasClass("input") && type !== "string" 
                 || gp.hasClass("assignment") 
                 && !wr.verifyType(gp.children(".exp")[0], type, "silent")) {
-            gp.parent().addClass("name_error");
+            gp.parent().addClass("type_error");
         } else {
-            gp.parent().removeClass("name_error");
+            gp.parent().removeClass("type_error");
         }
 
         // set variable name into var span
