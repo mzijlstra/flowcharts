@@ -3,24 +3,31 @@
     Author     : mzijlstra
 */
 body {
+  background-color: #336;
   font-family: monospace;
   font-size: 12px;
-  color: #333366; 
+  color: white; 
 }
 .central {
     position: absolute;
     top: 40%;
     left: 50%;
-    width: 200px;
-    margin-left: -100px;
+    width: 400px;
+    margin-left: -200px;
 }
 h1 {
-    font-size: 2.7em;
+    font-size: 520%;
     text-align: center;
     margin-bottom: 2px;
+    text-align: center;
+}
+h2 {
+    font-size: 170%;
+    margin-top: 0px;
+    text-align: center;
 }
 .container {
-    border: 1px solid black;
+    border: 2px solid white;
     padding: 10px;
 }
 .error {
@@ -28,9 +35,11 @@ h1 {
     padding-bottom: 3px;
 }
 input[type=email], input[type=password] { 
+    background-color: #336;
+    color: white;
     font-family: inherit;
     margin-bottom: 5px;
-    width: 170px;
+    width: 375px;
 }
 #lgn_right {
     text-align: right;

@@ -13,7 +13,8 @@
     </head>
     <body>
         <div class="central">
-            <h1>Web Raptor</h1>
+            <h1>Web-Raptor</h1>
+            <h2>Flowchart Programming Language</h2>
             <div class="container">
                 <form action="login" method="post">
                     <?php if (isset($_SESSION['error'])) : ?>
