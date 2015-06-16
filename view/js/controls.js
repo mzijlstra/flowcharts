@@ -107,7 +107,7 @@ $(function () {
         // add variables for the function that the elem is inside of
         var fun = $(elem).closest(".instructions").attr("id").substring(4);
         for (key in wr.functions[fun]) {
-            vtype = $(wr.curvars[key]).prev().find(".type").text();
+            vtype = $(wr.functions[fun][key]).prev().find(".type").text();
             ctx[key] = defaults[vtype];
         }
 
