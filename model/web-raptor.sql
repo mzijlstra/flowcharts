@@ -46,7 +46,7 @@ INSERT INTO function VALUES(0, 'main',
 '<div class="statement">
     <div class="start">
         <div class="text">
-            <span class="type">int</span>
+            <span class="type">number</span>
             <span class="name">main</span>(<span class="params"></span>)
         </div>
     </div>
@@ -71,8 +71,7 @@ INSERT INTO function VALUES(0, 'main',
     <div class="type_container">
         <div class="menu">
             <div class="menu_item">string</div>
-            <div class="menu_item">int</div>
-            <div class="menu_item">float</div>
+            <div class="menu_item">number</div>
             <div class="menu_item">boolean</div>
             <div class="menu_item">array</div>
             <div class="menu_item">object</div>

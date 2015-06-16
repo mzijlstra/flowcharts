@@ -1,11 +1,16 @@
 FEATURES TO ADD:
-- Beginner mode with interactive parse tree during execution, and black box parseInt() and parseFloat() flow charts
-- Advanced mode with for loop, foreach loop, and objects?
+- IO sub-system including log, since alert() and prompt() can be disabled by user
+- Javascript Generation, so that more advanced users can more easily switch to writing code
 - Turtle Graphics module
 - Image manipulation module
+- Beginner mode with interactive parse tree during execution, and black box parseInt() and parseFloat() flow charts
+- Advanced mode with for loop, foreach loop, and objects?
 - In the variable selection drop down only list variables that have the correct type. For example input should only be able to select string type variables.
 - The ability to add returns inside if statements?
 - INTERPRETER (will connect to JavaScript, easier than implementing an interpreter for a homebrew language)
+
+2015-06-16:
+Switched to number instead of float and int, since JS only has number and some of the error messages that users would get can get confusing.
 
 2015-05:
 Finished AJAX stuff for functions and project management

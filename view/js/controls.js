@@ -92,8 +92,7 @@ $(function () {
         // create an evaluation context with defaults for current variables
         var defaults = {
             "string": "''",
-            "int": "1",
-            "float": "0.1",
+            "number": "1",
             "boolean": "true",
             "array": "[]",
             "object": "{}"
@@ -127,13 +126,7 @@ $(function () {
         // check the resulting type
         var result = typeof (data);
         var match = false;
-        if (result === 'number') {
-            if (type === 'int' && data % 1 === 0) {
-                match = true;
-            } else if (type === 'float') {
-                match = true;
-            }
-        } else if (result === 'object') {
+        if (result === 'object') {
             if (type === 'array' && data.length) {
                 match = true;
             } else if (type === 'object') {

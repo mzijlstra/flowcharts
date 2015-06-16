@@ -111,8 +111,7 @@
                 <div class="type_container">
                     <div class="menu">
                         <div class="menu_item">string</div>
-                        <div class="menu_item">int</div>
-                        <div class="menu_item">float</div>
+                        <div class="menu_item">number</div>
                         <div class="menu_item">boolean</div>
                         <div class="menu_item">array</div>
                         <div class="menu_item">object</div>
@@ -128,13 +127,12 @@
                         <div class="type_container">
                             <div class="menu">
                                 <div class="menu_item">string</div>
-                                <div class="menu_item">int</div>
-                                <div class="menu_item">float</div>
+                                <div class="menu_item">number</div>
                                 <div class="menu_item">boolean</div>
                                 <div class="menu_item">array</div>
                                 <div class="menu_item">object</div>
                             </div>
-                            <span class="type">int</span>
+                            <span class="type">number</span>
                         </div>
                         <span class="name">main</span>(<span class="params"></span>)
                     </div>
