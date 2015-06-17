@@ -551,6 +551,8 @@ div#projects:hover #project_menu {
     display: none; }
   #var_area .variables.active {
     display: block; }
+  #var_area .stack {
+    display: none; }
 
 #functions {
   position: absolute;

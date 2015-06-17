@@ -91,7 +91,6 @@ $(function () {
         // also copy destroy, ready, and exec methods
         result[0].destroy = elem[0].destroy;
         result[0].ready = elem[0].ready;
-        result[0].exec = elem[0].exec;
         return result;
     };
 
@@ -457,9 +456,9 @@ $(function () {
         var name = $(event.target).text();
         var type = $(wr.curvars[name]).siblings(".type_container")
                 .find(".type").text();
-        
-        if (gp.hasClass("input") && type !== "string" 
-                || gp.hasClass("assignment") 
+
+        if (gp.hasClass("input") && type !== "string"
+                || gp.hasClass("assignment")
                 && !wr.verifyType(gp.children(".exp")[0], type, "silent")) {
             gp.parent().addClass("type_error");
         } else {
@@ -584,7 +583,12 @@ $(function () {
                         "Then didigts, underscores, and letters are allowed.");
             } else if (wr.functions[n]) {
                 alert("Duplicate Function Name\n\n" +
-                        "Please change the name to keep the functions unique.");
+                        "Please change the function name to keep it unique.");
+            } else if (wr.curfun[n]) {
+                // TODO we should check for conflicts with variable names
+                // in all current functions
+                alert("Conflict found with variable name " + n + "\n\n" +
+                        "Please change the function name to keep it unique.");
             } else {
                 bad = false;
             }

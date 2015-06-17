@@ -11,7 +11,7 @@ var wr; // wr namespace is created inside controls.js
 
 $(function () {
     "use strict";
-
+    
     $(".connection, .statement").each(function () {
         this.exec = function () {
             $(this).addClass("executing");

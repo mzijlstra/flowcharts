@@ -36,6 +36,8 @@
                         </div>
                     <?php endforeach; ?>
                 </div>
+                <div id="stack">
+                </div>
             </div> <!-- end var_area -->
 
             <div id="functions">

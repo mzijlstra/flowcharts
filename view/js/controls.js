@@ -22,6 +22,7 @@ $(function () {
     wr.functions = {'main': {}}; // the flowcharts the user has made
     wr.curfun = 'main';
     wr.curvars = wr.functions.main;
+    wr.curframe = -1;
     wr.state; //gets set below by the control buttons [edit,play,pause]
     wr.playing; // will hold the timeout variable when playing
     wr.steps = []; // execution steps (statements, connections, & more)
@@ -102,7 +103,7 @@ $(function () {
         // add in functions that return default values based on their type
         for (key in wr.functions) {
             vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return "+ defaults[vtype] +"};"; 
+            ctx[key] = "function () { return " + defaults[vtype] + "};";
         }
         // add variables for the function that the elem is inside of
         var fun = $(elem).closest(".instructions").attr("id").substring(4);
@@ -149,6 +150,54 @@ $(function () {
         stmt.removeClass("type_error exp_error"); // in case it has it
         return true;
     };
+    /**
+     * Does a call to a flowchart function. Execution is started with a 
+     * doCall('main'), after which each 'function call' inside the chart
+     * in reality becomes a doCall() of that function
+     * @param {type} fname
+     * @param {type} args
+     */
+    wr.doCall = function (fname, args) {
+        var ctx = {};
+        ctx['$w'] = 'window';
+        // add the flowchart functions
+        for (key in functions) {
+            ctx[key] = 'function () { $w.top.wr.doCall("' + key + '", arguments) }';
+        }
+        // add the variables for this function
+        for (var key in wr.functions[fname]) {
+            ctx[key] = 'undefined';
+        }
+        // set args values
+        if (args) {
+            $("#vars_" + fname + " .parameter").each(function (i, e) {
+                var t = $(e);
+                var name = t.children("input").val();
+                if (!t.hasClass("bottom") && name !== "") {
+                    ctx[name] = args[i]; // TODO confirm that this works!
+                }
+            });
+        }
+
+        // show stack instead of variable declarations area
+        $("#variables").hide();
+        $("#stack").show();
+        
+        // create a stack frame TODO: create HTML for this
+        wr.curframe += 1;
+        
+        // create a copy of the instructions, and make them executable
+        $("ins_" + fname).clone()
+                .attr("id", "frame"+wr.curframe)
+                .addClass("instructions frame")
+                .appendTo("#instructions");
+        
+        // TODO: make these instructions executable
+        
+        // then view these instructions
+        $(".active").removeClass("active");
+        $("#frame" + wr.curframe).addClass("active");
+    };
 
 
 
@@ -163,6 +212,8 @@ $(function () {
     var delay_disp = $('#delay_disp');
     var step_btn = $('#step_btn');
     var workspace = $("#workspace");
+    var variables = $("#variables");
+    var stack = $("stack");
 
     // helper functions to switch between states
     var toPlayState = function () {
@@ -232,8 +283,8 @@ $(function () {
                 }
                 if (!ready) {
                     alert("Cannot start execution, there are errors in this "
-                            +"project\n\nThe problems have been highligted, "
-                            +"please check all functions");
+                            + "project\n\nThe problems have been highligted, "
+                            + "please check all functions");
                     return;
                 }
                 // if we're here any error highlights are old / not valid
@@ -243,6 +294,9 @@ $(function () {
                 // do css changes to exit edit mode
                 workspace.removeClass("edit");
                 workspace.addClass("exec");
+                variables.hide();
+                stack.show();
+                
 
                 // switch to the main function (always first in fun-names)
                 $("#fun-names span.fun")[0].click();
