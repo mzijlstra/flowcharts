@@ -199,8 +199,26 @@ div#projects:hover #project_menu {
     .variables.active {
         display: block;
     }
-    .stack {
+    #stack {
         display: none;
+        
+        .label {
+            font-weight: bold;
+        }
+        
+        .vname {
+            display: inline-block;
+            width: 100px;
+        }
+        .data.executing {
+            background-color: $hl;
+        }
+    }
+    #stack > .frame > .data {
+        display: none;
+    }
+    #stack > .frame.active > .data {
+        display: block;
     }
 }
 

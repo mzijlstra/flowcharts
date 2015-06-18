@@ -13,7 +13,6 @@
         <script src="jquery-2.1.1.js" ></script>
         <script src="controls.js"></script>
         <script src="edit.js"></script>
-        <script src="exec.js"></script>
     </head>
     <body>
         <h1 pid="<?= $pid ?>"><?= $pname ?></h1>

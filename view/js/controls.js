@@ -22,16 +22,16 @@ $(function () {
     wr.functions = {'main': {}}; // the flowcharts the user has made
     wr.curfun = 'main';
     wr.curvars = wr.functions.main;
-    wr.curframe = -1;
+    wr.curfrm = -1; // current stack frame
+    wr.stack = []; // will hold call stack 
     wr.state; //gets set below by the control buttons [edit,play,pause]
     wr.playing; // will hold the timeout variable when playing
-    wr.steps = []; // execution steps (statements, connections, & more)
 
     /**
      * The function used to take a flowchart execution step
      */
     wr.step = function () {
-        var item = wr.steps.pop();
+        var item = wr.stack[wr.curfrm]['steps'].pop();
 
         // scroll executing item to the top of the page
         if (item.nodeType) { // as long as item is an actual DOM element
@@ -53,11 +53,28 @@ $(function () {
         item.exec();
     };
     /**
+     * The function used to 'play', makes recursive call to itself with timeout
+     */
+    wr.play = function () {
+        if (wr.curfrm < 0 || wr.stack[wr.curfrm].steps.length === 0) {
+            // TODO perhaps create some kind of 'completed' state?
+            // currently when this is true we cannot click play again
+            $('#play_pause').click();
+            $("#step_btn").css("display", "none");
+            $("#delay_disp").css("display", "block");
+        } else {
+            wr.step();
+            wr.playing = setTimeout(wr.play,
+                    parseFloat($("#delay").text()) * 1000);
+        }
+    };
+
+    /**
      * This function will evaluate the given expression in the context of the 
      * provided object
      * @param {string} exp The expression we want evaluated
      * @param {object} [ctx] variables with wich code will be evaluated
-     * @returns {undefined} The result of the evaluation
+     * @returns {data} The result of the evaluation
      */
     wr.eval = function (exp, ctx) {
         if (!ctx) {
@@ -158,11 +175,18 @@ $(function () {
      * @param {type} args
      */
     wr.doCall = function (fname, args) {
+        wr.curfrm += 1;
+
+        // clear active from previous items
+        $(".active").removeClass("active");
+
+        // create the context for this call
         var ctx = {};
         ctx['$w'] = 'window';
         // add the flowchart functions
-        for (key in functions) {
-            ctx[key] = 'function () { $w.top.wr.doCall("' + key + '", arguments) }';
+        for (key in wr.functions) {
+            ctx[key] = 'function () { $w.top.wr.doCall("' + key
+                    + '", arguments) }';
         }
         // add the variables for this function
         for (var key in wr.functions[fname]) {
@@ -174,29 +198,55 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    ctx[name] = args[i]; // TODO confirm that this works!
+                    ctx[name] = args[i]; 
                 }
             });
         }
 
-        // show stack instead of variable declarations area
-        $("#variables").hide();
-        $("#stack").show();
-        
-        // create a stack frame TODO: create HTML for this
-        wr.curframe += 1;
-        
         // create a copy of the instructions, and make them executable
-        $("ins_" + fname).clone()
-                .attr("id", "frame"+wr.curframe)
-                .addClass("instructions frame")
-                .appendTo("#instructions");
-        
-        // TODO: make these instructions executable
-        
+        var ins = $("#ins_" + fname).clone()
+                .attr("id", "frame" + wr.curfrm)
+                .addClass("instructions frame");
+        makeExecutable(ins);
+
+        // setup the steps for this function call;
+        var steps = [];
+        $(ins.children().get().reverse()).each(function () {
+            steps.push(this);
+        });
+
+        // create a HTML stack frame 
+        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
+        var label = "<div class='label'>" + fname + "(";
+        if (args) {
+            for (var i = 0; i < args.length; i++) {
+                label += args[i] + ", ";
+            }
+            label = label.substring(0, label.length - 2);
+        }
+        label += ")</div>";
+        fdata.append(label);
+        var v; // add fields for all the variables
+        for (key in wr.functions[fname]) {
+            v = $("<div class='data'></div>");
+            v.append("<span class='vname'>" + key + " : </span>");
+            v.append("<span class='vdata' " +
+                    "id='f" + wr.curfrm + "_" + key + "'>");
+            fdata.append(v);
+        }
+
+        wr.stack.push({
+            'ctx': ctx,
+            'ins': ins,
+            'data': fdata,
+            'steps': steps
+        });
+
         // then view these instructions
-        $(".active").removeClass("active");
-        $("#frame" + wr.curframe).addClass("active");
+        fdata.addClass("active");
+        $("#stack").append(fdata);
+        ins.addClass("active");
+        ins.appendTo("#instructions");
     };
 
 
@@ -213,7 +263,7 @@ $(function () {
     var step_btn = $('#step_btn');
     var workspace = $("#workspace");
     var variables = $("#variables");
-    var stack = $("stack");
+    var stack = $("#stack");
 
     // helper functions to switch between states
     var toPlayState = function () {
@@ -223,29 +273,11 @@ $(function () {
         delay_disp.css("display", "block");
         wr.state = states.play;
 
-        // if at beginning or end of executing, start again
-        if (wr.steps.length === 0) {
-            $($("#ins_main").children().get().reverse()).each(function () {
-                wr.steps.push(this);
-            });
+        // if we're not executing, start executing main
+        if (wr.curfrm === -1) {
+            wr.doCall("main");
         }
-
-        $("#instructions").scrollTop(0);
-
-        // start executing
-        $(".executing").removeClass("executing");
-        var recurse = function () {
-            if (wr.steps.length === 0) {
-                $('#play_pause').click();
-                $("#step_btn").css("display", "none");
-                $("#delay_disp").css("display", "block");
-            } else if (wr.state.name === "play") {
-                wr.step();
-                wr.playing = setTimeout(recurse,
-                        parseFloat($("#delay").text()) * 1000);
-            }
-        };
-        recurse();
+        wr.play();
     };
     var toEditState = function () {
         pause_btn.css("display", "none");
@@ -254,10 +286,24 @@ $(function () {
         delay_disp.css("display", "block");
         workspace.removeClass("exec");
         workspace.addClass("edit");
+        stack.hide();
+        variables.show();
+        $(".fun").show();
+        $("#add_fun").show();
+        $("#fun-names").css({"height": "", "padding": "", "border-bottom": ""});
 
         clearTimeout(wr.playing);
-        wr.steps = [];
         wr.state = states.edit;
+
+        // clear the stack, and the HTML frames (both data and instruction)
+        wr.stack = [];
+        wr.curfrm = -1;
+        $(".frame").detach();
+        variables.show();
+        stack.hide();
+
+        // show main function
+        $(".fun").first().click();
     };
     var toPauseState = function () {
         pause_btn.css("display", "none");
@@ -296,7 +342,10 @@ $(function () {
                 workspace.addClass("exec");
                 variables.hide();
                 stack.show();
-                
+                $(".fun").hide();
+                $("#add_fun").hide();
+                $("#fun-names").css({"height": "0px", "padding": "0px",
+                    "border-bottom": "none"});
 
                 // switch to the main function (always first in fun-names)
                 $("#fun-names span.fun")[0].click();
@@ -404,4 +453,294 @@ $(function () {
         };
     });
 
+    /**
+     * Sets the 'exec' functions for the different statements 
+     * @param {Element} ins instructions element containing statemetns
+     */
+    var makeExecutable = function (ins) {
+        ins.find(".connection").each(function () {
+            this.exec = function () {
+                $(this).addClass("executing");
+            };
+        });
+
+        ins.find(".statement > .start").each(function () {
+            $(this).parent()[0].exec = function () {
+                // TODO have this step visually set the values of the parameters
+                $(this).addClass("executing");
+            };
+        });
+
+        ins.find(".statement > .input").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                var io = t.find(".io");
+                var input = window.prompt("Please enter input:");
+                input = '"' + input + '"'; // input is always a string
+                io.text(input);
+                io.addClass("eval");
+
+                var asgn = t.find(".asgn");
+                setTimeout(function () {
+                    asgn.addClass("eval");
+                }, parseFloat($("#delay").text()) * 500);
+
+                // second step, assign the input 
+                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                        var nelem = t.find(".var");
+                        nelem.addClass("executing");
+                        var name = nelem.text();
+
+                        // place value in the needed locations
+                        wr.stack[wr.curfrm].ctx[name] = input;
+                        $("#f" + wr.curfrm + "_" + name).text(input)
+                                .parent().addClass("executing");
+
+                        io.text("INPUT");
+                        io.removeClass("eval");
+
+                        setTimeout(function () {
+                            asgn.removeClass("eval");
+                        }, parseFloat($("#delay").text()) * 500);
+                    }});
+            };
+        });
+
+        ins.find(".statement > .output").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                // eval expression and show in exp span
+                var exp = t.find(".exp");
+                exp.attr("exp", exp.text());
+                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                exp.text('"' + result + '"');
+                exp.addClass("eval");
+
+                var asgn = t.find(".asgn");
+                setTimeout(function () {
+                    asgn.addClass("eval");
+                }, parseFloat($("#delay").text()) * 500);
+
+                // second step, show result
+                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                        t.find(".io").addClass("executing");
+                        exp.text(exp.attr("exp"));
+                        exp.removeClass("eval");
+                        window.alert(result);
+
+                        setTimeout(function () {
+                            asgn.removeClass("eval");
+                        }, parseFloat($("#delay").text()) * 500);
+                    }});
+            };
+        });
+
+        ins.find(".statement > .assignment").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                // eval expression and show in exp span
+                var exp = t.find(".exp");
+                exp.attr("exp", exp.text());
+                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                if (typeof (result) === "string") {
+                    result = '"' + result + '"';
+                }
+                exp.text(result);
+                exp.addClass("eval");
+
+                var asgn = t.find(".asgn");
+                setTimeout(function () {
+                    asgn.addClass("eval");
+                }, parseFloat($("#delay").text()) * 500);
+
+                // second step, assign to variable
+                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                        var nelem = t.find(".var");
+                        nelem.addClass("executing");
+                        var name = nelem.text();
+                        exp.text(exp.attr("exp"));
+                        exp.removeClass("eval");
+                        
+                        // place value in the needed locations
+                        wr.stack[wr.curfrm].ctx[name] = result;
+                        $("#f" + wr.curfrm + "_" + name).text(result)
+                                .parent().addClass("executing");
+                        
+                        setTimeout(function () {
+                            asgn.removeClass("eval");
+                        }, parseFloat($("#delay").text()) * 500);
+                    }});
+            };
+        });
+
+        ins.find(".statement > .if").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                // eval expression
+                var exp = t.find(".exp").first();
+                exp.attr("exp", exp.text());
+                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                exp.text(result);
+                exp.addClass("eval");
+                
+                var resetExp = function() {                
+                    exp.text(exp.attr("exp"));
+                    exp.removeClass("eval");
+                };
+
+                var elems;
+                if (result) {
+                    // get all the elements on the right branch
+                    elems = $(document).find(
+                            ".executing > .if > table > tbody > tr > .right"
+                            ).children().get().reverse();
+
+                    var absolute_right = elems.pop(); // needed for exit
+                    var first = elems.pop(); // pops first connection in right
+                    var bot_right = elems.shift(); // bot_right_connect
+                    var last = elems.shift(); // may be undefined
+
+                    var enter_right = function () {
+                        $(first).addClass("executing");
+                        t.find(".top_connect").first().addClass("executing");
+                    };
+                    var exit_right = function () {
+                        $([bot_right, absolute_right])
+                                .addClass("executing");
+                        $(last).addClass("executing"); // does nothing if undef
+                        // find bot_left_connect
+                        t.find(".left").first().children().last()
+                                .addClass("executing");
+                        resetExp();
+                    };
+
+                    if (elems.length === 0) {
+                        // if no statements in branch, do enter and exit in one
+                        wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                                enter_right();
+                                exit_right();
+                            }});
+                    } else {
+                        // setup entrance to the branch
+                        // replace with single entry item 
+                        elems.push({"exec": function () {
+                                enter_right();
+                            }});
+
+                        // setup exit from the branch
+                        // replace with single exit item 
+                        elems.unshift({"exec": function () {
+                                exit_right();
+                            }});
+
+                        $(elems).each(function () {
+                            wr.stack[wr.curfrm]['steps'].push(this);
+                        });
+                    }
+                } else {
+                    elems = t.find(".left").first().children().get().reverse();
+
+                    // clean up entry into left branch
+                    elems.pop(); // remves top_connect
+                    var absolute_left = elems.pop();
+
+                    elems.shift(); // removes bot_left_connect
+                    var last = elems.shift(); // last connection on left side
+                    elems.unshift({"exec": function () {
+                            $([last, absolute_left]).addClass("executing");
+                            resetExp();
+                        }});
+
+                    $(elems).each(function () {
+                        wr.stack[wr.curfrm]['steps'].push(this);
+                    });
+                }
+            };
+        });
+
+        ins.find(".statement > .while").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                // eval expression
+                var exp = t.find(".exp").first();
+                exp.attr("exp", exp.text());
+                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                exp.text(result);
+                exp.addClass("eval");
+                
+                var resetExp = function() {                
+                    exp.text(exp.attr("exp"));
+                    exp.removeClass("eval");
+                };
+
+                if (result) {
+                    // always come back to diamond after entering loop
+                    wr.stack[wr.curfrm]['steps'].push(this);
+
+                    var elems = t.find(".loop_body").first().children().get()
+                            .reverse();
+                    var first = elems.pop();
+                    var last = elems.shift(); // may be undefined
+                    var enter = function () {
+                        t.find(".true_connector").first().addClass("executing");
+                        $(first).addClass("executing");
+                    };
+                    var exit = function () {
+                        t.find(".return_line").first().addClass("executing");
+                        $(last).addClass("executing"); // does nothing if undef
+                        resetExp();
+                    };
+                    if (elems.length === 0) {
+                        wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                                enter();
+                                exit();
+                            }});
+                    } else {
+                        elems.push({"exec": function () {
+                                enter();
+                            }});
+                        elems.unshift({"exec": function () {
+                                exit();
+                            }});
+                        $(elems).each(function () {
+                            wr.stack[wr.curfrm]['steps'].push(this);
+                        });
+                    }
+                } else {
+                    var next = wr.stack[wr.curfrm]['steps'].pop();
+                    wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                            t.find(".false_line").addClass("executing");
+                            $(next).addClass("executing");
+                            resetExp();
+                        }});
+                }
+            };
+        });
+
+        ins.find(".statement > .stop").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+
+                // TODO clean up stack frame and return value to previous frame
+                // return can be done by adding a step to the frame below it 
+                // which does a search and replace on the currently execting
+                // expression to put the return value in place of the call
+
+                // 1) wait to show return highlighted
+                // 2) destroy this frame and return to previous frame
+                // 3) have a step on revious frame that puts return value in exp
+            };
+        });
+    };
 });

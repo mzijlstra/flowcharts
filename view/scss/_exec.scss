@@ -35,17 +35,23 @@ $exec: greenyellow;
     }
 }
 
-// border color for simple statements
+// border color for basic statements
 .exec .executing .start,
 .exec .executing .stop,
 .exec div.statement span.executing,  // input, output, and assingment
 .exec .executing.statement > .input > .io,
 .exec .executing.statement > .output > .exp, 
-.exec .executing.statement > .assignment > .exp 
+.exec .executing.statement > .assignment > .exp, 
+.exec .asgn.executing
 {
     border-color: $exec;
 }
-
+.exec .io.eval,
+.exec .exp.eval, 
+.exec .asgn.eval
+{
+    color: $exec;
+} 
 // border color for if and while conditions
 .exec .executing > div > .diamond > .diamond_top_outside {
     border-bottom-color: $exec;

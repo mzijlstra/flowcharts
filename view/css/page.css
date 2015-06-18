@@ -382,8 +382,14 @@ div.variable.bottom .del {
 .exec div.statement span.executing,
 .exec .executing.statement > .input > .io,
 .exec .executing.statement > .output > .exp,
-.exec .executing.statement > .assignment > .exp {
+.exec .executing.statement > .assignment > .exp,
+.exec .asgn.executing {
   border-color: greenyellow; }
+
+.exec .io.eval,
+.exec .exp.eval,
+.exec .asgn.eval {
+  color: greenyellow; }
 
 .exec .executing > div > .diamond > .diamond_top_outside {
   border-bottom-color: greenyellow; }
@@ -551,8 +557,19 @@ div#projects:hover #project_menu {
     display: none; }
   #var_area .variables.active {
     display: block; }
-  #var_area .stack {
+  #var_area #stack {
     display: none; }
+    #var_area #stack .label {
+      font-weight: bold; }
+    #var_area #stack .vname {
+      display: inline-block;
+      width: 100px; }
+    #var_area #stack .data.executing {
+      background-color: #556; }
+  #var_area #stack > .frame > .data {
+    display: none; }
+  #var_area #stack > .frame.active > .data {
+    display: block; }
 
 #functions {
   position: absolute;

@@ -201,17 +201,19 @@ $(function () {
             if (wr.curvars[t.val()]) {
                 alert("Duplicate variable name " + t.val() + "\n" +
                         "Please change one to keep them unique.");
-                this.focus();
+                t.val(t.attr("cur"));
+                t.focus();
                 return false;
             } else if (wr.functions[t.val()]) {
                 alert("Conflict with function name " + t.val() + "\n" +
                         "Please change your variable name to keep it unique");
-                this.focus();
+                t.val(t.attr("cur"));
+                t.focus();
                 return false;
             } else {
                 var oldn = t.attr('cur');
                 var newn = t.val();
-                var elem = t.parent().get(0);
+                var elem = this;
 
                 // set value attribute to newn 
                 // otherwise .html() doesn't take it on postVarUpd
@@ -224,7 +226,6 @@ $(function () {
 
                 // add new name to our vars 
                 wr.curvars[newn] = elem;
-                wr.curvars[newn] = t.parent().get(0);
 
                 // update instructions with old name to new name
                 $('span.var:contains(' + oldn + ')').text(function (i, s) {
@@ -518,7 +519,8 @@ $(function () {
         }
         var exp = this;
         inputHere(exp, function (t) {
-            return wr.verifyType(t, "string");
+            wr.verifyType(t, "string");
+            return true;
         });
     });
     // assignment expressions
@@ -534,7 +536,8 @@ $(function () {
         }
         var type = type = $(wr.curvars[name]).prev().find(".type").text();
         inputHere(this, function (t) {
-            return wr.verifyType(t, type);
+            wr.verifyType(t, type);
+            return true;
         });
     });
     // if and while condition expressions
@@ -548,7 +551,8 @@ $(function () {
             exp = $(this).find(".exp")[0];
         }
         inputHere(exp, function (t) {
-            return wr.verifyType(t, "boolean");
+            wr.verifyType(t, "boolean");
+            return true;
         });
     });
     // return expressions
@@ -559,7 +563,8 @@ $(function () {
         var exp = $(this).find(".exp")[0];
         var type = $('#ins_' + wr.curfun).find('.start .type').text();
         inputHere(exp, function (t) {
-            return wr.verifyType(t, type);
+            wr.verifyType(t, type);
+            return true;
         });
     });
 
