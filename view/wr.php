@@ -11,7 +11,7 @@
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
         <script src="jquery-2.1.1.js" ></script>
-        <script src="controls.js"></script>
+        <script src="exec.js"></script>
         <script src="edit.js"></script>
     </head>
     <body>
