@@ -48,10 +48,21 @@ $exec: greenyellow;
 }
 .exec .io.eval,
 .exec .exp.eval, 
-.exec .asgn.eval
+.exec .asgn.eval,
+.exec div.statement .var.executing,
+.exec .params.executing 
 {
     color: $exec;
-} 
+}
+
+// during assignment the variable TR also gains 'executing'
+#stack .data tr.executing {
+    background-color: $fg;
+    color: $bg;
+}
+
+
+
 // border color for if and while conditions
 .exec .executing > div > .diamond > .diamond_top_outside {
     border-bottom-color: $exec;

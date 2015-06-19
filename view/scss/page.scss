@@ -157,6 +157,13 @@ div#projects:hover #project_menu {
         bottom: -15px -$line;
         left: -$line;
         border-right: none;
+        
+        input {
+            position: absolute;
+            left: 45px;
+            top: -2px;
+            width: 27px;
+        }
     }
     #step_btn {
         display: none;
@@ -190,7 +197,6 @@ div#projects:hover #project_menu {
 
     .label {
         padding: 3px;
-        border-bottom: $line dashed $fg;
     }
 
     .variables {
@@ -201,24 +207,28 @@ div#projects:hover #project_menu {
     }
     #stack {
         display: none;
-        
+
         .label {
-            font-weight: bold;
+            margin-top: 10px;
         }
-        
-        .vname {
-            display: inline-block;
-            width: 100px;
+        table.data {
+            border-collapse: collapse;
+            width: 100%;
         }
-        .data.executing {
-            background-color: $hl;
+        table.data td {
+            border-bottom: $line dashed $fg;
+            border-top: $line dashed $fg;
+            padding-left: 10px;
+        }
+        td.vname {
+            border-right: $line dashed $fg;
+        }
+        td.vdata {
+            min-width: 100px;
         }
     }
-    #stack > .frame > .data {
-        display: none;
-    }
-    #stack > .frame.active > .data {
-        display: block;
+    #stack .frame.active {
+        font-weight: bold;
     }
 }
 

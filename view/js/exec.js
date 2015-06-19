@@ -53,6 +53,7 @@ $(function () {
 
         // remove executing highlight in current function
         frame.ins.find(".executing").removeClass("executing");
+        frame.data.find(".executing").removeClass("executing");
         item.exec();
     };
     /**
@@ -180,17 +181,16 @@ $(function () {
     wr.doCall = function (fname, args) {
         wr.curfrm += 1;
 
-        // find where we have to return to
-        var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp").first();
-        // if we can't find it we aren't the fist call for the expression
-        // return so that we can be evaluated later (keeps sequence correct)
-        if (!ret2) {
-            wr.curfrm -= 1;
-            return;
+        // find where we have to return to (if we're not main starting up)
+        if (wr.curfrm !== 0) {
+            var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
+            // if we can't find it we aren't the fist call for the expression
+            // return so that we can be evaluated later (keeps sequence correct)
+            if (!ret2.length) {
+                wr.curfrm -= 1;
+                return;
+            }
         }
-
-        // clear active from previous items
-        $(".active").removeClass("active");
 
         // create the context for this call
         var ctx = {};
@@ -219,11 +219,38 @@ $(function () {
             });
         }
 
-        // create a copy of the instructions, and make them executable
+        // create a copy of the instructions, make executable, and add to doc
         var ins = $("#ins_" + fname).clone()
                 .attr("id", "frame" + wr.curfrm)
                 .addClass("instructions frame");
         makeExecutable(ins);
+        $("#instructions").append(ins);
+
+        // create the HTML view of the stack frame and add it to the document
+        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
+        var label = "<div class='label'>" + fname + "(";
+        if (args) {
+            for (var i = 0; i < args.length; i++) {
+                if (typeof (args[i] === "string")) {
+                    args[i] = '"' + args[i] + '"';
+                }
+                label += args[i] + ", ";
+            }
+            label = label.substring(0, label.length - 2);
+        }
+        label += ")</div>";
+        fdata.append(label);
+        var vars = $("<table class='data'>");
+        var v; // add fields for each of the variables
+        for (key in wr.functions[fname]) {
+            v = $("<tr>");
+            v.append("<td class='vname'>" + key + "</td>");
+            v.append("<td class='vdata' " +
+                    "id='f" + wr.curfrm + "_" + key + "'>");
+            vars.append(v);
+        }
+        fdata.append(vars);
+        $("#stack").append(fdata);
 
         // setup the steps for this function call;
         var steps = [];
@@ -231,26 +258,18 @@ $(function () {
             steps.push(this);
         });
 
-        // create a HTML stack frame 
-        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
-        var label = "<div class='label'>" + fname + "(";
-        if (args) {
-            for (var i = 0; i < args.length; i++) {
-                label += args[i] + ", ";
+        // have the first step be switching to the new flow chart
+        steps.push({
+            "exec": function () {
+                // clear active from previous items
+                $(".active").removeClass("active");
+                fdata.addClass("active");
+                ins.addClass("active");
+                ins.find(".statement").first().addClass("executing");
             }
-            label = label.substring(0, label.length - 2);
-        }
-        label += ")</div>";
-        fdata.append(label);
-        var v; // add fields for all the variables
-        for (key in wr.functions[fname]) {
-            v = $("<div class='data'></div>");
-            v.append("<span class='vname'>" + key + " : </span>");
-            v.append("<span class='vdata' " +
-                    "id='f" + wr.curfrm + "_" + key + "'>");
-            fdata.append(v);
-        }
+        });
 
+        // finish by putting our new frame onto the stack
         wr.stack.push({
             'name': fname,
             'ret2': ret2,
@@ -259,12 +278,6 @@ $(function () {
             'data': fdata,
             'steps': steps
         });
-
-        // then view these instructions
-        fdata.addClass("active");
-        $("#stack").append(fdata);
-        ins.addClass("active");
-        ins.appendTo("#instructions");
     };
 
 
@@ -397,6 +410,29 @@ $(function () {
         wr.state.reset();
     });
     $("#step_btn").click(wr.step);
+    $("#delay_disp").click(function () {
+        var t = $(this);
+        var delay = $("#delay");
+        var input = $("<input>");
+        input.val(delay.text());
+        input.keyup(function (event) {
+            if (event.which === 13) {
+                this.blur();
+                return true;
+            }
+            if (input.val().length > 3) {
+                input.val(input.val().substr(0,3));
+            }
+        });
+        input.blur(function () {
+            if (parseFloat(input.val())) {
+                delay.text(input.val());
+            }
+            input.detach();
+        });
+        t.append(input);
+        input.focus();
+    });
 
 
 
@@ -472,7 +508,7 @@ $(function () {
     });
 
     /**
-     * Sets the 'exec' functions for the different statements 
+     * Helper that sets the 'exec' function for the different statements 
      * @param {Element} ins instructions element containing statemetns
      */
     var makeExecutable = function (ins) {
@@ -484,8 +520,19 @@ $(function () {
 
         ins.find(".statement > .start").each(function () {
             $(this).parent()[0].exec = function () {
-                // TODO have this step visually set the values of the parameters
                 $(this).addClass("executing");
+                $(this).find(".params").addClass("executing");
+                var frame = wr.stack[wr.curfrm];
+                $("#vars_" + frame.name + " .parameter").each(function () {
+                    var t = $(this);
+                    var name = t.children("input").val();
+                    if (!t.hasClass("bottom") && name !== "") {
+                        var val = frame.ctx[name];
+                        var elem = $("#f" + wr.curfrm + "_" + name);
+                        elem.text(val);
+                        elem.parent().addClass("executing");
+                    }
+                });
             };
         });
 
@@ -533,20 +580,26 @@ $(function () {
                 t.addClass("executing");
                 var frame = wr.stack[wr.curfrm];
 
-                // eval expression and show in exp span
+                // eval expression 
                 var exp = t.find(".exp");
-                exp.attr("exp", exp.text());
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
                 var result = wr.eval(exp.text(), frame.ctx);
 
-                if (wr.stack[wr.curfrm] === frame) {
-                    exp.text('"' + result + '"');
-                    exp.addClass("eval");
-
-                    var asgn = t.find(".asgn");
-                    setTimeout(function () {
-                        asgn.addClass("eval");
-                    }, parseFloat($("#delay").text()) * 500);
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
                 }
+
+                // otherwise show the result, and line up the next steps
+                exp.text('"' + result + '"');
+                exp.addClass("eval");
+
+                var asgn = t.find(".asgn");
+                setTimeout(function () {
+                    asgn.addClass("eval");
+                }, parseFloat($("#delay").text()) * 500);
 
                 // second step, show result
                 frame.steps.push({"exec": function () {
@@ -570,23 +623,29 @@ $(function () {
                 var frame = wr.stack[wr.curfrm];
                 var findex = wr.curfrm; // curfrm may change on exp eval
 
-                // eval expression and show in exp span
+                // eval expression 
                 var exp = t.find(".exp");
-                exp.attr("exp", exp.text());
-
-                if (wr.stack[wr.curfrm] === frame) {
-                    var result = wr.eval(exp.text(), frame.ctx);
-                    if (typeof (result) === "string") {
-                        result = '"' + result + '"';
-                    }
-                    exp.text(result);
-                    exp.addClass("eval");
-
-                    var asgn = t.find(".asgn");
-                    setTimeout(function () {
-                        asgn.addClass("eval");
-                    }, parseFloat($("#delay").text()) * 500);
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
                 }
+                var result = wr.eval(exp.text(), frame.ctx);
+
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
+                }
+
+                // otherwise show the result, and line up the next steps
+                if (typeof (result) === "string") {
+                    result = '"' + result + '"';
+                }
+                exp.text(result);
+                exp.addClass("eval");
+
+                var asgn = t.find(".asgn");
+                setTimeout(function () {
+                    asgn.addClass("eval");
+                }, parseFloat($("#delay").text()) * 500);
 
                 // second step, assign to variable
                 frame.steps.push({"exec": function () {
@@ -619,6 +678,13 @@ $(function () {
                 var exp = t.find(".exp").first();
                 exp.attr("exp", exp.text());
                 var result = wr.eval(exp.text(), frame.ctx);
+
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
+                }
+
+                // show result, and line up next steps
                 exp.text(result);
                 exp.addClass("eval");
 
@@ -626,9 +692,6 @@ $(function () {
                     exp.text(exp.attr("exp"));
                     exp.removeClass("eval");
                 };
-
-                // TODO this will not work with function calls
-                // true or false cannot be evaluated until after call comes back
 
                 var elems;
                 if (result) {
@@ -710,6 +773,13 @@ $(function () {
                 var exp = t.find(".exp").first();
                 exp.attr("exp", exp.text());
                 var result = wr.eval(exp.text(), frame.ctx);
+
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
+                }
+
+                // show result, and line up next steps
                 exp.text(result);
                 exp.addClass("eval");
 
@@ -717,9 +787,6 @@ $(function () {
                     exp.text(exp.attr("exp"));
                     exp.removeClass("eval");
                 };
-
-                // TODO this will not work with function calls
-                // true or false cannot be evaluated until after call comes back
 
                 if (result) {
                     // always come back to diamond after entering loop
@@ -780,61 +847,55 @@ $(function () {
                 }
                 exp.text(result);
                 exp.addClass("eval");
-
-
                 wr.curfrm -= 1;
-                frame.ins.detach();
-                frame.data.detach();
-                wr.stack.pop();
+
                 if (wr.curfrm !== -1) {
+                    var pframe = wr.stack[wr.curfrm];
+                    var pstmt = frame.ret2.closest(".statement");
+
                     // in reverse order, show that we're back in the previous
                     // function, then put our result in place of the call
-                    // and then re-evaluate the expression
-                    prev.steps.push({
+                    // and then re-execute the original statement 
+                    pframe.steps.push(pstmt[0]);
+                    pframe.steps.push({
                         "exec": function () {
-                            // TODO eval the expression and if there are no 
-                            // calls show the value -- this will also allow
-                            // the next step to pick it up                            
-                        }
-                    });
-                    prev.steps.push({
-                        "exec": function () {
-                            var name = frame.name;
-                            var elem = frame.ret2;  
-                            var exp = elem.text();
+                            pstmt.addClass("executing");
+                            var cur = frame.ret2.text();
 
-                            // FIXME there are some edge cases that could cause
-                            // problems: e.g. sting arguments containing )
-                            var re = new Regex(name + "([^)]*)");
-                            elem.text(exp.replace(re, result));
+                            // TODO FIXME there are some edge cases that could 
+                            // cause problems: e.g. sting arguments containing )
+                            var re = new RegExp(frame.name + "\\([^)]*\\)");
+                            frame.ret2.text(cur.replace(re, result));
                         }
                     });
-                    prev.steps.push({
+                    pframe.steps.push({
                         "exec": function () {
-                            // show the previous call 
-                            var prev = wr.stack[wr.curfrm];
-                            prev.ins.addClass("active");
-                            prev.data.addClass("active");
+                            // remove function return was inside of
+                            frame.ins.detach();
+                            frame.data.detach();
+                            wr.stack.pop();
+
+                            // show function return goes back to
+                            pstmt.addClass("executing");
+                            pframe.ins.addClass("active");
+                            pframe.data.addClass("active");
                         }
                     });
 
 
                 } else {
+                    // we're at the end of main 
+                    wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
                             alert("Execution completed");
+                            frame.ins.detach();
+                            frame.data.detach();
+                            wr.stack.pop();
+                            wr.curfrm -= 1;
                         }
                     });
                 }
-
-                // TODO clean up stack frame and return value to previous frame
-                // return can be done by adding a step to the frame below it 
-                // which does a search and replace on the currently execting
-                // expression to put the return value in place of the call
-
-                // 1) wait to show return highlighted
-                // 2) destroy this frame and return to previous frame
-                // 3) have a step on revious frame that puts return value in exp
             };
         });
     };

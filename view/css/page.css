@@ -388,8 +388,20 @@ div.variable.bottom .del {
 
 .exec .io.eval,
 .exec .exp.eval,
-.exec .asgn.eval {
+.exec .asgn.eval,
+.exec div.statement .var.executing,
+.exec div.statement .assignment .executing.exp,
+.assignment .exec div.statement .executing.exp,
+.exec div.statement .input .executing.exp,
+.input .exec div.statement .executing.exp,
+.exec div.statement .output .executing.exp,
+.output .exec div.statement .executing.exp,
+.exec .params.executing {
   color: greenyellow; }
+
+#stack .data tr.executing {
+  background-color: white;
+  color: #336; }
 
 .exec .executing > div > .diamond > .diamond_top_outside {
   border-bottom-color: greenyellow; }
@@ -527,6 +539,11 @@ div#projects:hover #project_menu {
     bottom: -16px;
     left: -1px;
     border-right: none; }
+    #controls #step_btn input, #controls #delay_disp input {
+      position: absolute;
+      left: 45px;
+      top: -2px;
+      width: 27px; }
   #controls #step_btn {
     display: none; }
   #controls #corner_ctrl {
@@ -551,8 +568,7 @@ div#projects:hover #project_menu {
   top: 0px;
   bottom: 0px; }
   #var_area .label {
-    padding: 3px;
-    border-bottom: 1px dashed white; }
+    padding: 3px; }
   #var_area .variables {
     display: none; }
   #var_area .variables.active {
@@ -560,16 +576,20 @@ div#projects:hover #project_menu {
   #var_area #stack {
     display: none; }
     #var_area #stack .label {
-      font-weight: bold; }
-    #var_area #stack .vname {
-      display: inline-block;
-      width: 100px; }
-    #var_area #stack .data.executing {
-      background-color: #556; }
-  #var_area #stack > .frame > .data {
-    display: none; }
-  #var_area #stack > .frame.active > .data {
-    display: block; }
+      margin-top: 10px; }
+    #var_area #stack table.data {
+      border-collapse: collapse;
+      width: 100%; }
+    #var_area #stack table.data td {
+      border-bottom: 1px dashed white;
+      border-top: 1px dashed white;
+      padding-left: 10px; }
+    #var_area #stack td.vname {
+      border-right: 1px dashed white; }
+    #var_area #stack td.vdata {
+      min-width: 100px; }
+  #var_area #stack .frame.active {
+    font-weight: bold; }
 
 #functions {
   position: absolute;
