@@ -3,9 +3,6 @@
     Author     : mzijlstra
 */
 
-// color for currently executing item
-$exec: greenyellow;
-
 .exec #controls {
     #reset {
         color: $fg;
@@ -93,4 +90,44 @@ $exec: greenyellow;
 }
 .exec .return_line.executing .arrow_up {
     border-bottom-color: $exec;
+}
+
+// type_error and exp_error for if and while conditions
+.statement.type_error > div > .diamond > .diamond_top_outside,
+.statement.exp_error > div > .diamond > .diamond_top_outside {
+    border-bottom-color: $error !important;
+}
+.statement.type_error > div > .diamond > .diamond_bot_outside,
+.statement.exp_error > div > .diamond > .diamond_bot_outside {
+    border-top-color: $error !important;
+}
+// name_error for input and assignment
+.statement.name_error {
+    .input, .assignment {
+        .var {
+            border-color: $error;
+        }
+    }
+}
+// type_error for output and assignment
+.statement.type_error {
+    .input .asgn,
+    .assignment .asgn, 
+    .output .asgn {
+        color: $error;
+    }
+}
+// exp_error for output and assignment
+.statement.exp_error {
+    .output .exp,
+    .assignment .exp {
+        border-color: $error !important;
+    }
+}
+// type_error and exp_error for return statement
+.statement.type_error .stop,
+.statement.exp_error .stop,
+.stop.type_error,
+.stop.exp_error {
+    border-color: $error !important;
 }

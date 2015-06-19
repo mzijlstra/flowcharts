@@ -331,32 +331,6 @@ div.variable.bottom .del {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent; }
 
-.statement.type_error > div > .diamond > .diamond_top_outside,
-.statement.exp_error > div > .diamond > .diamond_top_outside {
-  border-bottom-color: red; }
-
-.statement.type_error > div > .diamond > .diamond_bot_outside,
-.statement.exp_error > div > .diamond > .diamond_bot_outside {
-  border-top-color: red; }
-
-.statement.name_error .input .var, .statement.name_error .input .exp, .statement.name_error .assignment .var, .statement.name_error .assignment .exp {
-  border-color: red; }
-
-.statement.type_error .input .asgn,
-.statement.type_error .assignment .asgn,
-.statement.type_error .output .asgn {
-  color: red; }
-
-.statement.exp_error .output .exp,
-.statement.exp_error .assignment .exp {
-  border-color: red; }
-
-.statement.type_error .stop,
-.statement.exp_error .stop,
-.stop.type_error,
-.stop.exp_error {
-  border-color: red; }
-
 /* 
     Created on : Jun 8, 2015, 2:59:16 PM
     Author     : mzijlstra
@@ -426,6 +400,32 @@ div.variable.bottom .del {
 
 .exec .return_line.executing .arrow_up {
   border-bottom-color: greenyellow; }
+
+.statement.type_error > div > .diamond > .diamond_top_outside,
+.statement.exp_error > div > .diamond > .diamond_top_outside {
+  border-bottom-color: red !important; }
+
+.statement.type_error > div > .diamond > .diamond_bot_outside,
+.statement.exp_error > div > .diamond > .diamond_bot_outside {
+  border-top-color: red !important; }
+
+.statement.name_error .input .var, .statement.name_error .input .exp, .statement.name_error .assignment .var, .statement.name_error .assignment .exp {
+  border-color: red; }
+
+.statement.type_error .input .asgn,
+.statement.type_error .assignment .asgn,
+.statement.type_error .output .asgn {
+  color: red; }
+
+.statement.exp_error .output .exp,
+.statement.exp_error .assignment .exp {
+  border-color: red !important; }
+
+.statement.type_error .stop,
+.statement.exp_error .stop,
+.stop.type_error,
+.stop.exp_error {
+  border-color: red !important; }
 
 body {
   font-family: monospace;

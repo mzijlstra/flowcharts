@@ -3,8 +3,6 @@
     Author     : Michael Zijlstra <mzijlstra at mum.edu>
 */
 
-$error: red;
-
 /* General components */
 .del {
     position: absolute;
@@ -407,44 +405,4 @@ div.variable.bottom .del {
         border-left: $arrow $hide; 
         border-right: $arrow $hide; 
     }
-}
-
-// type_error and exp_error for if and while conditions
-.statement.type_error > div > .diamond > .diamond_top_outside,
-.statement.exp_error > div > .diamond > .diamond_top_outside {
-    border-bottom-color: $error;
-}
-.statement.type_error > div > .diamond > .diamond_bot_outside,
-.statement.exp_error > div > .diamond > .diamond_bot_outside {
-    border-top-color: $error;
-}
-// name_error for input and assignment
-.statement.name_error {
-    .input, .assignment {
-        .var {
-            border-color: $error;
-        }
-    }
-}
-// type_error for output and assignment
-.statement.type_error {
-    .input .asgn,
-    .assignment .asgn, 
-    .output .asgn {
-        color: $error;
-    }
-}
-// exp_error for output and assignment
-.statement.exp_error {
-    .output .exp,
-    .assignment .exp {
-        border-color: $error;
-    }
-}
-// type_error and exp_error for return statement
-.statement.type_error .stop,
-.statement.exp_error .stop,
-.stop.type_error,
-.stop.exp_error {
-    border-color: $error;
 }

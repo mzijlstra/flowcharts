@@ -54,22 +54,28 @@ $(function () {
         // remove executing highlight in current function
         frame.ins.find(".executing").removeClass("executing");
         frame.data.find(".executing").removeClass("executing");
-        item.exec();
+        try {
+            item.exec();
+        } catch (exception) {
+            $(".executing").addClass("exp_error");
+            alert("Runtime Exception: " + exception);
+            return false;
+        }
+        return true;
     };
     /**
      * The function used to 'play', makes recursive call to itself with timeout
      */
     wr.play = function () {
         if (wr.curfrm < 0 || wr.stack[wr.curfrm].steps.length === 0) {
-            // TODO perhaps create some kind of 'completed' state?
-            // currently when this is true we cannot click play again
             $('#play_pause').click();
             $("#step_btn").css("display", "none");
             $("#delay_disp").css("display", "block");
         } else {
-            wr.step();
-            wr.playing = setTimeout(wr.play,
-                    parseFloat($("#delay").text()) * 1000);
+            if (wr.step()) {
+                wr.playing = setTimeout(wr.play,
+                        parseFloat($("#delay").text()) * 1000);
+            }
         }
     };
 
@@ -421,7 +427,7 @@ $(function () {
                 return true;
             }
             if (input.val().length > 3) {
-                input.val(input.val().substr(0,3));
+                input.val(input.val().substr(0, 3));
             }
         });
         input.blur(function () {
