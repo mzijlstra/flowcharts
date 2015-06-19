@@ -31,7 +31,8 @@ $(function () {
      * The function used to take a flowchart execution step
      */
     wr.step = function () {
-        var item = wr.stack[wr.curfrm]['steps'].pop();
+        var frame = wr.stack[wr.curfrm];
+        var item = frame.steps.pop();
 
         // scroll executing item to the top of the page
         if (item.nodeType) { // as long as item is an actual DOM element
@@ -47,9 +48,11 @@ $(function () {
                     "scrollTop": ins.scrollTop() + (pos - 70)
                 }, delay);
             }
+            // TODO also scroll left-right
         }
 
-        $(".executing").removeClass("executing");
+        // remove executing highlight in current function
+        frame.ins.find(".executing").removeClass("executing");
         item.exec();
     };
     /**
@@ -120,7 +123,7 @@ $(function () {
         // add in functions that return default values based on their type
         for (key in wr.functions) {
             vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return " + defaults[vtype] + "};";
+            ctx[key] = "function () { return " + defaults[vtype] + "}";
         }
         // add variables for the function that the elem is inside of
         var fun = $(elem).closest(".instructions").attr("id").substring(4);
@@ -177,6 +180,15 @@ $(function () {
     wr.doCall = function (fname, args) {
         wr.curfrm += 1;
 
+        // find where we have to return to
+        var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp").first();
+        // if we can't find it we aren't the fist call for the expression
+        // return so that we can be evaluated later (keeps sequence correct)
+        if (!ret2) {
+            wr.curfrm -= 1;
+            return;
+        }
+
         // clear active from previous items
         $(".active").removeClass("active");
 
@@ -198,7 +210,11 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    ctx[name] = args[i]; 
+                    var val = args[i];
+                    if (typeof (val) === "string") {
+                        val = '"' + val + '"';
+                    }
+                    ctx[name] = val;
                 }
             });
         }
@@ -236,6 +252,8 @@ $(function () {
         }
 
         wr.stack.push({
+            'name': fname,
+            'ret2': ret2,
             'ctx': ctx,
             'ins': ins,
             'data': fdata,
@@ -488,13 +506,14 @@ $(function () {
                 }, parseFloat($("#delay").text()) * 500);
 
                 // second step, assign the input 
-                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                var frame = wr.stack[wr.curfrm];
+                frame['steps'].push({"exec": function () {
                         var nelem = t.find(".var");
                         nelem.addClass("executing");
                         var name = nelem.text();
 
                         // place value in the needed locations
-                        wr.stack[wr.curfrm].ctx[name] = input;
+                        frame.ctx[name] = input;
                         $("#f" + wr.curfrm + "_" + name).text(input)
                                 .parent().addClass("executing");
 
@@ -512,22 +531,27 @@ $(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
                 t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
 
                 // eval expression and show in exp span
                 var exp = t.find(".exp");
                 exp.attr("exp", exp.text());
-                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
-                exp.text('"' + result + '"');
-                exp.addClass("eval");
+                var result = wr.eval(exp.text(), frame.ctx);
 
-                var asgn = t.find(".asgn");
-                setTimeout(function () {
-                    asgn.addClass("eval");
-                }, parseFloat($("#delay").text()) * 500);
+                if (wr.stack[wr.curfrm] === frame) {
+                    exp.text('"' + result + '"');
+                    exp.addClass("eval");
+
+                    var asgn = t.find(".asgn");
+                    setTimeout(function () {
+                        asgn.addClass("eval");
+                    }, parseFloat($("#delay").text()) * 500);
+                }
 
                 // second step, show result
-                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                frame.steps.push({"exec": function () {
                         t.find(".io").addClass("executing");
+                        var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
                         window.alert(result);
@@ -543,35 +567,41 @@ $(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
                 t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
+                var findex = wr.curfrm; // curfrm may change on exp eval
 
                 // eval expression and show in exp span
                 var exp = t.find(".exp");
                 exp.attr("exp", exp.text());
-                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
-                if (typeof (result) === "string") {
-                    result = '"' + result + '"';
-                }
-                exp.text(result);
-                exp.addClass("eval");
 
-                var asgn = t.find(".asgn");
-                setTimeout(function () {
-                    asgn.addClass("eval");
-                }, parseFloat($("#delay").text()) * 500);
+                if (wr.stack[wr.curfrm] === frame) {
+                    var result = wr.eval(exp.text(), frame.ctx);
+                    if (typeof (result) === "string") {
+                        result = '"' + result + '"';
+                    }
+                    exp.text(result);
+                    exp.addClass("eval");
+
+                    var asgn = t.find(".asgn");
+                    setTimeout(function () {
+                        asgn.addClass("eval");
+                    }, parseFloat($("#delay").text()) * 500);
+                }
 
                 // second step, assign to variable
-                wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                frame.steps.push({"exec": function () {
                         var nelem = t.find(".var");
                         nelem.addClass("executing");
                         var name = nelem.text();
+                        var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
-                        
+
                         // place value in the needed locations
-                        wr.stack[wr.curfrm].ctx[name] = result;
-                        $("#f" + wr.curfrm + "_" + name).text(result)
+                        frame.ctx[name] = result;
+                        $("#f" + findex + "_" + name).text(result)
                                 .parent().addClass("executing");
-                        
+
                         setTimeout(function () {
                             asgn.removeClass("eval");
                         }, parseFloat($("#delay").text()) * 500);
@@ -583,18 +613,22 @@ $(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
                 t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
 
                 // eval expression
                 var exp = t.find(".exp").first();
                 exp.attr("exp", exp.text());
-                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                var result = wr.eval(exp.text(), frame.ctx);
                 exp.text(result);
                 exp.addClass("eval");
-                
-                var resetExp = function() {                
+
+                var resetExp = function () {
                     exp.text(exp.attr("exp"));
                     exp.removeClass("eval");
                 };
+
+                // TODO this will not work with function calls
+                // true or false cannot be evaluated until after call comes back
 
                 var elems;
                 if (result) {
@@ -624,7 +658,7 @@ $(function () {
 
                     if (elems.length === 0) {
                         // if no statements in branch, do enter and exit in one
-                        wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                        frame.steps.push({"exec": function () {
                                 enter_right();
                                 exit_right();
                             }});
@@ -642,7 +676,7 @@ $(function () {
                             }});
 
                         $(elems).each(function () {
-                            wr.stack[wr.curfrm]['steps'].push(this);
+                            frame.steps.push(this);
                         });
                     }
                 } else {
@@ -660,7 +694,7 @@ $(function () {
                         }});
 
                     $(elems).each(function () {
-                        wr.stack[wr.curfrm]['steps'].push(this);
+                        frame.steps.push(this);
                     });
                 }
             };
@@ -670,22 +704,26 @@ $(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
                 t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
 
                 // eval expression
                 var exp = t.find(".exp").first();
                 exp.attr("exp", exp.text());
-                var result = wr.eval(exp.text(), wr.stack[wr.curfrm].ctx);
+                var result = wr.eval(exp.text(), frame.ctx);
                 exp.text(result);
                 exp.addClass("eval");
-                
-                var resetExp = function() {                
+
+                var resetExp = function () {
                     exp.text(exp.attr("exp"));
                     exp.removeClass("eval");
                 };
 
+                // TODO this will not work with function calls
+                // true or false cannot be evaluated until after call comes back
+
                 if (result) {
                     // always come back to diamond after entering loop
-                    wr.stack[wr.curfrm]['steps'].push(this);
+                    frame.steps.push(this);
 
                     var elems = t.find(".loop_body").first().children().get()
                             .reverse();
@@ -701,7 +739,7 @@ $(function () {
                         resetExp();
                     };
                     if (elems.length === 0) {
-                        wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                        frame.steps.push({"exec": function () {
                                 enter();
                                 exit();
                             }});
@@ -713,12 +751,12 @@ $(function () {
                                 exit();
                             }});
                         $(elems).each(function () {
-                            wr.stack[wr.curfrm]['steps'].push(this);
+                            frame.steps.push(this);
                         });
                     }
                 } else {
-                    var next = wr.stack[wr.curfrm]['steps'].pop();
-                    wr.stack[wr.curfrm]['steps'].push({"exec": function () {
+                    var next = frame.steps.pop();
+                    frame.steps.push({"exec": function () {
                             t.find(".false_line").addClass("executing");
                             $(next).addClass("executing");
                             resetExp();
@@ -731,6 +769,63 @@ $(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
                 t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
+
+                // eval expression and show in exp span
+                var exp = t.find(".exp");
+                exp.attr("exp", exp.text());
+                var result = wr.eval(exp.text(), frame.ctx);
+                if (typeof (result) === "string") {
+                    result = '"' + result + '"';
+                }
+                exp.text(result);
+                exp.addClass("eval");
+
+
+                wr.curfrm -= 1;
+                frame.ins.detach();
+                frame.data.detach();
+                wr.stack.pop();
+                if (wr.curfrm !== -1) {
+                    // in reverse order, show that we're back in the previous
+                    // function, then put our result in place of the call
+                    // and then re-evaluate the expression
+                    prev.steps.push({
+                        "exec": function () {
+                            // TODO eval the expression and if there are no 
+                            // calls show the value -- this will also allow
+                            // the next step to pick it up                            
+                        }
+                    });
+                    prev.steps.push({
+                        "exec": function () {
+                            var name = frame.name;
+                            var elem = frame.ret2;  
+                            var exp = elem.text();
+
+                            // FIXME there are some edge cases that could cause
+                            // problems: e.g. sting arguments containing )
+                            var re = new Regex(name + "([^)]*)");
+                            elem.text(exp.replace(re, result));
+                        }
+                    });
+                    prev.steps.push({
+                        "exec": function () {
+                            // show the previous call 
+                            var prev = wr.stack[wr.curfrm];
+                            prev.ins.addClass("active");
+                            prev.data.addClass("active");
+                        }
+                    });
+
+
+                } else {
+                    frame.steps.push({
+                        "exec": function () {
+                            alert("Execution completed");
+                        }
+                    });
+                }
 
                 // TODO clean up stack frame and return value to previous frame
                 // return can be done by adding a step to the frame below it 

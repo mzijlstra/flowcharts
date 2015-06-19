@@ -195,6 +195,8 @@ $(function () {
             this.focus();
             return false;
         }
+        
+        // TODO Check that the variable name is not a JS keyword
 
         // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
@@ -582,6 +584,9 @@ $(function () {
         var bad = true;
         while (bad) {
             var n = prompt("Name for new function:");
+            
+            // TODO Check that the variable name is not a JS keyword
+            
             if (!n.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
                 alert("Bad Function Name\n\n" +
                         "Functions can start with an underscore or a letter.\n" +
@@ -600,7 +605,7 @@ $(function () {
         }
 
         // append a new instructions area
-        var idata = $("<div></div>");
+        var idata = $("<div id='ins_" + n + "' class='instructions'></div>");
         idata.append(cloneBlock("#start"))
                 .append(cloneBlock("#connection"))
                 .append(cloneBlock("#return"));
@@ -636,10 +641,7 @@ $(function () {
                     $("#fun-names").append(fname);
 
                     // append a new instructions area
-                    var ins = $("<div id='ins_" + n +
-                            "' class='instructions'></div>");
-                    ins.append(idata);
-                    $("#instructions").append(ins);
+                    $("#instructions").append(idata);
 
                     // append a new variables area
                     var vs = $("<div id='vars_" + n +
@@ -690,6 +692,8 @@ $(function () {
 
             if (cur !== t.val()) {
                 var upd = t.val();
+                
+                // TODO Check that the variable name is not a JS keyword
 
                 // make sure it's valid
                 if (!upd.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
