@@ -123,7 +123,7 @@ function invokeCtrlMethod($class, $method) {
     try {
         return $doMethod->invoke($controler, $method);
     } catch (Exception $e) {
-        // TODO: have some user setting for debug mode
+        // Perhaps have some user setting for debug mode
         error_log($e->getMessage());
         http_response_code(500);
         exit();
