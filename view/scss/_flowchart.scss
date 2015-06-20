@@ -154,7 +154,8 @@ div.variable.bottom .del {
 
 /* all statements */ 
 .statement {
-    position: relative;    
+    position: relative; 
+    min-width: 275px;
 
     .del {
         top: 0px;

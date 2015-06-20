@@ -133,7 +133,8 @@ div.variable.bottom .del {
 
 /* all statements */
 .statement {
-  position: relative; }
+  position: relative;
+  min-width: 275px; }
   .statement .del {
     top: 0px;
     left: 0px; }
@@ -576,7 +577,8 @@ div#projects:hover #project_menu {
   #var_area #stack {
     display: none; }
     #var_area #stack .label {
-      margin-top: 10px; }
+      font-size: 115%;
+      margin-top: 5px; }
     #var_area #stack table.data {
       border-collapse: collapse;
       width: 100%; }

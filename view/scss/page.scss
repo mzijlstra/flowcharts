@@ -159,7 +159,7 @@ div#projects:hover #project_menu {
         bottom: -15px -$line;
         left: -$line;
         border-right: none;
-        
+
         input {
             position: absolute;
             left: 45px;
@@ -211,7 +211,8 @@ div#projects:hover #project_menu {
         display: none;
 
         .label {
-            margin-top: 10px;
+            font-size: 115%;
+            margin-top: 5px;
         }
         table.data {
             border-collapse: collapse;
