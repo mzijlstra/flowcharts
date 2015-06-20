@@ -34,21 +34,52 @@ $(function () {
         var frame = wr.stack[wr.curfrm];
         var item = frame.steps.pop();
 
-        // scroll executing item to the top of the page
+        /**
+         * Helper function to scroll left and right. Wrote this because
+         * jQuery.animate() seems to have a delay for scrollLeft
+         * @param {Element} elem the 'window' element that has the scollbar
+         * @param {int} dest where we want to scroll to
+         * @param {int} duration in millis how long we want to take
+         */
+        var horizScroll = function (elem, dest, duration) {
+            var e = $(elem);
+            var cur = e.scrollLeft();
+            var ftime = 17; // 25 gives 40 fps
+            var frames = duration / ftime;
+            var amount = dest - cur;
+            var perframe = amount / frames;
+            var step = 0;
+            var doStep = function () {
+                elem.scrollLeft += perframe;
+                step += 1;
+                if (step < frames) {
+                    setTimeout(doStep, ftime);
+                }
+            };
+            doStep();
+        };
+
+        // scroll executing item to keep it in view
         if (item.nodeType) { // as long as item is an actual DOM element
-            var delay = parseFloat($("#delay").text()) * 1000;
-            var pos = $(item).offset().top;
+            var dur = parseFloat($("#delay").text()) * 1000;
+            var i = $(item);
+            var posTop = i.offset().top;
+            var posLeft = i.offset().left;
             var ins = $("#instructions");
-            if (pos > 100) {
+            if (posTop > 100) {
                 ins.animate({
-                    "scrollTop": ins.scrollTop() + (pos - 100)
-                }, delay);
-            } else if (pos < 70) {
+                    "scrollTop": ins.scrollTop() + (posTop - 100)
+                }, dur);
+            } else if (posTop < 70) {
                 ins.animate({
-                    "scrollTop": ins.scrollTop() + (pos - 70)
-                }, delay);
+                    "scrollTop": ins.scrollTop() + (posTop - 70)
+                }, dur);
             }
-            // TODO also scroll left-right
+            if (posLeft > 400) {
+                horizScroll(ins[0], ins.scrollLeft() + (posLeft - 400), dur);
+            } else if (posLeft < 300) {
+                horizScroll(ins[0], ins.scrollLeft() + (posLeft - 300), dur);
+            }
         }
 
         // remove executing highlight in current function
@@ -711,6 +742,10 @@ $(function () {
                     var bot_right = elems.shift(); // bot_right_connect
                     var last = elems.shift(); // may be undefined
 
+                    // the exit elem is .bot_left_connect and is also used to 
+                    // scroll the chart left while executing large charts
+                    var exit_elem = t.find(".left").first().children().last();
+
                     var enter_right = function () {
                         $(first).addClass("executing");
                         t.find(".top_connect").first().addClass("executing");
@@ -720,17 +755,17 @@ $(function () {
                                 .addClass("executing");
                         $(last).addClass("executing"); // does nothing if undef
                         // find bot_left_connect
-                        t.find(".left").first().children().last()
-                                .addClass("executing");
+                        exit_elem.addClass("executing");
                         resetExp();
                     };
 
                     if (elems.length === 0) {
                         // if no statements in branch, do enter and exit in one
-                        frame.steps.push({"exec": function () {
-                                enter_right();
-                                exit_right();
-                            }});
+                        exit_elem[0].exec = function () {
+                            enter_right();
+                            exit_right();
+                        };
+                        frame.steps.push(exit_elem[0]);
                     } else {
                         // setup entrance to the branch
                         // replace with single entry item 
@@ -740,9 +775,10 @@ $(function () {
 
                         // setup exit from the branch
                         // replace with single exit item 
-                        elems.unshift({"exec": function () {
-                                exit_right();
-                            }});
+                        exit_elem[0].exec = function () {
+                            exit_right();
+                        };
+                        elems.unshift(exit_elem[0]);
 
                         $(elems).each(function () {
                             frame.steps.push(this);
