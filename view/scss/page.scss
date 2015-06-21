@@ -100,7 +100,11 @@ div#projects:hover #project_menu {
     height: 75px;
     border-left: $line $border;
     border-bottom: $line $border;
-    cursor: pointer;    
+    cursor: pointer; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     #play_pause {
         position: absolute;
@@ -210,9 +214,11 @@ div#projects:hover #project_menu {
     #stack {
         display: none;
 
-        .label {
+        .frame {
+            padding-left: 10px;
+        }
+        .flabel {
             font-size: 115%;
-            margin-top: 5px;
         }
         table.data {
             border-collapse: collapse;
@@ -327,6 +333,32 @@ div#projects:hover #project_menu {
         }
     }
 
+    #output_disp {
+        display: none;
+        z-index: 10;
+        border: $line $border;
+        border-bottom: none;
+        background-color: $bg;
+        color: $fg;
+        position: absolute;
+        bottom: 0px;
+        right: 15px;
+        width: 400px;
+        height: 150px;
+
+        .label {
+            font-weight: bold;
+            color: $bg;
+            background-color: $fg;
+            border-bottom: $line $border;
+        }
+
+        #out {
+            padding: 3px;
+            overflow: auto;
+            height: 130px;
+        }
+    }
 }
 
 /* all custom menus */
@@ -378,8 +410,37 @@ footer {
     right: 0px;
     bottom: 0px;
     right: 0px;
-    background-color: #eee;
-    opacity: 0.5;
+    background-color: #bbb;
+    opacity: 0.4;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 150px;
+    width: 380px;
+    min-height: 100px;
+    margin-left: -190px;
+    border: 2*$line $border;
+    padding: 2em;
+    background-color: $bg;
+
+    .popup_content {
+        min-height: 65px;
+
+        .msg {
+            white-space: pre;
+        }
+        input {
+            width: 100%;
+            margin-top: 1em;
+        }
+    }
+    .center {
+        text-align: center;
+        margin-top: 1em;
+    }
 }
 
 #project_list {

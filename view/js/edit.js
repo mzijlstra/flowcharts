@@ -8,7 +8,7 @@
  * effort into creating clearly delinated sections with block comment headers 
  */
 
-var wr; // wr namespace is created inside controls.js
+var wr; // global object declared in wr.js
 
 $(function () {
     "use strict";
@@ -16,7 +16,7 @@ $(function () {
     /********************************************************
      * Application State Setup Code (after flow chart loaded from DB)
      ********************************************************/
-    // build local variable namespaces in wr.functions
+    // build local variables in wr.functions for each chart
     (function () {
         $("#workspace .fun .name").each(function () {
             var name = $(this).text();
@@ -33,6 +33,7 @@ $(function () {
 
     // Setup AJAX Error Handling
     $(document).ajaxError(function (e) {
+        // due to the seriousness of the situation I'll use a real alert
         alert("Network Error -- please check your connection and try again.");
     });
 
@@ -155,6 +156,7 @@ $(function () {
         t.append(i);
         i.focus();
     };
+    // The JS reserved keywords (fun and var names that are not allowed)
     var reserved = {'abstract': true, 'arguments': true, 'boolean': true,
         'break': true, 'byte': true, 'case': true, 'catch': true, 'char': true,
         'class': true, 'const': true, 'continue': true, 'debugger': true,
@@ -205,7 +207,7 @@ $(function () {
 
         // error messages for bad names
         if (!t.val().match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
-            alert("Bad Variable Name\n\n" +
+            wr.alert("Bad Variable Name:\n\n" +
                     "Variables can start with an underscore or a letter.\n" +
                     "Then didigts, underscores, and letters are allowed.");
             this.focus();
@@ -214,8 +216,8 @@ $(function () {
 
         // Check that the variable name is not a JS keyword
         if (reserved[t.val()]) {
-            alert("Bad Variable Name\n\n" + t.val() +
-                    " is a javascript reserved keyword");
+            wr.alert("Bad Variable Name:\n\n" + t.val() +
+                    "\n\nIs a javascript reserved keyword");
             this.focus();
             return false;
         }
@@ -223,13 +225,13 @@ $(function () {
         // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
             if (wr.curvars[t.val()]) {
-                alert("Duplicate variable name " + t.val() + "\n" +
+                wr.alert("Duplicate variable Name: " + t.val() + "\n\n" +
                         "Please change one to keep them unique.");
                 t.val(t.attr("cur"));
                 t.focus();
                 return false;
             } else if (wr.functions[t.val()]) {
-                alert("Conflict with function name " + t.val() + "\n" +
+                wr.alert("Conflict with function name: " + t.val() + "\n\n" +
                         "Please change your variable name to keep it unique");
                 t.val(t.attr("cur"));
                 t.focus();
@@ -378,7 +380,7 @@ $(function () {
             // post var removal to server
             postVarUpd();
         } else {
-            alert("Cannot remove variable while in use.");
+            wr.alert("Cannot remove variable while in use.");
         }
     });
 
@@ -555,7 +557,7 @@ $(function () {
         var name = $(this).siblings(".var_container").children(".var")
                 .text().trim();
         if (name === "") {
-            alert("Please select a variable first.");
+            wr.alert("Please select a variable first.");
             return false;
         }
         var type = type = $(wr.curvars[name]).prev().find(".type").text();
@@ -601,83 +603,94 @@ $(function () {
      ********************************************************/
     // add a function
     $("#add_fun").click(function () {
-
-        // ask for new function name
-        var bad = true;
-        while (bad) {
-            var n = prompt("Name for new function:");
-
-            // Check that the function name is not a JS keyword
+        // helper to check if the given name can be used
+        var checkName = function (n) {
+            var good = false;
             if (reserved[n]) {
-                alert("Bad Fucntion Name\n\n" + n +
-                        " is a javascript reserved keyword");
+                wr.alert("Bad Fucntion Name:\n\n" + n +
+                        "\n\nIs a javascript reserved keyword");
             } else if (!n.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
-                alert("Bad Function Name\n\n" +
+                wr.alert("Bad Function Name:\n\n" +
                         "Functions can start with an underscore or a letter.\n" +
                         "Then didigts, underscores, and letters are allowed.");
             } else if (wr.functions[n]) {
-                alert("Duplicate Function Name\n\n" +
+                wr.alert("Duplicate Function Name\n\n" +
                         "Please change the function name to keep it unique.");
             } else if (wr.curfun[n]) {
-                // TODO we should check for conflicts with variable names
-                // in all current functions
-                alert("Conflict found with variable name " + n + "\n\n" +
+                // should we check for conflicts with variable names
+                // in all current functions?
+                wr.alert("Conflict found with variable name: " + n + "\n\n" +
                         "Please change the function name to keep it unique.");
             } else {
-                bad = false;
+                good = true;
             }
-        }
+            return good;
+        };
 
-        // append a new instructions area
-        var idata = $("<div id='ins_" + n + "' class='instructions'></div>");
-        idata.append(cloneBlock("#start"))
-                .append(cloneBlock("#connection"))
-                .append(cloneBlock("#return"));
-        idata.find(".name").text(n);
+        // helper to process the name 
+        var useName = function (n) {
+            // append a new instructions area
+            var idata = $("<div id='ins_" + n + "' class='instructions'></div>");
+            idata.append(cloneBlock("#start"))
+                    .append(cloneBlock("#connection"))
+                    .append(cloneBlock("#return"));
+            idata.find(".name").text(n);
 
-        // create a new pramaters area 
-        var pm = $("<div class='params'></div>");
-        pm.append("<div class='label'>Parameters:</div>");
-        pm.append(cloneBlock("#declaration").addClass("parameter"));
+            // create a new pramaters area 
+            var pm = $("<div class='params'></div>");
+            pm.append("<div class='label'>Parameters:</div>");
+            pm.append(cloneBlock("#declaration").addClass("parameter"));
 
-        // append a new variables area
-        var vdata = $("<div></div>");
-        vdata.append(pm);
-        vdata.append("<div class='label'>Variables:</div>");
-        vdata.append(cloneBlock("#declaration"));
+            // append a new variables area
+            var vdata = $("<div></div>");
+            vdata.append(pm);
+            vdata.append("<div class='label'>Variables:</div>");
+            vdata.append(cloneBlock("#declaration"));
 
-        // AJAX call to create function on server
-        var pid = $("h1").attr("pid");
-        $.ajax({
-            "type": "POST",
-            "url": pid + "/" + n,
-            "data": {"idata": idata.html(), "vdata": vdata.html()},
-            "dataType": "json",
-            "success": function (fid) {
-                if ($.isNumeric(fid)) {
-                    // add the function to the HTML
-                    wr.functions[n] = {};
+            // AJAX call to create function on server
+            var pid = $("h1").attr("pid");
+            $.ajax({
+                "type": "POST",
+                "url": pid + "/" + n,
+                "data": {"idata": idata.html(), "vdata": vdata.html()},
+                "dataType": "json",
+                "success": function (fid) {
+                    if ($.isNumeric(fid)) {
+                        // add the function to the HTML
+                        wr.functions[n] = {};
 
-                    // append a new function name tab
-                    var fname = cloneBlock("#fun-name");
-                    fname.find(".name").text(n);
-                    fname.attr("fid", fid);
-                    $("#fun-names").append(fname);
+                        // append a new function name tab
+                        var fname = cloneBlock("#fun-name");
+                        fname.find(".name").text(n);
+                        fname.attr("fid", fid);
+                        $("#fun-names").append(fname);
 
-                    // append a new instructions area
-                    $("#instructions").append(idata);
+                        // append a new instructions area
+                        $("#instructions").append(idata);
 
-                    // append a new variables area
-                    var vs = $("<div id='vars_" + n +
-                            "' class='variables'></div>");
-                    vs.append(vdata);
-                    $("#variables").append(vs);
+                        // append a new variables area
+                        var vs = $("<div id='vars_" + n +
+                                "' class='variables'></div>");
+                        vs.append(vdata);
+                        $("#variables").append(vs);
 
-                    // switch to our new function (as defined below)
-                    fname.click();
+                        // switch to our new function (as defined below)
+                        fname.click();
+                    }
                 }
-            }
-        });
+            });
+        };
+
+        var requestName = function () {
+            wr.prompt("Name for new function:", function (n) {
+                if (checkName(n)) {
+                    useName(n);
+                } else {
+                    return true; // causes prompt to stay on screen
+                }
+            });
+        };
+        requestName();
     });
 
     // switching to a different function
@@ -709,7 +722,8 @@ $(function () {
         inputHere(n.get(0), function (t) {
             var cur = n.attr("cur");
             if (cur === "main") {
-                alert("Cannot rename function main");
+                wr.alert("Cannot rename function main. \n\n" +
+                        "It is needed as entry point for the program.");
                 n.text("main");
                 return false;
             }
@@ -719,15 +733,15 @@ $(function () {
 
                 // Check that the function name is not a JS keyword
                 if (reserved[t.val()]) {
-                    alert("Bad Funtction Name\n\n" + t.val() +
-                            " is a javascript reserved keyword");
+                    wr.alert("Bad Funtction Name:\n\n" + t.val() +
+                            "\n\nIs a javascript reserved keyword");
                     this.focus();
                     return false;
                 }
 
                 // make sure it's valid
                 if (!upd.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
-                    alert("Bad Function Name\n\n" +
+                    wr.alert("Bad Function Name:\n\n" +
                             "Functions can start with an underscore or a letter.\n" +
                             "Then didigts, underscores, and letters are allowed.");
                     t.focus();
@@ -736,7 +750,7 @@ $(function () {
 
                 // make sure it's not duplicate
                 if (wr.functions[upd]) {
-                    alert("Duplicate function name, please change it to keep " +
+                    wr.alert("Duplicate function name, please change it to keep " +
                             "function names unique.");
                     t.focus();
                     return false;
@@ -765,7 +779,8 @@ $(function () {
         var t = $(this);
         var n = t.parent().children(".name").text();
         if (n === "main") {
-            alert("Cannot delete main, the program cannot start without it.");
+            wr.alert("Cannot delete main.\n\n" +
+                    "The program cannot start without it.");
             return false;
         } else if (confirm("Delete the function: " + n + "?")) {
             $("#vars_" + n).remove();
@@ -789,14 +804,15 @@ $(function () {
      * Project related code
      ********************************************************/
     $("#new_proj").click(function () {
-        var name = prompt("Project Name:");
-        $.ajax({
-            "type": "POST",
-            "url": encodeURIComponent(name),
-            "success": function (data) {
-                var pid = JSON.parse(data);
-                window.location.assign(pid);
-            }
+        wr.prompt("Project Name:", function (name) {
+            $.ajax({
+                "type": "POST",
+                "url": encodeURIComponent(name),
+                "success": function (data) {
+                    var pid = JSON.parse(data);
+                    window.location.assign(pid);
+                }
+            });
         });
     });
 

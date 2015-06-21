@@ -10,22 +10,32 @@
  */
 
 
-// wr namespace
-var wr = {};
+var wr; // wr namespace declared in wr.js
 
 $(function () {
     "use strict";
 
-    /*****************************************************
-     * These are our global wr namespace vars and funcs
-     *****************************************************/
-    wr.functions = {'main': {}}; // the flowcharts the user has made
-    wr.curfun = 'main';
-    wr.curvars = wr.functions.main;
-    wr.curfrm = -1; // current stack frame
-    wr.stack = []; // will hold call stack 
-    wr.state; //gets set below by the control buttons [edit,play,pause]
-    wr.playing; // will hold the timeout variable when playing
+    /**
+     * Helper that puts given text into the output box shown during execution
+     * 
+     * @param {type} text
+     * @param {type} css
+     */
+    // Should I put this onto the global wr object? I only need it here
+    var output = function (text, css) {
+        var add = $("<div>");
+        if (typeof (text) === "string" && text[0] === '"') {
+            text = text.substr(1);
+            text = text.substr(0, text.length - 1);
+        }
+        add.text(text);
+        if (css) {
+            add.css(css);
+        }
+        var o = $("#out");
+        o.append(add);
+        o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
+    };
 
     /**
      * The function used to take a flowchart execution step
@@ -49,14 +59,14 @@ $(function () {
             var amount = dest - cur;
             var perframe = amount / frames;
             var step = 0;
-            var doStep = function () {
+            var doAnimFrame = function () {
                 elem.scrollLeft += perframe;
                 step += 1;
                 if (step < frames) {
-                    setTimeout(doStep, ftime);
+                    setTimeout(doAnimFrame, ftime);
                 }
             };
-            doStep();
+            doAnimFrame();
         };
 
         // scroll executing item to keep it in view
@@ -86,14 +96,15 @@ $(function () {
         frame.ins.find(".executing").removeClass("executing");
         frame.data.find(".executing").removeClass("executing");
         try {
-            item.exec();
+            var res = !item.exec();
+            return res;
         } catch (exception) {
             $(".executing").addClass("exp_error");
-            alert("Runtime Exception: " + exception);
+            output("Exception: " + exception, {"color": "red"});
             return false;
         }
-        return true;
     };
+
     /**
      * The function used to 'play', makes recursive call to itself with timeout
      */
@@ -132,417 +143,6 @@ $(function () {
 
         return $('#sandbox')[0].contentWindow.eval(code);
     };
-    /**
-     * Verifies that the extracted expression has the given data type.
-     * 
-     * This function can also be passed as the blur argument to inputHere.
-     * Since this is used by different parts I had to put it into the wr obj.
-     *
-     * @param {Element} elem The element that holds the expression
-     * @param {string} type  The desired type that the exp should have
-     * @param {boolean} [silent] If true only highlight, no alert()
-     * @returns {boolean} true if matches desired type
-     */
-    wr.verifyType = function (elem, type, silent) {
-        var e = $(elem);
-        var exp = e.val() || e.text();
-        var stmt = e.closest(".statement");
-
-        // create an evaluation context with defaults for current variables
-        var defaults = {
-            "string": "''",
-            "number": "1",
-            "boolean": "true",
-            "array": "[]",
-            "object": "{}"
-        };
-        var ctx = {};
-        var key, vtype;
-        // add in functions that return default values based on their type
-        for (key in wr.functions) {
-            vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return " + defaults[vtype] + "}";
-        }
-        // add variables for the function that the elem is inside of
-        var fun = $(elem).closest(".instructions").attr("id").substring(4);
-        for (key in wr.functions[fun]) {
-            vtype = $(wr.functions[fun][key]).prev().find(".type").text();
-            ctx[key] = defaults[vtype];
-        }
-
-        // do the actual evaluation
-        try {
-            var data = wr.eval(exp, ctx);
-        } catch (exception) {
-            stmt.addClass("exp_error");
-            if (!silent) {
-                alert("Error in expression, please check syntax.");
-            }
-            e.find("input").focus();
-            return false;
-        }
-
-        // check the resulting type
-        var result = typeof (data);
-        var match = false;
-        if (result === 'object') {
-            if (type === 'array' && data.length) {
-                match = true;
-            } else if (type === 'object') {
-                match = true;
-            }
-        } else if (result === type) {
-            match = true;
-        }
-
-        if (!match) {
-            stmt.addClass("type_error");
-            if (!silent) {
-                alert("Your expression has type: " + result + " instead of \n" +
-                        "the expected type: " + type);
-            }
-            return false;
-        }
-
-        // clean up when things go correctly
-        stmt.removeClass("type_error exp_error"); // in case it has it
-        return true;
-    };
-    /**
-     * Does a call to a flowchart function. Execution is started with a 
-     * doCall('main'), after which each 'function call' inside the chart
-     * in reality becomes a doCall() of that function
-     * @param {type} fname
-     * @param {type} args
-     */
-    wr.doCall = function (fname, args) {
-        wr.curfrm += 1;
-
-        // find where we have to return to (if we're not main starting up)
-        if (wr.curfrm !== 0) {
-            var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
-            // if we can't find it we aren't the fist call for the expression
-            // return so that we can be evaluated later (keeps sequence correct)
-            if (!ret2.length) {
-                wr.curfrm -= 1;
-                return;
-            }
-        }
-
-        // create the context for this call
-        var ctx = {};
-        ctx['$w'] = 'window';
-        // add the flowchart functions
-        for (key in wr.functions) {
-            ctx[key] = 'function () { $w.top.wr.doCall("' + key
-                    + '", arguments) }';
-        }
-        // add the variables for this function
-        for (var key in wr.functions[fname]) {
-            ctx[key] = 'undefined';
-        }
-        // set args values
-        if (args) {
-            $("#vars_" + fname + " .parameter").each(function (i, e) {
-                var t = $(e);
-                var name = t.children("input").val();
-                if (!t.hasClass("bottom") && name !== "") {
-                    var val = args[i];
-                    if (typeof (val) === "string") {
-                        val = '"' + val + '"';
-                    }
-                    ctx[name] = val;
-                }
-            });
-        }
-
-        // create a copy of the instructions, make executable, and add to doc
-        var ins = $("#ins_" + fname).clone()
-                .attr("id", "frame" + wr.curfrm)
-                .addClass("instructions frame");
-        makeExecutable(ins);
-        $("#instructions").append(ins);
-
-        // create the HTML view of the stack frame and add it to the document
-        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
-        var label = "<div class='label'>" + fname + "(";
-        if (args) {
-            for (var i = 0; i < args.length; i++) {
-                if (typeof (args[i] === "string")) {
-                    args[i] = '"' + args[i] + '"';
-                }
-                label += args[i] + ", ";
-            }
-            label = label.substring(0, label.length - 2);
-        }
-        label += ")</div>";
-        fdata.append(label);
-        var vars = $("<table class='data'>");
-        var v; // add fields for each of the variables
-        for (key in wr.functions[fname]) {
-            v = $("<tr>");
-            v.append("<td class='vname'>" + key + "</td>");
-            v.append("<td class='vdata' " +
-                    "id='f" + wr.curfrm + "_" + key + "'>");
-            vars.append(v);
-        }
-        fdata.append(vars);
-        $("#stack").append(fdata);
-
-        // setup the steps for this function call;
-        var steps = [];
-        $(ins.children().get().reverse()).each(function () {
-            steps.push(this);
-        });
-
-        // have the first step be switching to the new flow chart
-        steps.push({
-            "exec": function () {
-                // clear active from previous items
-                $(".active").removeClass("active");
-                fdata.addClass("active");
-                ins.addClass("active");
-                ins.find(".statement").first().addClass("executing");
-            }
-        });
-
-        // finish by putting our new frame onto the stack
-        wr.stack.push({
-            'name': fname,
-            'ret2': ret2,
-            'ctx': ctx,
-            'ins': ins,
-            'data': fdata,
-            'steps': steps
-        });
-    };
-
-
-
-
-
-    /*****************************************************
-     * The 3 different states that the program can be in
-     * The code below uses the state pattern for the states
-     *****************************************************/
-    var play_btn = $("#play_btn");
-    var pause_btn = $("#pause_btn");
-    var delay_disp = $('#delay_disp');
-    var step_btn = $('#step_btn');
-    var workspace = $("#workspace");
-    var variables = $("#variables");
-    var stack = $("#stack");
-
-    // helper functions to switch between states
-    var toPlayState = function () {
-        pause_btn.css("display", "block");
-        play_btn.css("display", "none");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
-        wr.state = states.play;
-
-        // if we're not executing, start executing main
-        if (wr.curfrm === -1) {
-            wr.doCall("main");
-        }
-        wr.play();
-    };
-    var toEditState = function () {
-        pause_btn.css("display", "none");
-        play_btn.css("display", "block");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
-        workspace.removeClass("exec");
-        workspace.addClass("edit");
-        stack.hide();
-        variables.show();
-        $(".fun").show();
-        $("#add_fun").show();
-        $("#fun-names").css({"height": "", "padding": "", "border-bottom": ""});
-
-        clearTimeout(wr.playing);
-        wr.state = states.edit;
-
-        // clear the stack, and the HTML frames (both data and instruction)
-        wr.stack = [];
-        wr.curfrm = -1;
-        $(".frame").detach();
-        variables.show();
-        stack.hide();
-
-        // show main function
-        $(".fun").first().click();
-    };
-    var toPauseState = function () {
-        pause_btn.css("display", "none");
-        play_btn.css("display", "block");
-        step_btn.css("display", "block");
-        delay_disp.css("display", "none");
-        clearTimeout(wr.playing);
-        wr.state = states.pause;
-    };
-
-    // the different states that application can be in
-    var states = {
-        "edit": {
-            "name": "edit",
-            "playpause": function () {
-                // check that everything is good to go ('compile' check)
-                var stmts = $("#instructions .statement").get();
-                var ready = true;
-                for (var i = 0; i < stmts.length; i++) {
-                    if (!stmts[i].ready()) {
-                        ready = false;
-                    }
-                }
-                if (!ready) {
-                    alert("Cannot start execution, there are errors in this "
-                            + "project\n\nThe problems have been highligted, "
-                            + "please check all functions");
-                    return;
-                }
-                // if we're here any error highlights are old / not valid
-                $('.type_error, .exp_error, .name_error')
-                        .removeClass('type_error exp_error name_error');
-
-                // do css changes to exit edit mode
-                workspace.removeClass("edit");
-                workspace.addClass("exec");
-                variables.hide();
-                stack.show();
-                $(".fun").hide();
-                $("#add_fun").hide();
-                $("#fun-names").css({"height": "0px", "padding": "0px",
-                    "border-bottom": "none"});
-
-                // switch to the main function (always first in fun-names)
-                $("#fun-names span.fun")[0].click();
-
-                toPlayState();
-            },
-            "reset": function () {
-                // does nothing in this state
-            }
-        },
-        "play": {
-            "name": "play",
-            "playpause": toPauseState,
-            "reset": toEditState
-        },
-        "pause": {
-            "name": "pause",
-            "playpause": toPlayState,
-            "reset": toEditState
-        }
-    };
-
-    // we start in the edit state
-    wr.state = states.edit;
-
-    // Hook up button clicks that move us between the states
-    $("#play_pause").click(function () {
-        wr.state.playpause();
-    });
-    $("#reset").click(function () {
-        wr.state.reset();
-    });
-    $("#step_btn").click(wr.step);
-    $("#delay_disp").click(function () {
-        var t = $(this);
-        var delay = $("#delay");
-        var input = $("<input>");
-        input.val(delay.text());
-        input.keyup(function (event) {
-            if (event.which === 13) {
-                this.blur();
-                return true;
-            }
-            if (input.val().length > 3) {
-                input.val(input.val().substr(0, 3));
-            }
-        });
-        input.blur(function () {
-            if (parseFloat(input.val())) {
-                delay.text(input.val());
-            }
-            input.detach();
-        });
-        t.append(input);
-        input.focus();
-    });
-
-
-
-
-
-    /*****************************************************
-     * The 'compile' check for the different statements
-     *****************************************************/
-    $(".statement > .start").each(function () {
-        $(this).parent()[0].ready = function () {
-            return true; // start is always ready
-        };
-    });
-    // stop is only ready if it returns an expression of the correct type
-    $(".statement > .stop").each(function () {
-        $(this).parent()[0].ready = function () {
-            var t = $(this);
-            var func = t.closest(".instructions").attr("id").substring(4);
-            var type = $('#ins_' + func).find('.start .type').text();
-            return wr.verifyType(t.find(".exp")[0], type, "silent");
-        };
-    });
-    // inputs are ready if they have a variable name and it's of type string
-    $(".statement > .input").each(function () {
-        $(this).parent()[0].ready = function () {
-            var t = $(this);
-            var func = t.closest(".instructions").attr("id").substring(4);
-            var name = t.find(".var").text().trim();
-            if (name === "") {
-                t.addClass("name_error");
-                return false;
-            }
-            var type = $(wr.functions[func][name]).prev().find(".type").text();
-            if (type !== "string") {
-                t.addClass("type_error");
-                return false;
-            }
-            return true;
-        };
-    });
-    // outputs are ready if their expression evaluates to a string
-    $(".statement > .output").each(function () {
-        $(this).parent()[0].ready = function () {
-            return wr.verifyType($(this).find(".exp")[0], "string", "silent");
-        };
-    });
-    // assignments are ready if their variable and expression have same type
-    $(".statement > .assignment").each(function () {
-        $(this).parent()[0].ready = function () {
-            var t = $(this);
-            // function that the statement is in
-            var func = t.closest(".instructions").attr("id").substring(4);
-            // name and type of the variable
-            var name = t.find(".var").text().trim();
-            if (name === "") {
-                t.addClass("name_error");
-                return false;
-            }
-            var type = $(wr.functions[func][name]).prev().find(".type").text();
-            var exp = t.find(".exp");
-            if (exp.text().trim() === "") {
-                t.addClass("exp_error");
-                return false;
-            }
-            return wr.verifyType(exp[0], type, "silent");
-        };
-    });
-    // if statements and while statements should have boolean expresssions
-    $(".statement > .if, .statement > .while").each(function () {
-        $(this).parent()[0].ready = function () {
-            return wr.verifyType($(this).find(".exp")[0], "boolean", "silent");
-        };
-    });
 
     /**
      * Helper that sets the 'exec' function for the different statements 
@@ -579,19 +179,25 @@ $(function () {
                 t.addClass("executing");
 
                 var io = t.find(".io");
-                var input = window.prompt("Please enter input:");
-                input = '"' + input + '"'; // input is always a string
-                io.text(input);
-                io.addClass("eval");
-
                 var asgn = t.find(".asgn");
-                setTimeout(function () {
-                    asgn.addClass("eval");
-                }, parseFloat($("#delay").text()) * 500);
+                var delay = parseFloat($("#delay").text());
+                var input = null;
+                wr.prompt("Please enter input:", function (inp) {
+                    input = '"' + inp + '"'; // input is always a string
+                    io.text(input);
+                    io.addClass("eval");
+
+                    setTimeout(function () {
+                        asgn.addClass("eval");
+                    }, delay * 500);
+                    
+                    // continue playing (now that we have input)
+                    setTimeout(wr.play, delay * 1000 + 1); 
+                });
 
                 // second step, assign the input 
                 var frame = wr.stack[wr.curfrm];
-                frame['steps'].push({"exec": function () {
+                frame.steps.push({"exec": function () {
                         var nelem = t.find(".var");
                         nelem.addClass("executing");
                         var name = nelem.text();
@@ -606,8 +212,9 @@ $(function () {
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
-                        }, parseFloat($("#delay").text()) * 500);
+                        }, delay * 500);
                     }});
+                return true; // stop playing (wait for input)
             };
         });
 
@@ -644,7 +251,7 @@ $(function () {
                         var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
-                        window.alert(result);
+                        output(result);
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
@@ -930,15 +537,125 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            alert("Execution completed");
-                            frame.ins.detach();
+                            output("-Execution complete-",
+                                    {"color": "greenyellow"});
                             frame.data.detach();
                             wr.stack.pop();
                             wr.curfrm -= 1;
+                            return true; // stops execution
                         }
                     });
                 }
             };
+        });
+    };
+
+    /**
+     * Does a call to a flowchart function. Execution is started with a 
+     * doCall('main'), after which each 'function call' inside the chart
+     * in reality becomes a doCall() of that function
+     * @param {type} fname
+     * @param {type} args
+     */
+    wr.doCall = function (fname, args) {
+        wr.curfrm += 1;
+
+        // find where we have to return to (if we're not main starting up)
+        if (wr.curfrm !== 0) {
+            var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
+            // if we can't find it we aren't the fist call for the expression
+            // return so that we can be evaluated later (keeps sequence correct)
+            if (!ret2.length) {
+                wr.curfrm -= 1;
+                return;
+            }
+        }
+
+        // create the context for this call
+        var ctx = {};
+        ctx['$w'] = 'window';
+        // add the flowchart functions
+        for (key in wr.functions) {
+            ctx[key] = 'function () { $w.top.wr.doCall("' + key
+                    + '", arguments) }';
+        }
+        // add the variables for this function
+        for (var key in wr.functions[fname]) {
+            ctx[key] = 'undefined';
+        }
+        // set args values
+        if (args) {
+            $("#vars_" + fname + " .parameter").each(function (i, e) {
+                var t = $(e);
+                var name = t.children("input").val();
+                if (!t.hasClass("bottom") && name !== "") {
+                    var val = args[i];
+                    if (typeof (val) === "string") {
+                        val = '"' + val + '"';
+                    }
+                    ctx[name] = val;
+                }
+            });
+        }
+
+        // create a copy of the instructions, make executable, and add to doc
+        var ins = $("#ins_" + fname).clone()
+                .attr("id", "frame" + wr.curfrm)
+                .addClass("instructions frame");
+        makeExecutable(ins);
+        $("#instructions").append(ins);
+
+        // create the HTML view of the stack frame and add it to the document
+        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
+        var label = "<div class='flabel'>" + fname + "(";
+        if (args) {
+            for (var i = 0; i < args.length; i++) {
+                if (typeof (args[i] === "string")) {
+                    args[i] = '"' + args[i] + '"';
+                }
+                label += args[i] + ", ";
+            }
+            label = label.substring(0, label.length - 2);
+        }
+        label += ")</div>";
+        fdata.append(label);
+        var vars = $("<table class='data'>");
+        var v; // add fields for each of the variables
+        for (key in wr.functions[fname]) {
+            v = $("<tr>");
+            v.append("<td class='vname'>" + key + "</td>");
+            v.append("<td class='vdata' " +
+                    "id='f" + wr.curfrm + "_" + key + "'>");
+            vars.append(v);
+        }
+        fdata.append(vars);
+        $("#stack").append(fdata);
+
+        // setup the steps for this function call;
+        var steps = [];
+        $(ins.children().get().reverse()).each(function () {
+            steps.push(this);
+        });
+
+        // have the first step be switching to the new flow chart
+        steps.push({
+            "exec": function () {
+                // clear active from previous items
+                $(".active").removeClass("active");
+                fdata.addClass("active");
+                ins.addClass("active");
+                ins.find(".statement").first().addClass("executing");
+            }
+        });
+
+        // finish by putting our new frame onto the stack
+        wr.stack.push({
+            'name': fname,
+            'ret2': ret2,
+            'ctx': ctx,
+            'ins': ins,
+            'data': fdata,
+            'steps': steps
         });
     };
 });

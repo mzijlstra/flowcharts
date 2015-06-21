@@ -11,8 +11,10 @@
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
         <script src="jquery-2.1.1.js" ></script>
-        <script src="exec.js"></script>
+        <script src="wr.js"></script>
+        <script src="states.js"></script>
         <script src="edit.js"></script>
+        <script src="exec.js"></script>
     </head>
     <body>
         <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
@@ -36,6 +38,7 @@
                     <?php endforeach; ?>
                 </div>
                 <div id="stack">
+                    <div class="label">Stack:</div>
                 </div>
             </div> <!-- end var_area -->
 
@@ -84,8 +87,29 @@
                         </div>
                     <?php endforeach; ?>
                 </div> <!-- end instructions -->
+
+                <div id="output_disp">
+                    <div class="label">OUTPUT</div>
+                    <div id="out"> 
+                    </div>
+                </div>
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
+
+        <div id="overlay"></div>
+        <div id="prompt" class="popup">
+            <div class="popup_content">
+                <div class="msg">Please enter input:</div>
+                <div><input type="text" /></div>
+            </div>
+            <div class="center"><button>OK</button></div>
+        </div>
+        <div id="alert" class="popup">
+            <div class="popup_content">
+                <div class="msg">This is an alert!</div>
+            </div>
+            <div class="center"><button>OK</button></div>
+        </div>
 
         <footer>Web-Raptor</footer>
 
