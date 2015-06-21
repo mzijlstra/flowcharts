@@ -155,6 +155,22 @@ $(function () {
         t.append(i);
         i.focus();
     };
+    var reserved = {'abstract': true, 'arguments': true, 'boolean': true,
+        'break': true, 'byte': true, 'case': true, 'catch': true, 'char': true,
+        'class': true, 'const': true, 'continue': true, 'debugger': true,
+        'default': true, 'delete': true, 'do': true, 'double': true,
+        'else': true, 'enum': true, 'eval': true, 'export': true,
+        'extends': true, 'false': true, 'final': true, 'finally': true,
+        'float': true, 'for': true, 'function': true, 'goto': true, 'if': true,
+        'implements': true, 'import': true, 'in': true, 'instanceof': true,
+        'int': true, 'interface': true, 'let': true, 'long': true,
+        'native': true, 'new': true, 'null': true, 'package': true,
+        'private': true, 'protected': true, 'public': true, 'return': true,
+        'short': true, 'static': true, 'super': true, 'switch': true,
+        'synchronized': true, 'this': true, 'throw': true, 'throws': true,
+        'transient': true, 'true': true, 'try': true, 'typeof': true,
+        'var': true, 'void': true, 'volatile': true, 'while': true,
+        'with': true, 'yield': true};
 
 
 
@@ -195,8 +211,14 @@ $(function () {
             this.focus();
             return false;
         }
-        
-        // TODO Check that the variable name is not a JS keyword
+
+        // Check that the variable name is not a JS keyword
+        if (reserved[t.val()]) {
+            alert("Bad Variable Name\n\n" + t.val() +
+                    " is a javascript reserved keyword");
+            this.focus();
+            return false;
+        }
 
         // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
@@ -584,10 +606,12 @@ $(function () {
         var bad = true;
         while (bad) {
             var n = prompt("Name for new function:");
-            
-            // TODO Check that the variable name is not a JS keyword
-            
-            if (!n.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
+
+            // Check that the function name is not a JS keyword
+            if (reserved[n]) {
+                alert("Bad Fucntion Name\n\n" + n +
+                        " is a javascript reserved keyword");
+            } else if (!n.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
                 alert("Bad Function Name\n\n" +
                         "Functions can start with an underscore or a letter.\n" +
                         "Then didigts, underscores, and letters are allowed.");
@@ -692,8 +716,14 @@ $(function () {
 
             if (cur !== t.val()) {
                 var upd = t.val();
-                
-                // TODO Check that the variable name is not a JS keyword
+
+                // Check that the function name is not a JS keyword
+                if (reserved[t.val()]) {
+                    alert("Bad Funtction Name\n\n" + t.val() +
+                            " is a javascript reserved keyword");
+                    this.focus();
+                    return false;
+                }
 
                 // make sure it's valid
                 if (!upd.match(/^[_a-zA-Z]([_0-9a-zA-Z]+)?$/)) {
