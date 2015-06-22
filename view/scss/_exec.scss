@@ -21,6 +21,9 @@
 .exec div:hover .del, .exec div:hover .menu {
     display: none !important;
 }
+.exec .type_container:hover .type {
+    border: none;
+}
 
 // connection element
 .exec .executing.connection { 

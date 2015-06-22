@@ -483,6 +483,59 @@ $(function () {
             };
         });
 
+        /**
+         * Helper function put a return value in the place of a function call
+         * @param {string} exp expression to modify
+         * @param {string} fname name of the function call to replace
+         * @param {string} value what to replace it with 
+         * @returns {string} modified expression
+         */
+        var replaceCall = function (exp, fname, value) {
+            var start = exp.indexOf(fname);
+            var begin = exp.substr(0, start);
+
+            // find the opening paren -- should be right after fname
+            var i = exp.indexOf('(', start);
+            var pstack = [];
+            pstack.push(i);
+            i++;
+
+            // helper to skip string args
+            var findStringClose = function (delim) {
+                while (exp[i] !== delim) {
+                    i++;
+                }
+            };
+
+            // look for closing paren
+            while (pstack.length !== 0 && i < exp.length) {
+                if (exp[i] === ')') {
+                    pstack.pop();
+                } else if (exp[i] === '(') {
+                    pstack.push(i);
+                } else if (exp[i] === '"') {
+                    i++;
+                    findStringClose('"');
+                } else if (exp[i] === "'") {
+                    i++;
+                    findStringClose("'");
+                }
+                i++;
+            }
+            // if we did not find it
+            if (pstack.length !== 0) {
+                alert("Error Invalid function call\n\n" +
+                        "Please show this error to your professor,\n" +
+                        "anlong with the expression you wrote.");
+                throw "Invalid function call, unable to find ')' for " +
+                        fname + " in expression: " + exp;
+            }
+
+            // reconstruct string with replacement
+            var end = exp.substring(i, exp.length);
+            return begin + value + end;
+        };
+
         ins.find(".statement > .stop").each(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
@@ -512,11 +565,8 @@ $(function () {
                         "exec": function () {
                             pstmt.addClass("executing");
                             var cur = frame.ret2.text();
-
-                            // TODO FIXME there are some edge cases that could 
-                            // cause problems: e.g. sting arguments containing )
-                            var re = new RegExp(frame.name + "\\([^)]*\\)");
-                            frame.ret2.text(cur.replace(re, result));
+                            frame.ret2.text(
+                                    replaceCall(cur, frame.name, result));
                         }
                     });
                     pframe.steps.push({
@@ -630,8 +680,8 @@ $(function () {
                     "id='f" + wr.curfrm + "_" + key + "'>");
             vars.append(v);
         }
-        // switch to, and look at other frames
-        fdata.click(function() {
+        // add ability to switch and look at other frames
+        fdata.click(function () {
             if (wr.state.name !== "pause") {
                 $("#play_pause").click();
             }

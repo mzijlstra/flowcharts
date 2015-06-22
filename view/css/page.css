@@ -349,6 +349,9 @@ div.variable.bottom .del {
 .exec div:hover .del, .exec div:hover .menu {
   display: none !important; }
 
+.exec .type_container:hover .type {
+  border: none; }
+
 .exec .executing.connection div.line, .exec .executing.connection div.sline {
   border-color: greenyellow; }
 .exec .executing.connection div.arrow_down {
