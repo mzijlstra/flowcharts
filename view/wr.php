@@ -8,6 +8,7 @@
         <meta charset="UTF-8">
         <title>Flow Chart</title>
         <link rel="stylesheet" href="page.css" type="text/css" />
+        <link rel="stylesheet" href="default.css" type="text/css" />
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
         <script src="jquery-2.1.1.js" ></script>
@@ -15,6 +16,7 @@
         <script src="edit.js"></script>
         <script src="exec.js"></script>
         <script src="states.js"></script>
+        <script src="highlight.pack.js"></script>
     </head>
     <body>
         <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
@@ -65,7 +67,7 @@
                             </div>
                         </div>
                         <div id="reset" class="control">
-                            RESET
+                            EDIT
                         </div>
                         <div id="delay_disp" class="control">
                             DELAY <span id="delay">0.5</span>
@@ -88,6 +90,7 @@
                     <?php endforeach; ?>
                 </div> <!-- end instructions -->
 
+                <div id="gen_js" alt="Generate JavaScript">JS</div>
                 <div id="output_disp">
                     <div class="label">OUTPUT</div>
                     <div id="out"> 
@@ -96,7 +99,10 @@
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
 
+        <div id="js_code"><pre><code></code></pre></div>
+        <div id="hide_js"><div id="close_js">&times;</div></div>
         <div id="overlay"></div>
+        
         <div id="prompt" class="popup">
             <div class="popup_content">
                 <div class="msg">Please enter input:</div>

@@ -337,8 +337,7 @@ div#projects:hover #project_menu {
         }
     }
 
-    #output_disp {
-        display: none;
+    #gen_js, #output_disp {
         z-index: 10;
         border: $line $border;
         border-bottom: none;
@@ -346,7 +345,19 @@ div#projects:hover #project_menu {
         color: $fg;
         position: absolute;
         bottom: 0px;
-        right: 15px;
+        right: 15px;        
+    }
+    #gen_js {
+        padding: 5px;
+        padding-bottom: 1px;
+        font-weight: bold;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        cursor: pointer;
+        right: 16px;
+    }
+    #output_disp {
+        display: none;
         width: 400px;
         height: 150px;
 
@@ -405,7 +416,38 @@ footer {
     margin-left: -150px;
     text-align: center;
 }
-
+// JS code related items do not participate in the color scheme
+#js_code {
+    @extend #workspace;
+    display: none;
+    background-color: white; 
+    color: black;
+    padding: 1em;
+}
+#hide_js {
+    display: none;
+    position: fixed;
+    right: 15px;
+    bottom: 25px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: 300%;
+    border: 1px solid black;
+    border-radius: 50px;
+    height: 22px;
+    opacity: 0.65;
+    cursor: pointer;
+    
+    #close_js {
+        position: relative;
+        top: -10px;
+    }
+}
+#hide_js:hover{
+    opacity: 1;
+}
 #overlay {
     display: none;
     position: fixed;

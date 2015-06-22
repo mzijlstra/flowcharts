@@ -9,6 +9,7 @@
  */
 
 var wr; // global object declared in wr.js
+var hljs; // provided by the highlight.js library
 
 $(function () {
     "use strict";
@@ -389,7 +390,8 @@ $(function () {
         var t = $(this);
         var name = t.children("input").val();
         var inuse = false;
-        $(".statement .var").each(function (i, o) {
+        var func = wr.curfun;
+        $("#ins_" + func + " .statement .var").each(function (i, o) {
             if (!inuse && $(o).text() === name) {
                 inuse = true;
                 t.addClass("inuse");
@@ -424,7 +426,7 @@ $(function () {
         if ($('#workspace').hasClass("exec")) {
             // silently inore request to show menu
         } else if (size === 0) {
-            alert("Please declare a variable first.");
+            wr.alert("Please declare a variable first.");
             $('.variable .var').focus();
         } else if (ins_menu.css("display") === "none") {
             ins_menu.css("top", event.pageY);
@@ -783,6 +785,7 @@ $(function () {
                     "The program cannot start without it.");
             return false;
         } else if (confirm("Delete the function: " + n + "?")) {
+            // TODO create a replacement for confirm?
             $("#vars_" + n).remove();
             $("#ins_" + n).remove();
             t.parent().remove();
@@ -818,5 +821,130 @@ $(function () {
 
     $("#open_proj").click(function () {
         window.location.assign("../project");
+    });
+
+
+
+
+    /********************************************************
+     * Generate JavaScript from flowchart
+     ********************************************************/
+    $("#gen_js").click(function () {
+        if (!wr.ready()) {
+            wr.alert("Cannot generate JavaScript,\n there are errors in this "
+                    + "project\n\n"
+                    + "The problems have been highligted, \n"
+                    + " please check all functions");
+            return;
+        }
+
+        var genFunc = function (name) {
+            // function declaration
+            var code = "function " + name + "(";
+            $("#vars_" + name + " .parameter").each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                if (!t.hasClass("bottom") && n !== "") {
+                    code += n + ", ";
+                }
+            });
+            var len = code.length;
+            if (code[len - 1] === " " && code[len - 2] === ",") {
+                code = code.substr(0, len - 2);
+            }
+            code += ") {\n";
+            // add variable declarations into the function
+            $("#vars_" + name + " .variable").filter(function () {
+                var t = $(this);
+                if (t.hasClass("parameter") || t.hasClass("bottom")) {
+                    return false;
+                }
+                return true;
+            }).each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                var type = t.find(".type").text();
+                code += "    var " + n + "; // " + type + "\n";
+            });
+            // add instructions
+            var makeIndent = function (amount) {
+                var result = "";
+                for (var i = 0; i < amount; i++) {
+                    result += "    ";
+                }
+                return result;
+            };
+            var addInstruction = function (elem, indent) {
+                var t = $(elem);
+                var c = makeIndent(indent);
+                if (t.children(".start").length) {
+                    return "";
+                } else if (t.children(".input").length) {
+                    c += t.find(".var").text();
+                    c += " = prompt('Enter Input: ');\n";
+                } else if (t.children(".output").length) {
+                    c += "console.log(";
+                    c += t.find(".exp").text() + ");\n";
+                } else if (t.children(".assignment").length) {
+                    c += t.find(".var").text();
+                    c += " = ";
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".if").length) {
+                    c += "if (" + t.find(".exp").first().text() + ") {\n";
+                    t.find(".right").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "} else {\n";
+                    t.find(".left").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".while").length) {
+                    c += "while (" + t.find(".exp").first().text() + ") { \n";
+                    t.find(".loop_body").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".stop").length) {
+                    c += "return ";
+                    c += t.find(".exp").text() + ";\n";
+                }
+                return c;
+            };
+            $("#ins_" + name + " > .statement").each(function () {
+                code += addInstruction(this, 1);
+            });
+            // close function
+            code += "}\n\n";
+            return code;
+        };
+        var program = "";
+        for (var key in wr.functions) {
+            if (key !== "main") {
+                program += genFunc(key);
+            }
+        }
+        program += genFunc("main");
+        program += "main(); // start executing main\n";
+
+        // insert and show generated code
+        var here = $("#js_code > pre > code");
+        here.empty().text(program);
+        here.each(function () {
+            hljs.highlightBlock(this);
+        });
+        $("#js_code").show();
+        $("#hide_js").show();
+    });
+
+    $("#hide_js").click(function () {
+        $("#js_code").hide();
+        $("#hide_js").hide();
     });
 });

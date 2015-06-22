@@ -26,6 +26,13 @@ $(function () {
     wr.play;    // continuesly executes steps (until there are no more)
     wr.eval;    // used to evaluate expressions in a specific ~sandboxed context
 
+    /*
+     * Functions in the wr namespace, implemented below
+     */
+    wr.alert;
+    wr.prompt;
+    wr.verifyType;
+    wr.ready;
 
     /**
      * Helper function used to show an alert (built in alerts can be disabled)
@@ -66,7 +73,7 @@ $(function () {
         var i = p.find("input");
         var b = p.find("button");
         p.find(".msg").text(text);
-        
+
         var doClick = function () {
             if (click) {
                 if (!click(i.val())) {
@@ -81,7 +88,7 @@ $(function () {
             b.off("click", doClick);
         };
         b.on("click", doClick);
-        
+
         o.show();
         p.show();
         i.focus();
@@ -167,5 +174,22 @@ $(function () {
         // clean up when things go correctly
         stmt.removeClass("type_error exp_error"); // in case it has it
         return true;
+    };
+
+    /**
+     * Helper function that acts like a 'compile time' check.
+     * It is used before executing, and before generating JS code
+     * @returns {Boolean} True if everything is ready
+     */
+    wr.ready = function () {
+        // check that everything is good to go ('compile' check)
+        var stmts = $("#instructions .statement").get();
+        var ready = true;
+        for (var i = 0; i < stmts.length; i++) {
+            if (!stmts[i].ready()) {
+                ready = false;
+            }
+        }
+        return ready;
     };
 });

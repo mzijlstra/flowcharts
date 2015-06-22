@@ -5,9 +5,9 @@
 
 var wr; // global object declared in wr.js
 
-$(function() {
+$(function () {
     "use strict";
-    
+
     /*****************************************************
      * The 3 different states that the program can be in
      * The code below uses the state pattern for the states
@@ -78,18 +78,11 @@ $(function() {
         "edit": {
             "name": "edit",
             "playpause": function () {
-                // check that everything is good to go ('compile' check)
-                var stmts = $("#instructions .statement").get();
-                var ready = true;
-                for (var i = 0; i < stmts.length; i++) {
-                    if (!stmts[i].ready()) {
-                        ready = false;
-                    }
-                }
-                if (!ready) {
-                    alert("Cannot start execution, there are errors in this "
-                            + "project\n\nThe problems have been highligted, "
-                            + "please check all functions");
+                if (!wr.ready()) {
+                    wr.alert("Cannot start execution,\n"
+                            + " there are errors in this project\n\n"
+                            + "The problems have been highligted, \n"
+                            + " please check all functions");
                     return;
                 }
                 // if we're here any error highlights are old / not valid
@@ -124,7 +117,7 @@ $(function() {
         },
         "pause": {
             "name": "pause",
-            "playpause": function() {
+            "playpause": function () {
                 toPlayState();
                 // make sure the correct frame is active 
                 $(".active").removeClass("active");
@@ -171,7 +164,7 @@ $(function() {
         t.append(input);
         input.focus();
     });
-    
+
 
 
 

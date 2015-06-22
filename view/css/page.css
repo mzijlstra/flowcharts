@@ -484,7 +484,7 @@ div#projects:hover #project_menu {
 #building_blocks {
   display: none; }
 
-#workspace {
+#workspace, #js_code {
   position: fixed;
   top: 40px;
   bottom: 20px;
@@ -682,8 +682,7 @@ div#projects:hover #project_menu {
       display: none; }
     #functions #instructions .instructions.active {
       display: block; }
-  #functions #output_disp {
-    display: none;
+  #functions #gen_js, #functions #output_disp {
     z-index: 10;
     border: 1px solid white;
     border-bottom: none;
@@ -691,7 +690,17 @@ div#projects:hover #project_menu {
     color: white;
     position: absolute;
     bottom: 0px;
-    right: 15px;
+    right: 15px; }
+  #functions #gen_js {
+    padding: 5px;
+    padding-bottom: 1px;
+    font-weight: bold;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    right: 16px; }
+  #functions #output_disp {
+    display: none;
     width: 400px;
     height: 150px; }
     #functions #output_disp .label {
@@ -736,6 +745,34 @@ footer {
   width: 300px;
   margin-left: -150px;
   text-align: center; }
+
+#js_code {
+  display: none;
+  background-color: white;
+  color: black;
+  padding: 1em; }
+
+#hide_js {
+  display: none;
+  position: fixed;
+  right: 15px;
+  bottom: 25px;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  font-size: 300%;
+  border: 1px solid black;
+  border-radius: 50px;
+  height: 22px;
+  opacity: 0.65;
+  cursor: pointer; }
+  #hide_js #close_js {
+    position: relative;
+    top: -10px; }
+
+#hide_js:hover {
+  opacity: 1; }
 
 #overlay {
   display: none;
