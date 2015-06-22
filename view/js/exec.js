@@ -629,7 +629,9 @@ $(function () {
             vars.append(v);
         }
         fdata.append(vars);
-        $("#stack").append(fdata);
+        var s = $("#stack");
+        s.append(fdata);
+        s[0].scrollTop = s[0].scrollHeight; // always scroll to bottom
 
         // setup the steps for this function call;
         var steps = [];

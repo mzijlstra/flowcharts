@@ -37,7 +37,7 @@ $(function () {
         var a = $("#alert");
         var o = $("#overlay");
         a.find(".msg").text(text);
-        a.find("button").click(function () {
+        var doClick = function () {
             if (click) {
                 click();
             }
@@ -45,7 +45,9 @@ $(function () {
             if ($("#prompt").css("display") !== "block") {
                 o.hide();
             }
-        });
+            a.off("click", doClick);
+        };
+        a.on("click", doClick);
         o.show();
         a.show();
     };
