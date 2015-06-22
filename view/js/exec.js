@@ -106,7 +106,8 @@ $(function () {
     };
 
     /**
-     * The function used to 'play', makes recursive call to itself with timeout
+     * The function used to 'play' (continuesly step) 
+     * makes recursive call to itself with timeout
      */
     wr.play = function () {
         if (wr.curfrm < 0 || wr.stack[wr.curfrm].steps.length === 0) {
@@ -146,7 +147,7 @@ $(function () {
 
     /**
      * Helper that sets the 'exec' function for the different statements 
-     * @param {Element} ins instructions element containing statemetns
+     * @param {Element} ins instructions element containing the statemetns
      */
     var makeExecutable = function (ins) {
         ins.find(".connection").each(function () {
@@ -487,7 +488,7 @@ $(function () {
          * Helper function put a return value in the place of a function call
          * @param {string} exp expression to modify
          * @param {string} fname name of the function call to replace
-         * @param {string} value what to replace it with 
+         * @param {string} value to replace the call with
          * @returns {string} modified expression
          */
         var replaceCall = function (exp, fname, value) {
