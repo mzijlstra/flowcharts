@@ -143,7 +143,7 @@ $(function () {
         }
 
         // check the resulting type
-        var result = typeof (data);
+        var result = typeof data;
         var match = false;
         if (result === 'object') {
             if (type === 'array' && data.length) {

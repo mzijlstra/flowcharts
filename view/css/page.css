@@ -164,6 +164,8 @@ div.variable.bottom .del {
     padding: 15px;
     display: inline-block;
     min-width: 13px; }
+  .assignment .io, .input .io, .output .io {
+    border-radius: 10px; }
   .assignment .exp, .input .exp, .output .exp {
     position: relative; }
     .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text] {
@@ -355,7 +357,6 @@ div.variable.bottom .del {
 .exec .executing .start,
 .exec .executing .stop,
 .exec div.statement span.executing,
-.exec .executing.statement > .input > .io,
 .exec .executing.statement > .output > .exp,
 .exec .executing.statement > .assignment > .exp,
 .exec .asgn.executing {
@@ -373,6 +374,12 @@ div.variable.bottom .del {
 .output .exec div.statement .executing.exp,
 .exec .params.executing {
   color: greenyellow; }
+
+.exec .executing.statement > .input > .io,
+.exec div.statement span.io.executing {
+  border-color: white;
+  background-color: white;
+  color: #336; }
 
 #stack .data tr.executing {
   background-color: white;
@@ -571,7 +578,8 @@ div#projects:hover #project_menu {
   left: 0px;
   width: 250px;
   top: 0px;
-  bottom: 0px; }
+  bottom: 0px;
+  overflow: auto; }
   #var_area .label {
     padding: 3px; }
   #var_area .variables {
@@ -581,14 +589,16 @@ div#projects:hover #project_menu {
   #var_area #stack {
     display: none; }
     #var_area #stack .frame {
-      padding-left: 10px; }
+      border-top: 1px solid white;
+      margin-top: 1px;
+      padding-left: 10px;
+      cursor: pointer; }
     #var_area #stack .flabel {
       font-size: 115%; }
     #var_area #stack table.data {
       border-collapse: collapse;
       width: 100%; }
     #var_area #stack table.data td {
-      border-bottom: 1px dashed white;
       border-top: 1px dashed white;
       padding-left: 10px; }
     #var_area #stack td.vname {
@@ -596,7 +606,8 @@ div#projects:hover #project_menu {
     #var_area #stack td.vdata {
       min-width: 100px; }
   #var_area #stack .frame.active {
-    font-weight: bold; }
+    font-weight: bold;
+    background-color: #556; }
 
 #functions {
   position: absolute;

@@ -36,7 +36,6 @@
 .exec .executing .start,
 .exec .executing .stop,
 .exec div.statement span.executing,  // input, output, and assingment
-.exec .executing.statement > .input > .io,
 .exec .executing.statement > .output > .exp, 
 .exec .executing.statement > .assignment > .exp, 
 .exec .asgn.executing
@@ -51,6 +50,14 @@
 {
     color: $exec;
 }
+.exec .executing.statement > .input > .io,
+.exec div.statement span.io.executing 
+{
+    border-color: $fg;
+    background-color: $fg;
+    color: $bg;
+}
+
 
 // during assignment the variable TR also gains 'executing'
 #stack .data tr.executing {

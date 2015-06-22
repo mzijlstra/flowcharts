@@ -124,7 +124,13 @@ $(function() {
         },
         "pause": {
             "name": "pause",
-            "playpause": toPlayState,
+            "playpause": function() {
+                toPlayState();
+                // make sure the correct frame is active 
+                $(".active").removeClass("active");
+                $("#instructions").children().last().addClass("active");
+                $("#stack").children().last().addClass("active");
+            },
             "reset": toEditState
         }
     };

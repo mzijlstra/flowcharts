@@ -24,7 +24,7 @@ $(function () {
     // Should I put this onto the global wr object? I only need it here
     var output = function (text, css) {
         var add = $("<div>");
-        if (typeof (text) === "string" && text[0] === '"') {
+        if (typeof text === "string" && text[0] === '"') {
             text = text.substr(1);
             text = text.substr(0, text.length - 1);
         }
@@ -190,9 +190,11 @@ $(function () {
                     setTimeout(function () {
                         asgn.addClass("eval");
                     }, delay * 500);
-                    
+
                     // continue playing (now that we have input)
-                    setTimeout(wr.play, delay * 1000 + 1); 
+                    if (wr.state.name === "play") {
+                        setTimeout(wr.play, delay * 1000 + 1);
+                    }
                 });
 
                 // second step, assign the input 
@@ -280,7 +282,7 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-                if (typeof (result) === "string") {
+                if (typeof result === "string") {
                     result = '"' + result + '"';
                 }
                 exp.text(result);
@@ -491,7 +493,7 @@ $(function () {
                 var exp = t.find(".exp");
                 exp.attr("exp", exp.text());
                 var result = wr.eval(exp.text(), frame.ctx);
-                if (typeof (result) === "string") {
+                if (typeof result === "string") {
                     result = '"' + result + '"';
                 }
                 exp.text(result);
@@ -590,7 +592,7 @@ $(function () {
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
                     var val = args[i];
-                    if (typeof (val) === "string") {
+                    if (typeof val === "string") {
                         val = '"' + val + '"';
                     }
                     ctx[name] = val;
@@ -600,17 +602,17 @@ $(function () {
 
         // create a copy of the instructions, make executable, and add to doc
         var ins = $("#ins_" + fname).clone()
-                .attr("id", "frame" + wr.curfrm)
+                .attr("id", "frameI" + wr.curfrm)
                 .addClass("instructions frame");
         makeExecutable(ins);
         $("#instructions").append(ins);
 
         // create the HTML view of the stack frame and add it to the document
-        var fdata = $("<div class='frame' id='frame" + wr.curfrm + "'>");
+        var fdata = $("<div class='frame' id='frameD" + wr.curfrm + "'>");
         var label = "<div class='flabel'>" + fname + "(";
         if (args) {
             for (var i = 0; i < args.length; i++) {
-                if (typeof (args[i] === "string")) {
+                if (typeof args[i] === "string") {
                     args[i] = '"' + args[i] + '"';
                 }
                 label += args[i] + ", ";
@@ -628,10 +630,20 @@ $(function () {
                     "id='f" + wr.curfrm + "_" + key + "'>");
             vars.append(v);
         }
+        // switch to, and look at other frames
+        fdata.click(function() {
+            if (wr.state.name !== "pause") {
+                $("#play_pause").click();
+            }
+            $(".active").removeClass("active");
+            var fnum = $(this).attr("id").match(/\d+/)[0];
+            $("#frameD" + fnum).addClass("active");
+            $("#frameI" + fnum).addClass("active");
+        });
         fdata.append(vars);
-        var s = $("#stack");
-        s.append(fdata);
-        s[0].scrollTop = s[0].scrollHeight; // always scroll to bottom
+        $("#stack").append(fdata);
+        var v = $("#var_area")[0];
+        v.scrollTop = v.scrollHeight; // always scroll to bottom
 
         // setup the steps for this function call;
         var steps = [];

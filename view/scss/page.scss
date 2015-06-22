@@ -200,6 +200,7 @@ div#projects:hover #project_menu {
     width: 250px;
     top: 0px;
     bottom: 0px;
+    overflow: auto;
 
     .label {
         padding: 3px;
@@ -215,7 +216,10 @@ div#projects:hover #project_menu {
         display: none;
 
         .frame {
+            border-top: $line $border;
+            margin-top: 1px;
             padding-left: 10px;
+            cursor: pointer;
         }
         .flabel {
             font-size: 115%;
@@ -225,7 +229,6 @@ div#projects:hover #project_menu {
             width: 100%;
         }
         table.data td {
-            border-bottom: $line dashed $fg;
             border-top: $line dashed $fg;
             padding-left: 10px;
         }
@@ -238,6 +241,7 @@ div#projects:hover #project_menu {
     }
     #stack .frame.active {
         font-weight: bold;
+        background-color: $hl;
     }
 }
 
