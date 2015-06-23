@@ -32,6 +32,7 @@
 
         <div id="workspace" class="edit">            
             <div id="var_area">
+                <div class="separator"></div>
                 <div id="variables">
                     <?php foreach ($funcs as $name => $fdata) : ?>
                         <div id="vars_<?= $name ?>" class="variables <?= $name == 'main' ? 'active' : '' ?>">

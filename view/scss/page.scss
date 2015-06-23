@@ -22,11 +22,25 @@ $size: 60px;
 @import 'flowchart';
 @import 'exec';
 
+// Included free font, to ensure the same look / width regardless of OS
+@font-face {
+    font-family: mono;
+    src: url('LiberationMono-Regular.ttf');
+}
+
 body {
-    font-family: monospace;
+    font-family: mono;
     font-size: 12px;
     color: $fg;
     background-color: $bg;
+}
+
+a {
+    color: $fg;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
 }
 
 input {
@@ -194,13 +208,47 @@ div#projects:hover #project_menu {
     }
 }
 
+// used to give corners to tabs (editing on top, exec on left)
+.cornerb {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 0px;
+    height: 0px;
+    border-right: 5px $hide;
+    border-top: 5px $border;                
+}
+
+.cornerw {
+    @extend .cornerb;
+    top: -6px;
+    left: -1px;
+    border-top: 5px solid $bg;                                
+}
+
 #var_area {
     position: absolute;
     left: 0px;
     width: 250px;
     top: 0px;
     bottom: 0px;
-    overflow: auto;
+    overflow-x: visible;
+    overflow-y: auto;
+    direction: rtl;
+    z-index: 1;
+
+    div {
+        direction: ltr;
+    }
+
+    .separator {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        width: 0px;
+        border-left: $line $border;       
+    }
 
     .label {
         padding: 3px;
@@ -216,12 +264,19 @@ div#projects:hover #project_menu {
         display: none;
 
         .frame {
-            border-top: $line $border;
-            margin-top: 1px;
-            padding-left: 10px;
+            position: relative;
+            border: $line $border;
+            margin-top: 2px;
+            margin-left: 2px;
+            background-color: $menu;
             cursor: pointer;
         }
+        .frame.active {
+            background-color: $bg;
+            border-right: none;
+        }
         .flabel {
+            padding-left: 10px;
             font-size: 115%;
         }
         table.data {
@@ -239,10 +294,6 @@ div#projects:hover #project_menu {
             min-width: 100px;
         }
     }
-    #stack .frame.active {
-        font-weight: bold;
-        background-color: $hl;
-    }
 }
 
 #functions {
@@ -251,7 +302,6 @@ div#projects:hover #project_menu {
     bottom: 0px;
     left: 250px;
     right: 0px;
-    border-left: $line $border;
 
     #fun-names { 
         z-index: 2;
@@ -282,23 +332,6 @@ div#projects:hover #project_menu {
             margin-right: -6px;
             margin-bottom: -2px;
             margin-top: 2px;
-
-            .cornerb {
-                position: absolute;
-                top: 0px;
-                left: 0px;
-                width: 0px;
-                height: 0px;
-                border-right: 5px $hide;
-                border-top: 5px $border;                
-            }
-
-            .cornerw {
-                @extend .cornerb;
-                top: -6px;
-                left: -1px;
-                border-top: 5px solid $bg;                                
-            }
 
             .rem {
                 position: absolute;
@@ -439,7 +472,7 @@ footer {
     height: 22px;
     opacity: 0.65;
     cursor: pointer;
-    
+
     #close_js {
         position: relative;
         top: -10px;

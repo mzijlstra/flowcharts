@@ -450,11 +450,13 @@ $(function () {
     // menu clicks trigger insertions based on id clicked
     ins_menu.click(function (event) {
         var t = $(event.target);
-        var toLoad = '#' + t.attr('id').substr(4);
-        wr.clicked.before(cloneBlock("#connection"))
-                .before(cloneBlock(toLoad));
+        var id = t.attr('id').substr(4);
+        if (id && id !== "menu") {
+            wr.clicked.before(cloneBlock("#connection"))
+                    .before(cloneBlock('#' + id));
 
-        postInsUpd();
+            postInsUpd();
+        }
     });
 
     // repopulate var select menu (asgn) on mouse enter

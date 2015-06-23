@@ -612,6 +612,9 @@ $(function () {
      */
     wr.doCall = function (fname, args) {
         wr.curfrm += 1;
+        if (wr.curfrm === wr.maxrec) {
+            throw "Maximum recursion depth reached";
+        }
 
         // find where we have to return to (if we're not main starting up)
         if (wr.curfrm !== 0) {
@@ -660,6 +663,7 @@ $(function () {
 
         // create the HTML view of the stack frame and add it to the document
         var fdata = $("<div class='frame' id='frameD" + wr.curfrm + "'>");
+        fdata.append("<span class='cornerb'><span class='cornerw'></span></span>");
         var label = "<div class='flabel'>" + fname + "(";
         if (args) {
             for (var i = 0; i < args.length; i++) {

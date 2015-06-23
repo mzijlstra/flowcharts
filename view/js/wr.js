@@ -18,6 +18,7 @@ $(function () {
     wr.stack = [];              // will hold call stack when executing (play)
     wr.state;                   // set by code in states.js [edit,play,pause]
     wr.playing;                 // will hold the timeout variable when playing
+    wr.maxrec = 250;            // maximum recursion depth
 
     /*
      * Functions in the wr namespace, implemented in exec.js
