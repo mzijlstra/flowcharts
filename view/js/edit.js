@@ -255,29 +255,27 @@ $(function () {
                 wr.curvars[newn] = elem;
 
                 // update instructions with old name to new name
-                $('span.var:contains(' + oldn + ')').text(function (i, s) {
-                    return s === oldn ? newn : s;
-                });
+                $('.active span.var:contains(' + oldn + ')').text(
+                        function (i, s) {
+                            return s === oldn ? newn : s;
+                        });
 
                 // update param name in signature
-                // TODO FIXME, there are clearly some bugs in this code
                 if (t.parent().hasClass("parameter")) {
-                    var type = t.parent().find(".type").text();
-                    var tn = type + " " + newn;
-                    var params = $(".active .start .params");
-                    var ptext = params.text();
-
-                    // if this is a new name
-                    if (oldn === "") {
-                        if (ptext === "") {
-                            params.text(tn);
+                    // rebuild the params string
+                    var str = "";
+                    $(".variables.active .parameter").each(function () {
+                        var t = $(this);
+                        var type = t.find(".type").text();
+                        var name = t.find("input").val();
+                        if (str === "") {
+                            str += type + " " + name;
                         } else {
-                            params.text(ptext + ", " + tn);
+                            str += ", " + type + " " + name;
                         }
-                    } else { // existing param
-                        params.text(ptext.replace(
-                                new RegExp(type + " " + oldn), tn));
-                    }
+                    });
+                    $(".active .start .params").text(str);
+
                     // also update the instruction signature on server
                     postInsUpd();
                 }
@@ -392,8 +390,7 @@ $(function () {
         var t = $(this);
         var name = t.children("input").val();
         var inuse = false;
-        var func = wr.curfun;
-        $("#ins_" + func + " .statement .var").each(function (i, o) {
+        $(".active .statement .var").each(function (i, o) {
             if (!inuse && $(o).text() === name) {
                 inuse = true;
                 t.addClass("inuse");
@@ -591,7 +588,7 @@ $(function () {
             return false; // don't show if we're executing
         }
         var exp = $(this).find(".exp")[0];
-        var type = $('#ins_' + wr.curfun).find('.start .type').text();
+        var type = $('.active .start .type').text();
         inputHere(exp, function (t) {
             wr.verifyType(t, type);
             return true;
@@ -620,7 +617,7 @@ $(function () {
             } else if (wr.functions[n]) {
                 wr.alert("Duplicate Function Name\n\n" +
                         "Please change the function name to keep it unique.");
-            } else if (wr.curfun[n]) {
+            } else if (wr.functions[wr.curfun][n]) {
                 // should we check for conflicts with variable names
                 // in all current functions?
                 wr.alert("Conflict found with variable name: " + n + "\n\n" +
