@@ -75,17 +75,12 @@ $(function () {
         p.find(".msg").text(text);
 
         var doClick = function () {
-            if (click) {
-                if (!click(i.val())) {
-                    p.hide();
-                    o.hide();
-                }
-            } else {
+            if (!click || !click(i.val())) {
                 p.hide();
                 o.hide();
+                i.val(""); // clear input
+                b.off("click", doClick);
             }
-            i.val(""); // clear input
-            b.off("click", doClick);
         };
         b.on("click", doClick);
 
