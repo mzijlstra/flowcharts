@@ -23,8 +23,8 @@
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
+                <div id="open_proj" class="menu_item">Show Projects</div>
                 <div id="new_proj" class="menu_item">New Project</div>
-                <div id="open_proj" class="menu_item">Open Project</div>
             </div>
         </div>
 
@@ -102,6 +102,13 @@
 
         <div id="js_code"><pre><code></code></pre></div>
         <div id="hide_js"><div id="close_js">&times;</div></div>
+        <div id="projects_disp">
+            <table id="project_data">
+                <caption>Projects:</caption>
+                <tr><th>Name</th><th>Created</th><th>Accessed</th><th>Del</th></tr>
+            </table>
+        </div>
+        <div id="hide_proj"><div id="close_proj">&times;</div></div>
         <div id="overlay"></div>
         
         <div id="prompt" class="popup">

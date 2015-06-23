@@ -20,15 +20,17 @@ $get_ctrl = array(
     "|/user/(\d+)|" => "UserCtrl@details",
     "|/logout|" => "UserCtrl@logout",
     "|/project$|" => "ProjectCtrl@getProjects",
+    "|/user/(\d+)/project$|" => "ProjectCtrl@getUserProjects",
     "|/project/(\d+)|" => "ProjectCtrl@getProject",
 );
 
 // Post requests that need a controller
 $post_ctrl = array(
     "|/login|" => "UserCtrl@login",
-    "|/project/(\d+)/(\w+)|" => "ProjectCtrl@addFunction",
-    "|/project/(\d+)|" => "ProjectCtrl@update",
-    "|/project/([^/]+)$|" => "ProjectCtrl@create",
+    "|/project/(\D[^/]+)$|" => "ProjectCtrl@create",
+    "|/project/(\d+)/rename$|" => "ProjectCtrl@rename",
+    "|/project/(\d+)/delete$|" => "ProjectCtrl@delete",
+    "|/project/(\d+)/add/(\w+)|" => "ProjectCtrl@addFunction",
     "|/function/(\d+)/vars|" => "ProjectCtrl@updVars",
     "|/function/(\d+)/ins|" => "ProjectCtrl@updIns",
     "|/function/(\d+)/rename|" => "ProjectCtrl@renameFunction",

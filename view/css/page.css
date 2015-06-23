@@ -463,8 +463,14 @@ input {
   color: white; }
 
 h1 {
+  position: relative;
   margin-left: 35px;
   margin-top: 0px; }
+  h1 input {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    min-width: 400px; }
 
 iframe {
   display: none !important; }
@@ -495,7 +501,7 @@ div#projects:hover #project_menu {
 #building_blocks {
   display: none; }
 
-#workspace, #js_code {
+#workspace, #js_code, #projects_disp {
   position: fixed;
   top: 40px;
   bottom: 20px;
@@ -773,20 +779,20 @@ footer {
   margin-left: -150px;
   text-align: center; }
 
-#js_code {
+#js_code, #projects_disp {
   display: none;
   background-color: #F0F0F0;
   color: black;
   padding: 1em; }
 
-#hide_js {
+#hide_js, #hide_proj {
   display: none;
   position: fixed;
   right: 15px;
   top: 45px;
   padding: 10px;
   background-color: black;
-  color: white;
+  color: #F0F0F0;
   font-weight: bold;
   font-size: 300%;
   border: 1px solid black;
@@ -794,12 +800,54 @@ footer {
   height: 22px;
   opacity: 0.65;
   cursor: pointer; }
-  #hide_js #close_js {
+  #hide_js #close_js, #hide_proj #close_js, #hide_proj #close_proj {
     position: relative;
-    top: -10px; }
+    bottom: 7px;
+    right: 1px; }
 
-#hide_js:hover {
+#hide_js:hover, #hide_proj:hover {
   opacity: 1; }
+
+#projects_disp {
+  border-left: 1px solid white;
+  background-color: #336;
+  color: white;
+  overflow: auto; }
+  #projects_disp table {
+    width: 100%;
+    border-collapse: collapse; }
+    #projects_disp table caption {
+      margin-top: 15px;
+      font-size: 175%;
+      font-weight: bold; }
+    #projects_disp table tr {
+      border-top: 1px solid white;
+      cursor: pointer; }
+    #projects_disp table tr:nth-child(even) {
+      background-color: #282858; }
+    #projects_disp table tr:first-child {
+      width: 50%; }
+    #projects_disp table th {
+      text-align: left;
+      color: #336;
+      background-color: white;
+      padding-left: 12px; }
+    #projects_disp table td {
+      padding: 12px; }
+    #projects_disp table td.pname {
+      width: 60%; }
+    #projects_disp table td.del_btn {
+      position: relative; }
+    #projects_disp table tr:hover td.del_btn .del {
+      display: block;
+      top: 8px; }
+
+#hide_proj {
+  background: radial-gradient(circle, #AAD 1%, white 57%, #282858 60%);
+  border: none;
+  opacity: 0.9; }
+  #hide_proj #close_proj {
+    color: #336; }
 
 #overlay {
   display: none;
@@ -834,25 +882,37 @@ footer {
     text-align: center;
     margin-top: 1em; }
 
+/*
 #project_list {
-  min-height: 200px;
-  margin: 5em; }
-  #project_list table {
-    width: 100%;
-    border-collapse: collapse; }
-    #project_list table .pname {
-      width: 50%; }
-    #project_list table .left {
-      text-align: left; }
-    #project_list table .center {
-      text-align: center; }
-    #project_list table td {
-      border: 1px solid white;
-      padding: 0.3em 1em; }
-    #project_list table .project:nth-child(odd) {
-      background-color: #282858; }
-    #project_list table .project:hover {
-      background-color: #556;
-      cursor: pointer; }
+    min-height: 200px;
+    margin: 5em;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        .pname {
+            width: 50%;
+        }
+        .left {
+            text-align: left;
+        }
+        .center {
+            text-align: center;
+        }
+        td {
+            border: $line $border;
+            padding: 0.3em 1em;
+        }
+        .project:nth-child(odd) {
+            background-color: $menu;
+        }
+        .project:hover {
+            background-color: $hl;
+            cursor: pointer;
+        }
+    }
+}
+*/
 
 /*# sourceMappingURL=page.css.map */

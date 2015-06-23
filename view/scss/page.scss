@@ -52,8 +52,16 @@ input {
 }
 
 h1 {
+    position: relative;
     margin-left: 35px;
     margin-top: 0px;
+    
+    input {
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        min-width: 400px;
+    }
 }
 
 // iframes will be used for sandboxed JS evaluation
@@ -464,7 +472,7 @@ footer {
     top: 45px;
     padding: 10px;
     background-color: black;
-    color: white;
+    color: #F0F0F0;
     font-weight: bold;
     font-size: 300%;
     border: 1px solid black;
@@ -475,12 +483,70 @@ footer {
 
     #close_js {
         position: relative;
-        top: -10px;
+        bottom: 7px;
+        right: 1px;
     }
 }
 #hide_js:hover{
     opacity: 1;
 }
+#projects_disp {
+    @extend #js_code;
+    border-left: $line $border;
+    background-color: $bg;; 
+    color: $fg;
+    overflow: auto;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        caption {
+            margin-top: 15px;
+            font-size: 175%;
+            font-weight: bold;
+        }
+        tr {
+            border-top: $line $border;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: $menu;
+        }
+        tr:first-child {
+            width: 50%;
+        }
+        th {
+            text-align: left;
+            color: $bg;
+            background-color: $fg;
+            padding-left: 12px;
+        }
+        td {
+            padding: 12px;
+        }
+        td.pname {
+            width: 60%;
+        }
+        td.del_btn {
+            position: relative;
+        }
+        tr:hover td.del_btn .del {
+            display: block;
+            top: 8px;
+        }
+    }
+}
+#hide_proj {
+    @extend #hide_js;
+    background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
+    border: none;
+    opacity: 0.9;
+    #close_proj {
+        @extend #close_js;
+        color: $bg;
+    }
+}
+
 #overlay {
     display: none;
     position: fixed;
@@ -521,7 +587,7 @@ footer {
         margin-top: 1em;
     }
 }
-
+/*
 #project_list {
     min-height: 200px;
     margin: 5em;
@@ -552,3 +618,4 @@ footer {
         }
     }
 }
+*/

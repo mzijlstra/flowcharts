@@ -26,7 +26,7 @@ class ProjectCtrl {
         return "wr.php";
     }
 
-    // GET /project$
+    // AJAX GET /project$
     public function getProjects() {
         global $VIEW_DATA;
 
@@ -34,12 +34,26 @@ class ProjectCtrl {
 
         // Retrieve all projects for this user
         $projects = $this->projectDao->all($uid);
-        $VIEW_DATA['data'] = $projects;
+        $VIEW_DATA['json'] = $projects;
 
-        return "projects.php";
+        return "json.php";
     }
 
-    // AJAX POST /project/([^/]+)$
+    // AJAX GET /user/(\d+)/project$
+    public function getUserProjects() {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+
+        $uid = $URI_PARAMS[1];
+
+        // Retrieve all projects for this user
+        $projects = $this->projectDao->all($uid);
+        $VIEW_DATA['json'] = $projects;
+
+        return "json.php";
+    }
+
+    // AJAX POST /project/(\D[^/]+)$
     public function create() {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -61,6 +75,24 @@ class ProjectCtrl {
         $VIEW_DATA['json'] = $pid;
         return "json.php";
     }
+
+    // AJAX POST /project/(\d+)/rename$
+    public function rename() {
+        global $URI_PARAMS;
+
+        $pid = $URI_PARAMS[1];
+        $name = filter_input(INPUT_POST, "name");
+        $this->projectDao->rename($pid, $name);
+    }
+    
+    // AJAX POST /project/(\d+)/delete
+    public function delete() {
+        global $URI_PARAMS;
+
+        $pid = $URI_PARAMS[1];
+        $this->projectDao->delete($pid);
+    }
+    
 
     // AJAX POST /project/(\d+)/(\w+)
     public function addFunction() {

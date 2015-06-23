@@ -121,7 +121,7 @@ $(function () {
 
         // dynamically resize field based on contents
         var resize = function () {
-            var length = i.val().length * 7 + 7;
+            var length = i.val().length * 8;
             if (length < 150) {
                 length = 150;
             }
@@ -774,7 +774,7 @@ $(function () {
                 var fid = $(".fun.active").attr("fid");
                 $.post("../function/" + fid + "/rename", {
                     "name": upd
-                });
+                }, shouldNotHaveData);
             }
             return true;
         });
@@ -798,7 +798,7 @@ $(function () {
 
             // AJAX delete function
             var fid = t.parent().attr("fid");
-            $.post("../function/" + fid + "/delete");
+            $.post("../function/" + fid + "/delete", shouldNotHaveData);
             return true;
         }
     });
@@ -810,11 +810,17 @@ $(function () {
     /********************************************************
      * Project related code
      ********************************************************/
+    // create a new project
     $("#new_proj").click(function () {
         wr.prompt("Project Name:", function (name) {
+            name = name.trim();
+            if (name.match(/^\d/)) {
+                wr.alert("Project name cannot start with a number.");
+                return true; // causes prompt to stay on screen
+            }
             $.ajax({
                 "type": "POST",
-                "url": encodeURIComponent(name),
+                "url": "add/" + encodeURIComponent(name),
                 "success": function (data) {
                     var pid = JSON.parse(data);
                     window.location.assign(pid);
@@ -823,9 +829,79 @@ $(function () {
         });
     });
 
+    // show the project list to switch to and/or delete projects
     $("#open_proj").click(function () {
-        window.location.assign("../project");
+        $("#projects_disp").show();
+        $("#hide_proj").show();
+        var pd = $("#project_data");
+        pd.find(".proj").detach();
+
+        var goto_proj = function () {
+            var tr = $(this);
+            window.location.assign("../project/" + tr.attr("pid"));
+        };
+
+        var del_proj = function (event) {
+            if (confirm("Are you sure you wish to delete this project?")) {
+                var tr = $(this).closest("tr");
+                $.post(tr.attr("pid") + "/delete", shouldNotHaveData);
+            }
+            event.stopPropagation(); // don't execute tr.click()
+        };
+
+        $.ajax({
+            "dataType": "json",
+            "url": "../project",
+            "success": function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var proj = data[i];
+                    var row = $("<tr pid='" + proj['id'] + "' class='proj'>");
+                    row.append("<td class='pname'>" + proj['name'] + "</td>");
+                    row.append("<td>" + proj['created'] + "</td>");
+                    row.append("<td>" + proj['accessed'] + "</td>");
+                    row.append("<td class='del_btn'><div class='del'>&times;"
+                            + "</div></td>");
+                    row.click(goto_proj);
+                    pd.append(row);
+                }
+                // always show at least 10 rows
+                if (data.length < 10) {
+                    for (var i = data.length; i < 10; i++) {
+                        pd.append("<tr class='proj'><td>&nbsp;</td><td>"
+                                + "</td><td></td><td></td></tr>");
+                    }
+                }
+
+                pd.find(".del").click(del_proj);
+            }
+        });
+
     });
+
+    // hidie the project list
+    $("#hide_proj").click(function () {
+        $("#projects_disp").hide();
+        $("#hide_proj").hide();
+    });
+
+    // rename a project
+    $("h1").click(function () {
+        var t = $(this);
+        t.attr("cur", t.text());
+        inputHere(this, function (input) {
+            var upd = input.val().trim();
+            if (!upd.match(/^\D/)) {
+                wr.alert("Project name cannot start with a number");
+                return false;
+            } else if (upd !== t.attr("cur")) {
+                $.post(t.attr("pid") + "/rename", {
+                    "name": upd
+                }, shouldNotHaveData);
+            }
+            return true;
+        });
+    });
+
 
 
 

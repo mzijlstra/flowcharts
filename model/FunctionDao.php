@@ -12,7 +12,7 @@ class FunctionDao {
     public function all($pid) {
         $stmt = $this->db->prepare(
                 "SELECT id, name, instructions, variables FROM `function` "
-                . "WHERE project_id = :pid ");
+                . "WHERE project_id = :pid AND active = 1");
         $stmt->execute(array("pid" => $pid));
 
         $funcs = array();
@@ -63,7 +63,8 @@ class FunctionDao {
     }
 
     public function delete($fid) {
-        $stmt = $this->db->prepare("DELETE FROM `function` WHERE id = :fid");
+        $stmt = $this->db->prepare("UPDATE `function` SET active = 0 "
+                . " WHERE id = :fid");
         $stmt->execute(array("fid" => $fid));
     }
 }
