@@ -541,6 +541,8 @@ footer {
     background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
     border: none;
     opacity: 0.9;
+    left: 20px;
+    right: initial;
     #close_proj {
         @extend #close_js;
         color: $bg;
@@ -587,35 +589,3 @@ footer {
         margin-top: 1em;
     }
 }
-/*
-#project_list {
-    min-height: 200px;
-    margin: 5em;
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-
-        .pname {
-            width: 50%;
-        }
-        .left {
-            text-align: left;
-        }
-        .center {
-            text-align: center;
-        }
-        td {
-            border: $line $border;
-            padding: 0.3em 1em;
-        }
-        .project:nth-child(odd) {
-            background-color: $menu;
-        }
-        .project:hover {
-            background-color: $hl;
-            cursor: pointer;
-        }
-    }
-}
-*/

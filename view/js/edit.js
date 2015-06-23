@@ -875,7 +875,6 @@ $(function () {
                 pd.find(".del").click(del_proj);
             }
         });
-
     });
 
     // hidie the project list

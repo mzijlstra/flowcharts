@@ -125,7 +125,7 @@ class UserCtrl {
         $this->userDao->update($first, $last, $email, $type, $actv, 
                 $uid, $pass);
 
-        return "Location: user/$uid";
+        return "Location: $uid";
     }
 
 }

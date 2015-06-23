@@ -845,7 +845,9 @@ footer {
 #hide_proj {
   background: radial-gradient(circle, #AAD 1%, white 57%, #282858 60%);
   border: none;
-  opacity: 0.9; }
+  opacity: 0.9;
+  left: 20px;
+  right: initial; }
   #hide_proj #close_proj {
     color: #336; }
 
@@ -881,38 +883,5 @@ footer {
   .popup .center {
     text-align: center;
     margin-top: 1em; }
-
-/*
-#project_list {
-    min-height: 200px;
-    margin: 5em;
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-
-        .pname {
-            width: 50%;
-        }
-        .left {
-            text-align: left;
-        }
-        .center {
-            text-align: center;
-        }
-        td {
-            border: $line $border;
-            padding: 0.3em 1em;
-        }
-        .project:nth-child(odd) {
-            background-color: $menu;
-        }
-        .project:hover {
-            background-color: $hl;
-            cursor: pointer;
-        }
-    }
-}
-*/
 
 /*# sourceMappingURL=page.css.map */

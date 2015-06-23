@@ -8,14 +8,14 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title>Users</title>
-        <script src="../js/jquery-2.1.1.js"></script>
+        <script src="jquery-2.1.1.js"></script>
         <script>
             $(function() {
                 "use strict";
                 $("tr").click(function() {
                     var t = $(this);
                     var uid = $(t.children("td")[0]).text();
-                    location.href = "userDetails.php?uid=" + uid;
+                    location.href = "user/" + uid;
                 });
             });
         </script>

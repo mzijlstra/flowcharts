@@ -21,7 +21,7 @@
     <body>
         <h1>User Details:</h1>
         <div class="fields">
-            <form method="post" action="user<?= $user ? "/{$user['id']}" : "" ?>">
+            <form method="post">
                 <?php if ($user) : ?>
                     <input type='hidden' name='uid' value='<?= $user['id'] ?>' />
                 <?php endif; ?>
@@ -43,7 +43,8 @@
                 <span>Type:</span>
                 <select name="type">
                     <option>student</option>
-                    <option>admin</option>
+                    <option <?= $user && $user['type'] === "admin" ? 'selected="selected"' : '' ?>>
+                        admin</option>
                 </select> <br />
 
                 <span>Active:</span>
@@ -51,6 +52,7 @@
 
                 <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/>
             </form>
+            <a href="../user"><button>Back</button></a>
         </div>
     </body>
 </html>
