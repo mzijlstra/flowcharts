@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <title>Flow Chart</title>
         <link rel="stylesheet" href="page.css" type="text/css" />
-        <link rel="stylesheet" href="default.css" type="text/css" />
+        <link rel="stylesheet" href="hljs-default.css" type="text/css" />
         <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
         <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
         <script src="jquery-2.1.1.js" ></script>
