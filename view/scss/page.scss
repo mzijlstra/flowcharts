@@ -420,7 +420,7 @@ footer {
 #js_code {
     @extend #workspace;
     display: none;
-    background-color: white; 
+    background-color: #F0F0F0; 
     color: black;
     padding: 1em;
 }
@@ -428,7 +428,7 @@ footer {
     display: none;
     position: fixed;
     right: 15px;
-    bottom: 25px;
+    top: 45px;
     padding: 10px;
     background-color: black;
     color: white;

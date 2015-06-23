@@ -268,10 +268,12 @@ $(function () {
                         var t = $(this);
                         var type = t.find(".type").text();
                         var name = t.find("input").val();
-                        if (str === "") {
-                            str += type + " " + name;
-                        } else {
-                            str += ", " + type + " " + name;
+                        if (name !== "") {
+                            if (str === "") {
+                                str += type + " " + name;
+                            } else {
+                                str += ", " + type + " " + name;
+                            }
                         }
                     });
                     $(".active .start .params").text(str);
@@ -891,7 +893,9 @@ $(function () {
                     c += t.find(".exp").text() + ";\n";
                 } else if (t.children(".if").length) {
                     c += "if (" + t.find(".exp").first().text() + ") {\n";
-                    t.find(".right").first().children(".statement").each(
+                    t.children(".if").children("table").children("tbody ")
+                            .children("tr").children("td.right")
+                            .children(".statement").each(
                             function () {
                                 c += addInstruction(this, indent + 1);
                             });
@@ -936,9 +940,7 @@ $(function () {
         // insert and show generated code
         var here = $("#js_code > pre > code");
         here.empty().text(program);
-        here.each(function () {
-            hljs.highlightBlock(this);
-        });
+        hljs.highlightBlock(here[0]);
         $("#js_code").show();
         $("#hide_js").show();
     });
