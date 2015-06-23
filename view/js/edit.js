@@ -260,6 +260,7 @@ $(function () {
                 });
 
                 // update param name in signature
+                // TODO FIXME, there are clearly some bugs in this code
                 if (t.parent().hasClass("parameter")) {
                     var type = t.parent().find(".type").text();
                     var tn = type + " " + newn;
@@ -286,7 +287,8 @@ $(function () {
                     var p = t.parent();
                     p.removeClass("bottom");
                     if (t.parent().hasClass("parameter")) {
-                        p.after(cloneBlock("#declaration").addClass("parameter"));
+                        p.after(cloneBlock("#declaration")
+                                .addClass("parameter"));
                     } else {
                         p.after(cloneBlock("#declaration"));
                     }
@@ -632,7 +634,8 @@ $(function () {
         // helper to process the name 
         var useName = function (n) {
             // append a new instructions area
-            var idata = $("<div id='ins_" + n + "' class='instructions'></div>");
+            var idata = $("<div id='ins_" + n
+                    + "' class='instructions'></div>");
             idata.append(cloneBlock("#start"))
                     .append(cloneBlock("#connection"))
                     .append(cloneBlock("#return"));
