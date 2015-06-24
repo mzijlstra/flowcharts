@@ -68,7 +68,7 @@ class UserCtrl {
         return "users.php";
     }
 
-    // GET /user/(\d+)
+    // GET /user/(\d+)$
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -100,6 +100,8 @@ class UserCtrl {
         }
         $uid = $this->userDao->insert($first, $last, $email, $hash, $type, 
                 $actv);
+        
+        // TODO also create the users's first project!
         return "Location: user/$uid";
     }
 

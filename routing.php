@@ -17,11 +17,12 @@ $view_ctrl = array(
 // Get requests that need a controller
 $get_ctrl = array(
     "|/user$|" => "UserCtrl@all",
-    "|/user/(\d+)|" => "UserCtrl@details",
+    "|/user/(\d+)$|" => "UserCtrl@details",
+    "|/user/(\d+)/project$|" => "ProjectCtrl@getUserProjects",
+    "|/user/(\d+)/project/(\d+)$|" => "ProjectCtrl@getProject",
     "|/logout|" => "UserCtrl@logout",
     "|/project$|" => "ProjectCtrl@getProjects",
-    "|/user/(\d+)/project$|" => "ProjectCtrl@getUserProjects",
-    "|/project/(\d+)|" => "ProjectCtrl@getProject",
+    "|/project/(\d+)$|" => "ProjectCtrl@getProject",
 );
 
 // Post requests that need a controller
@@ -36,7 +37,7 @@ $post_ctrl = array(
     "|/function/(\d+)/rename|" => "ProjectCtrl@renameFunction",
     "|/function/(\d+)/delete|" => "ProjectCtrl@deleteFunction",
     "|/user$|" => "UserCtrl@create",
-    "|/user/(\d+)|" => "UserCtrl@update",
+    "|/user/(\d+)$|" => "UserCtrl@update",
 );
 
 /* * **************************************

@@ -10,12 +10,44 @@ and open the template in the editor.
         <title>Users</title>
         <script src="jquery-2.1.1.js"></script>
         <script>
-            $(function() {
+            $(function () {
                 "use strict";
-                $("tr").click(function() {
+
+                $("tr.user").click(function () {
                     var t = $(this);
+                    if (t.next().length && !t.next().hasClass("user")) {
+                        return; // projects already shown
+                    }
+
                     var uid = $(t.children("td")[0]).text();
-                    location.href = "user/" + uid;
+                    var nextrow = $("<tr><td colspan='8'></td></tr>");
+                    nextrow.find("td").append("<table></table>");
+                    var container = nextrow.find("table");
+                    container.append("<tr><th>Name</th><th>Created</th><th>Accessed</th></tr>");
+
+                    $.ajax({
+                        "dataType": "json",
+                        "url": "user/" + uid + "/project",
+                        "success": function (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                var proj = data[i];
+                                var row = $("<tr pid='" + proj['id'] + "' class='proj'>");
+                                row.append("<td class='pname'>" + proj['name'] + "</td>");
+                                row.append("<td>" + proj['created'] + "</td>");
+                                row.append("<td>" + proj['accessed'] + "</td>");
+                                row.click(function () {
+                                    var tr = $(this);
+                                    window.location.assign("user/" + uid
+                                            + "/project/" + tr.attr("pid"));
+                                });
+                                container.append(row);
+                            }
+                            t.after(nextrow);
+                        }
+                    });
+                });
+                $(".add button").click(function () {
+                    window.location.assign("user/add");
                 });
             });
         </script>
@@ -68,7 +100,7 @@ and open the template in the editor.
                 <th>active</th>
             </tr>
             <?php foreach ($users as $user) : ?>
-                <tr>
+                <tr class="user">
                     <td><?= $user['id'] ?></td>
                     <td><?= $user['firstname'] ?></td>
                     <td><?= $user['lastname'] ?></td>
@@ -76,6 +108,10 @@ and open the template in the editor.
                     <td><?= $user['created'] ?></td>
                     <td><?= $user['accessed'] ?></td>
                     <td><?= $user['active'] ?></td>
+                    <td><a href="user/<?= $user['id'] ?>">
+                            <button>Edit</button>
+                        </a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>

@@ -9,11 +9,13 @@ class ProjectDao {
 
     public $db;
 
-    public function get($pid) {
-        $access = $this->db->prepare(
-                "UPDATE `project` SET accessed = NOW() "
-                . "WHERE id = :pid AND active = 1");
-        $access->execute(array("pid" => $pid));
+    public function get($pid, $uid, $type = "student") {
+        if ($type === "student") {
+            $access = $this->db->prepare(
+                    "UPDATE `project` SET accessed = NOW() "
+                    . "WHERE id = :pid AND user_id = :uid AND active = 1");
+            $access->execute(array("pid" => $pid, "uid" => $uid));
+        }
 
         $stmt = $this->db->prepare(
                 "SELECT * FROM `project` WHERE id = :pid AND active = 1");

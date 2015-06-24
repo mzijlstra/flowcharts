@@ -11,15 +11,40 @@ class ProjectCtrl {
     public $projectDao;
     public $functionDao;
 
-    // GET /project/(\d+)
+    // GET /project/(\d+)$
+    // GET /user/(\d+)/project/(\d+)$
     public function getProject() {
+        // TODO FIXME, make sure the user is allowed to do this
         global $URI_PARAMS;
         global $VIEW_DATA;
 
+        $user = $_SESSION['user'];
+        $uid = $user['id'];
         $pid = $URI_PARAMS[1];
+        $type = "student";
+
+        if (count($URI_PARAMS) === 3) {
+            if ($user['type'] === 'admin') {
+                $uid = $URI_PARAMS[1];
+                $pid = $URI_PARAMS[2];
+                $type = "admin";
+            } else {
+                // Then show login page
+                $_SESSION['error'] = "Admin Access Required";
+                header("Location: ${MY_BASE}/login");
+                exit();
+            }
+        }
+
+        $proj = $this->projectDao->get($pid, $uid, $type);
+        if (!$proj) {
+            // clearly uid did not match
+            $_SESSION['error'] = "Incorrect Username for Requested Project";
+            header("Location: ${MY_BASE}/login");
+            exit();
+        }
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
 
-        $proj = $this->projectDao->get($pid);
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
 
@@ -84,7 +109,7 @@ class ProjectCtrl {
         $name = filter_input(INPUT_POST, "name");
         $this->projectDao->rename($pid, $name);
     }
-    
+
     // AJAX POST /project/(\d+)/delete
     public function delete() {
         global $URI_PARAMS;
@@ -92,7 +117,6 @@ class ProjectCtrl {
         $pid = $URI_PARAMS[1];
         $this->projectDao->delete($pid);
     }
-    
 
     // AJAX POST /project/(\d+)/(\w+)
     public function addFunction() {

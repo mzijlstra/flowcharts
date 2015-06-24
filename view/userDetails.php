@@ -21,18 +21,12 @@
     <body>
         <h1>User Details:</h1>
         <div class="fields">
-            <form method="post">
-                <?php if ($user) : ?>
-                    <input type='hidden' name='uid' value='<?= $user['id'] ?>' />
-                <?php endif; ?>
+            <form method="post" action="<?= $user ? $user['id'] : "../user"?>">
                 <span>First Name:</span>
                 <input type="text" name="first" value="<?= $user ? $user['firstname'] : "" ?>" /> <br />
 
                 <span>Last Name:</span>
                 <input type="text" name="last"  value="<?= $user ? $user['lastname'] : "" ?>"/> <br />
-
-                <span>Student ID:</span>
-                <input type="text" name="sid"  value="<?= $user ? $user['studentID'] : "" ?>"/> <br />
 
                 <span>Email:</span>
                 <input type="text" name="email"  value="<?= $user ? $user['email'] : "" ?>"/> <br />
