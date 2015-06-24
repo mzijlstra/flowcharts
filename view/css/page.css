@@ -734,7 +734,7 @@ div#projects:hover #project_menu {
     right: 16px; }
   #functions #output_disp {
     display: none;
-    width: 400px;
+    width: 403px;
     height: 150px; }
     #functions #output_disp .label {
       font-weight: bold;
@@ -783,7 +783,8 @@ footer {
   display: none;
   background-color: #F0F0F0;
   color: black;
-  padding: 1em; }
+  padding: 1em;
+  z-index: 10; }
 
 #hide_js, #hide_proj {
   display: none;
@@ -798,8 +799,10 @@ footer {
   border: 1px solid black;
   border-radius: 50px;
   height: 22px;
+  width: 22px;
   opacity: 0.65;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 10; }
   #hide_js #close_js, #hide_proj #close_js, #hide_proj #close_proj {
     position: relative;
     bottom: 7px;
@@ -860,7 +863,8 @@ footer {
   bottom: 0px;
   right: 0px;
   background-color: #bbb;
-  opacity: 0.4; }
+  opacity: 0.4;
+  z-index: 20; }
 
 .popup {
   display: none;
@@ -872,7 +876,8 @@ footer {
   margin-left: -190px;
   border: 2px solid white;
   padding: 2em;
-  background-color: #336; }
+  background-color: #336;
+  z-index: 21; }
   .popup .popup_content {
     min-height: 65px; }
     .popup .popup_content .msg {

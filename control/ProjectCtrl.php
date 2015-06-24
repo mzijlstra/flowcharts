@@ -14,34 +14,31 @@ class ProjectCtrl {
     // GET /project/(\d+)$
     // GET /user/(\d+)/project/(\d+)$
     public function getProject() {
-        // TODO FIXME, make sure the user is allowed to do this
         global $URI_PARAMS;
         global $VIEW_DATA;
 
         $user = $_SESSION['user'];
         $uid = $user['id'];
         $pid = $URI_PARAMS[1];
-        $type = "student";
+        $record = true;
 
         if (count($URI_PARAMS) === 3) {
             if ($user['type'] === 'admin') {
                 $uid = $URI_PARAMS[1];
                 $pid = $URI_PARAMS[2];
-                $type = "admin";
+                $record = false;
             } else {
-                // Then show login page
-                $_SESSION['error'] = "Admin Access Required";
-                header("Location: ${MY_BASE}/login");
-                exit();
+                // Show access denied
+                http_response_code(403); 
+                return "error/403.php";
             }
         }
 
-        $proj = $this->projectDao->get($pid, $uid, $type);
+        $proj = $this->projectDao->get($pid, $uid, $record);
         if (!$proj) {
-            // clearly uid did not match
-            $_SESSION['error'] = "Incorrect Username for Requested Project";
-            header("Location: ${MY_BASE}/login");
-            exit();
+            // clearly uid did not match, show access denied
+            http_response_code(403);
+            return "error/403.php";
         }
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
 
@@ -78,7 +75,7 @@ class ProjectCtrl {
         return "json.php";
     }
 
-    // AJAX POST /project/(\D[^/]+)$
+    // AJAX POST /project/add/(\D[^/]+)$
     public function create() {
         global $URI_PARAMS;
         global $VIEW_DATA;

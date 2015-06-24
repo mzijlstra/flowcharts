@@ -590,11 +590,13 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            output("-Execution complete-",
+                            output("- Execution complete, click edit or play "
+                                    + "to continue. -",
                                     {"color": "greenyellow"});
                             frame.data.detach();
                             wr.stack.pop();
                             wr.curfrm -= 1;
+                            $("#play_pause").click();
                             return true; // stops execution
                         }
                     });

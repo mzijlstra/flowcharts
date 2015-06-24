@@ -10,7 +10,8 @@ $sec = array(
     "|GET@/login|" => "none",
     "|GET@/logout|" => "none",
     "|POST@/login|" => "none",
-    "|GET@/wr|" => "user",
+    "|GET@/$|" => "user",
+    "|GET@/project|" => "user",
     "|POST@/project|" => "user",
     "|POST@/function|" => "user",
     "|GET@/user|" => "admin",
@@ -59,6 +60,7 @@ switch ($my_policy) {
         isLoggedIn();
         if ($_SESSION['user']['type'] !== 'admin') {
             http_response_code(403);
+            require "view/error/403.php";
             exit();
         }
 }

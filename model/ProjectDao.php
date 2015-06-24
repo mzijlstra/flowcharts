@@ -9,8 +9,8 @@ class ProjectDao {
 
     public $db;
 
-    public function get($pid, $uid, $type = "student") {
-        if ($type === "student") {
+    public function get($pid, $uid, $record = true) {
+        if ($record) {
             $access = $this->db->prepare(
                     "UPDATE `project` SET accessed = NOW() "
                     . "WHERE id = :pid AND user_id = :uid AND active = 1");
@@ -18,8 +18,10 @@ class ProjectDao {
         }
 
         $stmt = $this->db->prepare(
-                "SELECT * FROM `project` WHERE id = :pid AND active = 1");
-        $stmt->execute(array("pid" => $pid));
+                "SELECT * FROM `project` "
+                . " WHERE id = :pid AND user_id = :uid"
+                . " AND active = 1");
+        $stmt->execute(array("pid" => $pid, "uid" => $uid));
         return $stmt->fetch();
     }
 

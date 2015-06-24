@@ -69,6 +69,7 @@ class Context {
             $this->userCtrl = new UserCtrl();
             $this->userCtrl->userDao = $this->getUserDao();
             $this->userCtrl->projectDao = $this->getProjectDao();
+            $this->userCtrl->functionDao = $this->getFunctionDao();
         }
         return $this->userCtrl;
     }

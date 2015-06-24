@@ -399,7 +399,7 @@ div#projects:hover #project_menu {
     }
     #output_disp {
         display: none;
-        width: 400px;
+        width: 403px; // 55 characters wide
         height: 150px;
 
         .label {
@@ -464,6 +464,7 @@ footer {
     background-color: #F0F0F0; 
     color: black;
     padding: 1em;
+    z-index: 10;
 }
 #hide_js {
     display: none;
@@ -478,8 +479,10 @@ footer {
     border: 1px solid black;
     border-radius: 50px;
     height: 22px;
+    width: 22px;
     opacity: 0.65;
     cursor: pointer;
+    z-index: 10;
 
     #close_js {
         position: relative;
@@ -559,6 +562,7 @@ footer {
     right: 0px;
     background-color: #bbb;
     opacity: 0.4;
+    z-index: 20;
 }
 
 .popup {
@@ -572,6 +576,7 @@ footer {
     border: 2*$line $border;
     padding: 2em;
     background-color: $bg;
+    z-index: 21;
 
     .popup_content {
         min-height: 65px;

@@ -6,9 +6,11 @@
  * @author mzijlstra 11/14/2014
  */
 class UserCtrl {
+
     // set by context on creation
     public $userDao;
     public $projectDao;
+    public $functionDao;
 
     // POST /login
     public function login() {
@@ -60,7 +62,7 @@ class UserCtrl {
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
-    
+
     // GET /user
     public function all() {
         global $VIEW_DATA;
@@ -79,7 +81,7 @@ class UserCtrl {
         $VIEW_DATA['uid'] = $uid;
         return "userDetails.php";
     }
-    
+
     // POST /user
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
@@ -98,10 +100,19 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $uid = $this->userDao->insert($first, $last, $email, $hash, $type, 
-                $actv);
-        
-        // TODO also create the users's first project!
+        try {
+            $this->projectDao->db->beginTransaction();
+
+            $uid = $this->userDao->insert($first, $last, $email, $hash, $type, $actv);
+            $pid = $this->projectDao->create("First Project", $uid);
+            $this->functionDao->createMain($pid);
+
+            $this->projectDao->db->commit();
+        } catch (PDOException $e) {
+            $this->projectDao->db->rollBack();
+            throw $e;
+        }
+
         return "Location: user/$uid";
     }
 
@@ -124,8 +135,7 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $this->userDao->update($first, $last, $email, $type, $actv, 
-                $uid, $pass);
+        $this->userDao->update($first, $last, $email, $type, $actv, $uid, $pass);
 
         return "Location: $uid";
     }

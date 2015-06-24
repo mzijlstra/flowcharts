@@ -114,22 +114,23 @@ function matchUriToCtrl($ctrls) {
     }
     // page not found (security mapping exists, but not ctrl mapping)
     http_response_code(404);
+    require "view/error/404.php";
     exit();
 }
 
 function invokeCtrlMethod($class, $method) {
-    $context = new Context();
-    $getControler = new ReflectionMethod("Context", "get" . $class);
-    $controler = $getControler->invoke($context);
-    $doMethod = new ReflectionMethod($class, $method);
 
     try {
+        $context = new Context();
+        $getControler = new ReflectionMethod("Context", "get" . $class);
+        $controler = $getControler->invoke($context);
+        $doMethod = new ReflectionMethod($class, $method);
         return $doMethod->invoke($controler, $method);
     } catch (Exception $e) {
         // Perhaps have some user setting for debug mode
         error_log($e->getMessage());
-        http_response_code(500);
+        http_response_code(500); // Does not work, not sure why we don't get here
+        require "view/error/500.php";
         exit();
     }
 }
-

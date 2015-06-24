@@ -657,7 +657,7 @@ $(function () {
             var pid = $("h1").attr("pid");
             $.ajax({
                 "type": "POST",
-                "url": pid + "/" + n,
+                "url": pid + "/add/" + n,
                 "data": {"idata": idata.html(), "vdata": vdata.html()},
                 "dataType": "json",
                 "success": function (fid) {
@@ -820,7 +820,7 @@ $(function () {
             }
             $.ajax({
                 "type": "POST",
-                "url": "add/" + encodeURIComponent(name),
+                "url": encodeURIComponent(name),
                 "success": function (data) {
                     var pid = JSON.parse(data);
                     window.location.assign(pid);
