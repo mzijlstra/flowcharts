@@ -22,7 +22,7 @@ $(function () {
      * @param {type} css
      */
     // Should I put this onto the global wr object? I only need it here
-    var output = function (text, css) {
+    var iolog = function (text, css) {
         var add = $("<div>");
         if (typeof text === "string" && text[0] === '"') {
             text = text.substr(1);
@@ -100,7 +100,7 @@ $(function () {
             return res;
         } catch (exception) {
             $(".executing").addClass("exp_error");
-            output("Exception: " + exception, {"color": "red"});
+            iolog("Exception: " + exception, {"color": "red"});
             return false;
         }
     };
@@ -184,6 +184,10 @@ $(function () {
                 var delay = parseFloat($("#delay").text());
                 var input = null;
                 wr.prompt("Please enter input:", function (inp) {
+                    iolog("IN : " + '"' + inp + '"', {
+                        "font-weight": "bold", // TODO wish I could set class
+                        "background-color": "#282858" 
+                    }); 
                     input = '"' + inp + '"'; // input is always a string
                     io.text(input);
                     io.addClass("eval");
@@ -254,7 +258,7 @@ $(function () {
                         var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
-                        output(result);
+                        iolog("OUT: " + result);
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
@@ -590,7 +594,7 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            output("- Execution complete, click edit or play "
+                            iolog("- Execution complete, click edit or play "
                                     + "to continue. -",
                                     {"color": "greenyellow"});
                             frame.data.detach();

@@ -442,6 +442,9 @@ div.variable.bottom .del {
 @font-face {
   font-family: mono;
   src: url("LiberationMono-Regular.ttf"); }
+@font-face {
+  font-family: mono-bold;
+  src: url("LiberationMono-Bold.ttf"); }
 body {
   font-family: mono;
   font-size: 12px;

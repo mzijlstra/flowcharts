@@ -10,7 +10,7 @@ body {
 }
 .central {
     position: absolute;
-    top: 40%;
+    top: 25%;
     left: 50%;
     width: 400px;
     margin-left: -200px;

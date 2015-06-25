@@ -93,7 +93,7 @@
 
                 <div id="gen_js" alt="Generate JavaScript">JS</div>
                 <div id="output_disp">
-                    <div class="label">OUTPUT</div>
+                    <div class="label">INPUT/OUTPUT</div>
                     <div id="out"> 
                     </div>
                 </div>
