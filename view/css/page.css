@@ -442,9 +442,6 @@ div.variable.bottom .del {
 @font-face {
   font-family: mono;
   src: url("LiberationMono-Regular.ttf"); }
-@font-face {
-  font-family: mono-bold;
-  src: url("LiberationMono-Bold.ttf"); }
 body {
   font-family: mono;
   font-size: 12px;
@@ -457,6 +454,11 @@ a {
 
 a:hover {
   text-decoration: underline; }
+
+#validate {
+  position: fixed;
+  bottom: 0px;
+  right: 0px; }
 
 input {
   font-family: inherit;

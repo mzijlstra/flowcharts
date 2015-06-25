@@ -125,6 +125,13 @@
             <div class="center"><button>OK</button></div>
         </div>
 
+        <div id="validate">
+            <a href="http://mumstudents.org/unicorn/check?ucn_uri=referer&ucn_task=custom&tests=markup-validator">
+                HTML5</a>
+            <a href="http://mumstudents.org/unicorn/check?ucn_uri=referer&ucn_task=custom&tests=css-validator&profile=css3">
+                CSS3</a>
+            <a href="http://mumstudents.org/jscheck/referer.php">JSLint</a>
+        </div>
         <footer>Web-Raptor</footer>
 
         <div id="ins_menu" class="menu">
