@@ -29,11 +29,11 @@ $(function () {
                 }
             });
         });
-        wr.curvars = wr.functions['main'];
-    })();
+        wr.curvars = wr.functions.main;
+    }());
 
     // Setup AJAX Error Handling
-    $(document).ajaxError(function (e) {
+    $(document).ajaxError(function () {
         // due to the seriousness of the situation I'll use a real alert
         alert("Network Error -- please check your connection and try again.");
     });
@@ -192,7 +192,8 @@ $(function () {
     $(".variable .var").keydown(function (event) {
         if (event.which === 32) {
             return false;
-        } else if (event.which === 13) {
+        }
+        if (event.which === 13) {
             $(event.target).blur();
         }
     });
@@ -231,74 +232,75 @@ $(function () {
                 t.val(t.attr("cur"));
                 t.focus();
                 return false;
-            } else if (wr.functions[t.val()]) {
+            }
+            if (wr.functions[t.val()]) {
                 wr.alert("Conflict with function name: " + t.val() + "\n\n" +
                         "Please change your variable name to keep it unique");
                 t.val(t.attr("cur"));
                 t.focus();
                 return false;
-            } else {
-                var oldn = t.attr('cur');
-                var newn = t.val();
-                var elem = this;
-
-                // set value attribute to newn 
-                // otherwise .html() doesn't take it on postVarUpd
-                t.attr("value", t.val());
-
-                // remove old name from our vars 
-                if (oldn !== "" && wr.curvars[oldn] === elem) {
-                    delete wr.curvars[oldn];
-                }
-
-                // add new name to our vars 
-                wr.curvars[newn] = elem;
-
-                // update instructions with old name to new name
-                $('.active span.var:contains(' + oldn + ')').text(
-                        function (i, s) {
-                            return s === oldn ? newn : s;
-                        });
-
-                // update param name in signature
-                if (t.parent().hasClass("parameter")) {
-                    // rebuild the params string
-                    var str = "";
-                    $(".variables.active .parameter").each(function () {
-                        var t = $(this);
-                        var type = t.find(".type").text();
-                        var name = t.find("input").val();
-                        if (name !== "") {
-                            if (str === "") {
-                                str += type + " " + name;
-                            } else {
-                                str += ", " + type + " " + name;
-                            }
-                        }
-                    });
-                    $(".active .start .params").text(str);
-
-                    // also update the instruction signature on server
-                    postInsUpd();
-                }
-
-                // append another declration field
-                if (t.parent().hasClass("bottom")) {
-                    var p = t.parent();
-                    p.removeClass("bottom");
-                    if (t.parent().hasClass("parameter")) {
-                        p.after(cloneBlock("#declaration")
-                                .addClass("parameter"));
-                    } else {
-                        p.after(cloneBlock("#declaration"));
-                    }
-                    var added = p.parent().find(".var:last-child");
-                    added.focus();
-                }
-
-                // AJAX Post variables
-                postVarUpd();
             }
+
+            var oldn = t.attr('cur');
+            var newn = t.val();
+            var elem = this;
+
+            // set value attribute to newn 
+            // otherwise .html() doesn't take it on postVarUpd
+            t.attr("value", t.val());
+
+            // remove old name from our vars 
+            if (oldn !== "" && wr.curvars[oldn] === elem) {
+                delete wr.curvars[oldn];
+            }
+
+            // add new name to our vars 
+            wr.curvars[newn] = elem;
+
+            // update instructions with old name to new name
+            $('.active span.var:contains(' + oldn + ')').text(
+                    function (i, s) {
+                        return s === oldn ? newn : s;
+                    });
+
+            // update param name in signature
+            if (t.parent().hasClass("parameter")) {
+                // rebuild the params string
+                var str = "";
+                $(".variables.active .parameter").each(function () {
+                    var th = $(this);
+                    var type = th.find(".type").text();
+                    var name = th.find("input").val();
+                    if (name !== "") {
+                        if (str === "") {
+                            str += type + " " + name;
+                        } else {
+                            str += ", " + type + " " + name;
+                        }
+                    }
+                });
+                $(".active .start .params").text(str);
+
+                // also update the instruction signature on server
+                postInsUpd();
+            }
+
+            // append another declration field
+            if (t.parent().hasClass("bottom")) {
+                var p = t.parent();
+                p.removeClass("bottom");
+                if (t.parent().hasClass("parameter")) {
+                    p.after(cloneBlock("#declaration")
+                            .addClass("parameter"));
+                } else {
+                    p.after(cloneBlock("#declaration"));
+                }
+                var added = p.parent().find(".var:last-child");
+                added.focus();
+            }
+
+            // AJAX Post variables
+            postVarUpd();
         }
     });
 
@@ -336,9 +338,9 @@ $(function () {
     $(".type").mouseenter(function () {
         var t = $(this);
         var m = t.parent().children(".menu");
-        m.find(".menu_item").each(function (i, o) {
-            if ($(o).text() === t.text()) {
-                $(o).addClass("menu_hl");
+        m.find(".menu_item").each(function () {
+            if ($(this).text() === t.text()) {
+                $(this).addClass("menu_hl");
             }
         });
         m.show();
@@ -460,7 +462,7 @@ $(function () {
     });
 
     // repopulate var select menu (asgn) on mouse enter
-    $(".var_container").mouseenter(function (event) {
+    $(".var_container").mouseenter(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
@@ -489,9 +491,9 @@ $(function () {
         var type = $(wr.curvars[name]).siblings(".type_container")
                 .find(".type").text();
 
-        if (gp.hasClass("input") && type !== "string"
-                || gp.hasClass("assignment")
-                && !wr.verifyType(gp.children(".exp")[0], type, "silent")) {
+        if (gp.hasClass("input") && type !== "string" ||
+                gp.hasClass("assignment") &&
+                !wr.verifyType(gp.children(".exp")[0], type, "silent")) {
             gp.parent().addClass("type_error");
         } else {
             gp.parent().removeClass("type_error");
@@ -530,9 +532,9 @@ $(function () {
         var p = t.parent().get(0);
 
         p.destroy = function () {
-            return confirm("Are you sure you want to delete this "
-                    + t.attr("class") + " statement and everything "
-                    + "inside it?");
+            return confirm("Are you sure you want to delete this " +
+                    t.attr("class") + " statement and everything " +
+                    "inside it?");
         };
     });
 
@@ -565,7 +567,7 @@ $(function () {
             wr.alert("Please select a variable first.");
             return false;
         }
-        var type = type = $(wr.curvars[name]).prev().find(".type").text();
+        var type = $(wr.curvars[name]).prev().find(".type").text();
         inputHere(this, function (t) {
             wr.verifyType(t, type);
             return true;
@@ -635,8 +637,8 @@ $(function () {
         // helper to process the name 
         var useName = function (n) {
             // append a new instructions area
-            var idata = $("<div id='ins_" + n
-                    + "' class='instructions'></div>");
+            var idata = $("<div id='ins_" + n +
+                    "' class='instructions'></div>");
             idata.append(cloneBlock("#start"))
                     .append(cloneBlock("#connection"))
                     .append(cloneBlock("#return"));
@@ -855,20 +857,20 @@ $(function () {
             "success": function (data) {
                 for (var i = 0; i < data.length; i++) {
                     var proj = data[i];
-                    var row = $("<tr pid='" + proj['id'] + "' class='proj'>");
-                    row.append("<td class='pname'>" + proj['name'] + "</td>");
-                    row.append("<td>" + proj['created'] + "</td>");
-                    row.append("<td>" + proj['accessed'] + "</td>");
-                    row.append("<td class='del_btn'><div class='del'>&times;"
-                            + "</div></td>");
+                    var row = $("<tr pid='" + proj.id + "' class='proj'>");
+                    row.append("<td class='pname'>" + proj.name + "</td>");
+                    row.append("<td>" + proj.created + "</td>");
+                    row.append("<td>" + proj.accessed + "</td>");
+                    row.append("<td class='del_btn'><div class='del'>&times;" +
+                            "</div></td>");
                     row.click(goto_proj);
                     pd.append(row);
                 }
                 // always show at least 10 rows
                 if (data.length < 10) {
-                    for (var i = data.length; i < 10; i++) {
-                        pd.append("<tr class='proj'><td>&nbsp;</td><td>"
-                                + "</td><td></td><td></td></tr>");
+                    for (var j = data.length; j < 10; j++) {
+                        pd.append("<tr class='proj'><td>&nbsp;</td><td>" + 
+                                "</td><td></td><td></td></tr>");
                     }
                 }
 
@@ -910,10 +912,10 @@ $(function () {
      ********************************************************/
     $("#gen_js").click(function () {
         if (!wr.ready()) {
-            wr.alert("Cannot generate JavaScript,\n there are errors in this "
-                    + "project\n\n"
-                    + "The problems have been highligted, \n"
-                    + " please check all functions");
+            wr.alert("Cannot generate JavaScript,\n there are errors in this " +
+                    "project\n\n" + 
+                    "The problems have been highligted, \n" + 
+                    " please check all functions");
             return;
         }
 

@@ -186,8 +186,8 @@ $(function () {
                 wr.prompt("Please enter input:", function (inp) {
                     iolog("IN : " + '"' + inp + '"', {
                         "font-weight": "bold", // TODO wish I could set class
-                        "background-color": "#282858" 
-                    }); 
+                        "background-color": "#282858"
+                    });
                     input = '"' + inp + '"'; // input is always a string
                     io.text(input);
                     io.addClass("eval");
@@ -345,6 +345,7 @@ $(function () {
                 };
 
                 var elems;
+                var last;
                 if (result) {
                     // get all the elements on the right branch
                     elems = $(document).find(
@@ -354,7 +355,7 @@ $(function () {
                     var absolute_right = elems.pop(); // needed for exit
                     var first = elems.pop(); // pops first connection in right
                     var bot_right = elems.shift(); // bot_right_connect
-                    var last = elems.shift(); // may be undefined
+                    last = elems.shift(); // may be undefined
 
                     // the exit elem is .bot_left_connect and is also used to 
                     // scroll the chart left while executing large charts
@@ -406,7 +407,7 @@ $(function () {
                     var absolute_left = elems.pop();
 
                     elems.shift(); // removes bot_left_connect
-                    var last = elems.shift(); // last connection on left side
+                    last = elems.shift(); // last connection on left side
                     elems.unshift({"exec": function () {
                             $([last, absolute_left]).addClass("executing");
                             resetExp();
@@ -594,8 +595,8 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            iolog("- Execution complete, click edit or play "
-                                    + "to continue. -",
+                            iolog("- Execution complete, click edit or play " +
+                                    "to continue. -",
                                     {"color": "greenyellow"});
                             frame.data.detach();
                             wr.stack.pop();
@@ -623,8 +624,9 @@ $(function () {
         }
 
         // find where we have to return to (if we're not main starting up)
+        var ret2 = false;
         if (wr.curfrm !== 0) {
-            var ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
+            ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
             // if we can't find it we aren't the fist call for the expression
             // return so that we can be evaluated later (keeps sequence correct)
             if (!ret2.length) {
@@ -635,11 +637,11 @@ $(function () {
 
         // create the context for this call
         var ctx = {};
-        ctx['$w'] = 'window';
+        ctx.$w = 'window';
         // add the flowchart functions
-        for (key in wr.functions) {
-            ctx[key] = 'function () { $w.top.wr.doCall("' + key
-                    + '", arguments) }';
+        for (var key in wr.functions) {
+            ctx[key] = 'function () { $w.top.wr.doCall("' + key + 
+                    '", arguments) }';
         }
         // add the variables for this function
         for (var key in wr.functions[fname]) {
@@ -703,8 +705,8 @@ $(function () {
         });
         fdata.append(vars);
         $("#stack").append(fdata);
-        var v = $("#var_area")[0];
-        v.scrollTop = v.scrollHeight; // always scroll to bottom
+        var va = $("#var_area")[0];
+        va.scrollTop = va.scrollHeight; // always scroll to bottom
 
         // setup the steps for this function call;
         var steps = [];

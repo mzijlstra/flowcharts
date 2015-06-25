@@ -79,10 +79,10 @@ $(function () {
             "name": "edit",
             "playpause": function () {
                 if (!wr.ready()) {
-                    wr.alert("Cannot start execution,\n"
-                            + " there are errors in this project\n\n"
-                            + "The problems have been highligted, \n"
-                            + " please check all functions");
+                    wr.alert("Cannot start execution,\n" +
+                            " there are errors in this project\n\n" +
+                            "The problems have been highligted, \n" +
+                            " please check all functions");
                     return;
                 }
                 // if we're here any error highlights are old / not valid

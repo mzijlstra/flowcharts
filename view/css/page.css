@@ -455,11 +455,6 @@ a {
 a:hover {
   text-decoration: underline; }
 
-#validate {
-  position: fixed;
-  bottom: 0px;
-  right: 0px; }
-
 input {
   font-family: inherit;
   font-size: inherit;
