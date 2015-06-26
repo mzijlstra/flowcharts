@@ -18,19 +18,19 @@ $(function () {
     /**
      * Helper that puts given text into the output box shown during execution
      * 
-     * @param {type} text
-     * @param {type} css
+     * @param {type} text to be displayed in I/O window
+     * @param {type} cname CSS class name to be used for the text
      */
     // Should I put this onto the global wr object? I only need it here
-    var iolog = function (text, css) {
+    var iolog = function (text, cname) {
         var add = $("<div>");
         if (typeof text === "string" && text[0] === '"') {
             text = text.substr(1);
             text = text.substr(0, text.length - 1);
         }
         add.text(text);
-        if (css) {
-            add.css(css);
+        if (cname) {
+            add.addClass(cname);
         }
         var o = $("#out");
         o.append(add);
@@ -100,7 +100,7 @@ $(function () {
             return res;
         } catch (exception) {
             $(".executing").addClass("exp_error");
-            iolog("Exception: " + exception, {"color": "red"});
+            iolog("Exception: " + exception, "err");
             return false;
         }
     };
@@ -184,10 +184,7 @@ $(function () {
                 var delay = parseFloat($("#delay").text());
                 var input = null;
                 wr.prompt("Please enter input:", function (inp) {
-                    iolog("IN : " + '"' + inp + '"', {
-                        "font-weight": "bold", // TODO wish I could set class
-                        "background-color": "#282858"
-                    });
+                    iolog("IN : " + '"' + inp + '"', "in");
                     input = '"' + inp + '"'; // input is always a string
                     io.text(input);
                     io.addClass("eval");
@@ -596,8 +593,7 @@ $(function () {
                     frame.steps.push({
                         "exec": function () {
                             iolog("- Execution complete, click edit or play " +
-                                    "to continue. -",
-                                    {"color": "greenyellow"});
+                                    "to continue. -", "done");
                             frame.data.detach();
                             wr.stack.pop();
                             wr.curfrm -= 1;
