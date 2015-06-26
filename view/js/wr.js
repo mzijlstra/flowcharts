@@ -95,6 +95,46 @@ $(function () {
         }
     });
 
+    /**
+     * Helper function that shows a confirmation popup with OK and Cancel 
+     * @param {string} text To be displayed in popup
+     * @param {function} ok To be executed when OK is clicked
+     * @param {function} cancel To be executed when Cancel is clicked
+     */
+    wr.confirm = function (text, ok, cancel) { // TODO start using in edit.js
+        var c = $("cofirm");
+        var o = $("#overlay");
+        var bK = c.find(".ok");
+        var bC = c.find(".cancel");
+
+        var hide = function () {
+            bK.off("click", doOk);
+            bC.off("click", doCancel);
+            c.hide();
+            o.hide();
+        };
+
+        var doOk = function () {
+            if (ok) {
+                ok();
+            }
+            hide();
+        };
+
+        var doCancel = function () {
+            if (cancel) {
+                cancel();
+            }
+            hide();
+        };
+
+        bK.on("click", doOk);
+        bC.on("click", doCancel);
+        c.find(".msg").text(text);
+        o.show();
+        c.show();
+    };
+
 
     /**
      * Helper function that is used by both edit.js and exec.js.
