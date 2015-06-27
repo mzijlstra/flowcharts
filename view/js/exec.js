@@ -527,7 +527,7 @@ $(function () {
             }
             // if we did not find it
             if (pstack.length !== 0) {
-                alert("Error Invalid function call\n\n" +
+                wr.alert("Error Invalid function call\n\n" +
                         "Please show this error to your professor,\n" +
                         "anlong with the expression you wrote.");
                 throw "Invalid function call, unable to find ')' for " +

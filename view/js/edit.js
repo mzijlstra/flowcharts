@@ -34,8 +34,8 @@ $(function () {
 
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
-        // due to the seriousness of the situation I'll use a real alert
-        alert("Network Error -- please check your connection and try again.");
+        wr.alert("Network Error\n\n" +
+                "Please check your connection and try again.");
     });
 
 
