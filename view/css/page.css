@@ -776,7 +776,8 @@ div#projects:hover #project_menu {
 
 #project_menu {
   top: 24px;
-  left: -1px; }
+  left: -1px;
+  z-index: 25; }
 
 footer {
   position: fixed;

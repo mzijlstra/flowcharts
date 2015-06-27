@@ -512,7 +512,8 @@ $(function () {
     });
 
     // hook up delete click handlers
-    $(".statement .del").click(function () {
+    $(".statement .del").click(function (event) {
+        event.stopPropagation();
         var p = $(this).parent();
         if (!p.hasClass("statement")) {
             p = p.closest(".statement");
@@ -531,10 +532,16 @@ $(function () {
         var t = $(this);
         var p = t.parent().get(0);
 
-        p.destroy = function () {
-            return confirm("Are you sure you want to delete this " +
-                    t.attr("class") + " statement and everything " +
-                    "inside it?");
+        p.destroy = function (event) {
+            var th = $(this);
+            wr.confirm("Are you sure you want to delete this " +
+                    t.attr("class") + " statement\n and everything " +
+                    "inside it?", function () {
+                        var pre = th.prev();
+                        pre.detach();
+                        th.detach();
+                    });
+            return false;
         };
     });
 
@@ -790,8 +797,8 @@ $(function () {
             wr.alert("Cannot delete main.\n\n" +
                     "The program cannot start without it.");
             return false;
-        } else if (confirm("Delete the function: " + n + "?")) {
-            // TODO create a replacement for confirm?
+        }
+        wr.confirm("Delete the function: " + n + "?", function () {
             $("#vars_" + n).remove();
             $("#ins_" + n).remove();
             t.parent().remove();
@@ -801,8 +808,7 @@ $(function () {
             // AJAX delete function
             var fid = t.parent().attr("fid");
             $.post("../function/" + fid + "/delete", shouldNotHaveData);
-            return true;
-        }
+        });
     });
 
 
@@ -844,11 +850,12 @@ $(function () {
         };
 
         var del_proj = function (event) {
-            if (confirm("Are you sure you wish to delete this project?")) {
-                var tr = $(this).closest("tr");
-                $.post(tr.attr("pid") + "/delete", shouldNotHaveData);
-            }
             event.stopPropagation(); // don't execute tr.click()
+            var tr = $(this).closest("tr");
+            wr.confirm("Are you sure you wish to delete this project?", function () {
+                $.post(tr.attr("pid") + "/delete", shouldNotHaveData);
+                window.location.assign("../");
+            });
         };
 
         $.ajax({
@@ -869,7 +876,7 @@ $(function () {
                 // always show at least 10 rows
                 if (data.length < 10) {
                     for (var j = data.length; j < 10; j++) {
-                        pd.append("<tr class='proj'><td>&nbsp;</td><td>" + 
+                        pd.append("<tr class='proj'><td>&nbsp;</td><td>" +
                                 "</td><td></td><td></td></tr>");
                     }
                 }
@@ -913,8 +920,8 @@ $(function () {
     $("#gen_js").click(function () {
         if (!wr.ready()) {
             wr.alert("Cannot generate JavaScript,\n there are errors in this " +
-                    "project\n\n" + 
-                    "The problems have been highligted, \n" + 
+                    "project\n\n" +
+                    "The problems have been highligted, \n" +
                     " please check all functions");
             return;
         }

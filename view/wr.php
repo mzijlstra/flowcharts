@@ -118,6 +118,15 @@
             </div>
             <div class="center"><button>OK</button></div>
         </div>
+        <div id="confirm" class="popup">
+            <div class="popup_content">
+                <div class="msg">Please confirm:</div>
+            </div>
+            <div class="center">
+                <button id="confirm_cancel">Cancel</button>
+                <button id="confirm_ok">OK</button>
+            </div>
+        </div>
         <div id="alert" class="popup">
             <div class="popup_content">
                 <div class="msg">This is an alert!</div>

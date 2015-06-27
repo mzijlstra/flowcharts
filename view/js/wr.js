@@ -102,10 +102,10 @@ $(function () {
      * @param {function} cancel To be executed when Cancel is clicked
      */
     wr.confirm = function (text, ok, cancel) { // TODO start using in edit.js
-        var c = $("cofirm");
+        var c = $("#confirm");
         var o = $("#overlay");
-        var bK = c.find(".ok");
-        var bC = c.find(".cancel");
+        var bK = $("#confirm_ok");
+        var bC = $("#confirm_cancel");
 
         var hide = function () {
             bK.off("click", doOk);
