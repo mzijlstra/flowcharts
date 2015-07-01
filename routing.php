@@ -22,6 +22,7 @@ $get_ctrl = array(
     "|/user/(\d+)/project/(\d+)$|" => "ProjectCtrl@getProject",
     "|/logout|" => "UserCtrl@logout",
     "|/project$|" => "ProjectCtrl@getProjects",
+    "|/project/recent$|" => "ProjectCtrl@getRecent",
     "|/project/(\d+)$|" => "ProjectCtrl@getProject",
 );
 

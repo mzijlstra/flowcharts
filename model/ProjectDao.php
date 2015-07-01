@@ -60,16 +60,30 @@ class ProjectDao {
         return $this->db->lastInsertId();
     }
 
-    public function rename($pid, $name) {
+    public function rename($pid, $uid, $name) {
         $stmt = $this->db->prepare("UPDATE `project` SET name = :name"
-                . " WHERE id = :pid");
-        $stmt->execute(array("pid" => $pid, "name" => $name));
+                . " WHERE id = :pid AND user_id = :uid");
+        $stmt->execute(array("pid" => $pid, "name" => $name, "uid" => $uid));
     }
 
-    public function delete($pid) {
-        $stmt = $this->db->prepare("UPDATE `project` SET active = 0"
-                . " WHERE id = :pid");
-        $stmt->execute(array("pid" => $pid));
+    public function delete($pid, $uid) {
+        // make sure that the user has at least one project
+        $amount = $this->db->prepare("SELECT COUNT(id) FROM `project` "
+                . "WHERE user_id = :uid AND active = 1");
+        $amount->execute(array("uid" => $uid));
+        $row = $amount->fetch();
+        
+        if ($row[0] > 1) {
+            $stmt = $this->db->prepare("UPDATE `project` SET active = 0"
+                    . " WHERE id = :pid AND user_id = :uid");
+        }
+        $stmt->execute(array("pid" => $pid, "uid" => $uid));
     }
 
+    public function isOwner($pid, $uid) {
+        $amount = $this->db->prepare("SELECT COUNT(id) FROM `project` "
+                . "WHERE id = :pid AND user_id = :uid AND active = 1");
+        $amount->execute(array("pid" => $pid, "uid" => $uid));
+        return $amount->fetch(); // returns FALSE if no row was found
+    }
 }

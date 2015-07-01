@@ -67,4 +67,13 @@ class FunctionDao {
                 . " WHERE id = :fid");
         $stmt->execute(array("fid" => $fid));
     }
+
+    public function isOwner($fid, $uid) {
+        $amount = $this->db->prepare("SELECT COUNT(f.id) FROM `function` f "
+                . "JOIN `project` p ON f.project_id = p.id "
+                . "WHERE f.id = :fid AND p.user_id = :uid");
+        $amount->execute(array("fid" => $fid, "uid" => $uid));
+        return $amount->fetch(); // returns FALSE if no row was found
+    }
+
 }

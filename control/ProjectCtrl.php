@@ -29,7 +29,7 @@ class ProjectCtrl {
                 $record = false;
             } else {
                 // Show access denied
-                http_response_code(403); 
+                http_response_code(403);
                 return "error/403.php";
             }
         }
@@ -46,6 +46,14 @@ class ProjectCtrl {
         $VIEW_DATA['pid'] = $pid;
 
         return "wr.php";
+    }
+
+    // GET /project/recent
+    public function getRecent() {
+        global $MY_BASE;
+        $uid = $_SESSION['user']['id'];        
+        $pid = $this->projectDao->recent($uid);
+        return "Location: $MY_BASE/project/$pid";
     }
 
     // AJAX GET /project$
@@ -101,18 +109,18 @@ class ProjectCtrl {
     // AJAX POST /project/(\d+)/rename$
     public function rename() {
         global $URI_PARAMS;
-
         $pid = $URI_PARAMS[1];
+        $uid = $_SESSION['user']['id'];
         $name = filter_input(INPUT_POST, "name");
-        $this->projectDao->rename($pid, $name);
+        $this->projectDao->rename($pid, $uid, $name);
     }
 
     // AJAX POST /project/(\d+)/delete
     public function delete() {
         global $URI_PARAMS;
-
         $pid = $URI_PARAMS[1];
-        $this->projectDao->delete($pid);
+        $uid = $_SESSION['user']['id'];
+        $this->projectDao->delete($pid, $uid);
     }
 
     // AJAX POST /project/(\d+)/(\w+)
@@ -120,50 +128,79 @@ class ProjectCtrl {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
+        $uid = $_SESSION['user']['id'];
         $pid = $URI_PARAMS[1];
         $name = $URI_PARAMS[2];
         $idata = filter_input(INPUT_POST, "idata");
         $vdata = filter_input(INPUT_POST, "vdata");
 
-        $fid = $this->functionDao->create($pid, $name, $idata, $vdata);
-        $VIEW_DATA['json'] = $fid;
-
-        return "json.php";
+        if ($this->projectDao->isOwner($pid, $uid)) {
+            $fid = $this->functionDao->create($pid, $name, $idata, $vdata);
+            $VIEW_DATA['json'] = $fid;
+            return "json.php";
+        } else {
+            http_response_code(403);
+            return "error/403.php";
+        }
     }
 
     // AJAX POST /function/(\d+)/vars
     public function updVars() {
         global $URI_PARAMS;
+        $uid = $_SESSION['user']['id'];
         $fid = $URI_PARAMS[1];
 
-        $vdata = filter_input(INPUT_POST, "vdata");
-        $this->functionDao->updVars($fid, $vdata);
+        if ($this->functionDao->isOwner($fid, $uid)) {
+            $vdata = filter_input(INPUT_POST, "vdata");
+            $this->functionDao->updVars($fid, $vdata);
+        } else {
+            http_response_code(403);
+            return "error/403.php";
+        }
     }
 
     // AJAX POST /function/(\d+)/ins
     public function updIns() {
         global $URI_PARAMS;
+        $uid = $_SESSION['user']['id'];
         $fid = $URI_PARAMS[1];
 
-        $idata = filter_input(INPUT_POST, "idata");
-        $this->functionDao->updIns($fid, $idata);
+        if ($this->functionDao->isOwner($fid, $uid)) {
+            $idata = filter_input(INPUT_POST, "idata");
+            $this->functionDao->updIns($fid, $idata);
+        } else {
+            http_response_code(403);
+            return "error/403.php";
+        }
     }
 
     // AJAX POST /function/(\d+)/rename
     public function renameFunction() {
         global $URI_PARAMS;
+        $uid = $_SESSION['user']['id'];
         $fid = $URI_PARAMS[1];
 
-        $name = filter_input(INPUT_POST, "name");
-        $this->functionDao->rename($fid, $name);
+        if ($this->functionDao->isOwner($fid, $uid)) {
+            $name = filter_input(INPUT_POST, "name");
+            $this->functionDao->rename($fid, $name);
+        } else {
+            http_response_code(403);
+            return "error/403.php";
+        }
     }
 
     // AJAX POST /function/(\d+)/delete
     public function deleteFunction() {
         global $URI_PARAMS;
+        $uid = $_SESSION['user']['id'];
         $fid = $URI_PARAMS[1];
 
-        $this->functionDao->delete($fid);
+        if ($this->functionDao->isOwner($fid, $uid)) {
+            $this->functionDao->delete($fid);
+        } else {
+            http_response_code(403);
+            return "error/403.php";
+        }
     }
 
 }

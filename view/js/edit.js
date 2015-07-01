@@ -518,7 +518,7 @@ $(function () {
         if (!p.hasClass("statement")) {
             p = p.closest(".statement");
         }
-        var pelem = p.get(0);
+        var pelem = p[0];
         var c = p.prev(); // connector
         if (!pelem.destroy || pelem.destroy()) {
             c.remove();
@@ -530,7 +530,7 @@ $(function () {
     // add confirmation messages if and while stmts
     $(".if, .while").each(function () {
         var t = $(this);
-        var p = t.parent().get(0);
+        var p = t.parent()[0];
 
         p.destroy = function (event) {
             var th = $(this);
@@ -852,10 +852,20 @@ $(function () {
         var del_proj = function (event) {
             event.stopPropagation(); // don't execute tr.click()
             var tr = $(this).closest("tr");
-            wr.confirm("Are you sure you wish to delete this project?", function () {
-                $.post(tr.attr("pid") + "/delete", shouldNotHaveData);
-                window.location.assign("../");
-            });
+            // Make sure we have at least one project left
+            if (pd.find(".proj").length > 1) {
+                wr.confirm("Are you sure you wish to delete this project?", function () {
+                    var pid = tr.attr("pid");
+                    $.post(pid + "/delete", shouldNotHaveData);
+                    // redirect to most recent if current project deleted
+                    if (pid === $("h1").first().attr("pid")) {
+                        window.location.assign("recent");
+                    }
+                });
+            } else {
+                wr.alert("You need to have at least one project.\n\n"
+                        + "Cannot delete last remaining project.");
+            }
         };
 
         $.ajax({
@@ -876,7 +886,7 @@ $(function () {
                 // always show at least 10 rows
                 if (data.length < 10) {
                     for (var j = data.length; j < 10; j++) {
-                        pd.append("<tr class='proj'><td>&nbsp;</td><td>" +
+                        pd.append("<tr><td>&nbsp;</td><td>" +
                                 "</td><td></td><td></td></tr>");
                     }
                 }
