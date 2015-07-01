@@ -51,9 +51,18 @@ class ProjectCtrl {
     // GET /project/recent
     public function getRecent() {
         global $MY_BASE;
-        $uid = $_SESSION['user']['id'];        
+        $uid = $_SESSION['user']['id'];
         $pid = $this->projectDao->recent($uid);
         return "Location: $MY_BASE/project/$pid";
+    }
+
+    // AJAX GET /project/other_recents
+    public function getOtherRecent() {
+        global $VIEW_DATA;
+        $uid = $_SESSION['user']['id'];
+        $pid = filter_input(INPUT_GET, "pid");
+        $VIEW_DATA['json'] = $this->projectDao->otherRecent($uid, $pid);
+        return "json.php";
     }
 
     // AJAX GET /project$

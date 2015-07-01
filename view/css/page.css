@@ -488,6 +488,11 @@ div#projects {
     position: relative;
     margin-left: 5px;
     top: 9px; }
+  div#projects #recent_proj {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white; }
+    div#projects #recent_proj .menu_item {
+      margin-left: 10px; }
 
 div#projects:hover #project_menu {
   display: block; }

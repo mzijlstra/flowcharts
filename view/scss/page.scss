@@ -55,7 +55,7 @@ h1 {
     position: relative;
     margin-left: 35px;
     margin-top: 0px;
-    
+
     input {
         position: absolute;
         top: -2px;
@@ -84,6 +84,15 @@ div#projects {
         position: relative;
         margin-left: 5px;
         top: 9px;
+    }
+
+    #recent_proj {
+        border-top: $line $border;
+        border-bottom: $line $border;
+        
+        .menu_item {
+            margin-left: 10px;
+        }
     }
 }
 
@@ -413,7 +422,7 @@ div#projects:hover #project_menu {
             padding: 3px;
             overflow: auto;
             height: 130px;
-            
+
             .err {
                 color: red;
             }

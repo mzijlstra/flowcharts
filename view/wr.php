@@ -23,8 +23,16 @@
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
-                <div id="open_proj" class="menu_item">Show Projects</div>
                 <div id="new_proj" class="menu_item">New Project</div>
+                <div id="recent_proj">
+                    <div class="menu_label">Recent Projects:</div>
+                    <div class="menu_item">-----</div>
+                    <div class="menu_item">-----</div>
+                    <div class="menu_item">-----</div>
+                    <div class="menu_item">-----</div>
+                    <div class="menu_item">-----</div>
+                </div>
+                <div id="open_proj" class="menu_item">Show All Projects</div>
             </div>
         </div>
 

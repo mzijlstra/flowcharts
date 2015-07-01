@@ -38,6 +38,20 @@ class ProjectDao {
         }
     }
 
+    public function otherRecent($uid, $pid) {
+        $recent = $this->db->prepare(
+                "SELECT id, name FROM project "
+                . "WHERE user_id = :uid AND id != :pid AND active = 1 "
+                . "ORDER BY accessed DESC "
+                . "LIMIT 6");
+        $recent->execute(array("uid" => $uid, "pid" => $pid));
+        $projects = array();
+        foreach ($recent as $row) {
+            $projects[] = $row;
+        }
+        return $projects;
+    }
+
     public function all($uid) {
         $recent = $this->db->prepare(
                 "SELECT * FROM project "
@@ -72,7 +86,7 @@ class ProjectDao {
                 . "WHERE user_id = :uid AND active = 1");
         $amount->execute(array("uid" => $uid));
         $row = $amount->fetch();
-        
+
         if ($row[0] > 1) {
             $stmt = $this->db->prepare("UPDATE `project` SET active = 0"
                     . " WHERE id = :pid AND user_id = :uid");
@@ -86,4 +100,5 @@ class ProjectDao {
         $amount->execute(array("pid" => $pid, "uid" => $uid));
         return $amount->fetch(); // returns FALSE if no row was found
     }
+
 }

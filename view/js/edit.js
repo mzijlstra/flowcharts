@@ -818,6 +818,43 @@ $(function () {
     /********************************************************
      * Project related code
      ********************************************************/
+    // show recent projects
+    $("#projects").mouseenter(function () {
+        var pid = $("h1").first().attr("pid");
+        $.ajax({
+            "dataType": "json",
+            "url": "other_recent",
+            "data": {"pid": pid},
+            "success": function (data) {
+                var row, item;
+                var items = $("#recent_proj .menu_item");
+                for (var i = 0; i < data.length; i++) {
+                    row = data[i];
+                    item = items.eq(i);
+                    item.text(row['name']);
+                    item.attr("pid", row['id']);
+                }
+                // clean up any deleted recents
+                if (i < 5) {
+                    for (; i < 5; i++) {
+                        item = items.eq(i);
+                        item.text("-----");
+                        item.removeAttr("pid");
+                    }
+                }
+            }
+        });
+    });
+
+    // if one of the 'recent' menu items is clicked
+    $("#recent_proj .menu_item").click(function () {
+        var t = $(this);
+        if (t.attr("pid")) { // may be a placeholder 
+            var pid = t.attr("pid");
+            window.location.assign(pid);
+        }
+    });
+
     // create a new project
     $("#new_proj").click(function () {
         wr.prompt("Project Name:", function (name) {
