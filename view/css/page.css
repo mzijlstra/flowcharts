@@ -848,6 +848,18 @@ footer {
       color: #336;
       background-color: white;
       padding-left: 12px; }
+    #projects_disp table th.ASC:after, #projects_disp table th.DESC:after {
+      content: "";
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      position: relative;
+      left: 8px; }
+    #projects_disp table th.ASC:after {
+      border-top: 6px solid #336;
+      top: 9px; }
+    #projects_disp table th.DESC:after {
+      border-bottom: 6px solid #336;
+      top: -10px; }
     #projects_disp table td {
       padding: 12px; }
     #projects_disp table td.pname {

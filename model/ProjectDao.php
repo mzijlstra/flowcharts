@@ -52,11 +52,11 @@ class ProjectDao {
         return $projects;
     }
 
-    public function all($uid) {
+    public function all($uid, $order, $direction) {
         $recent = $this->db->prepare(
                 "SELECT * FROM project "
                 . "WHERE user_id = :uid AND active = 1 "
-                . "ORDER BY accessed DESC ");
+                . "ORDER BY $order $direction ");
         $recent->execute(array("uid" => $uid));
 
         $projects = array();

@@ -89,7 +89,7 @@ div#projects {
     #recent_proj {
         border-top: $line $border;
         border-bottom: $line $border;
-        
+
         .menu_item {
             margin-left: 10px;
         }
@@ -544,6 +544,21 @@ footer {
             color: $bg;
             background-color: $fg;
             padding-left: 12px;
+        }
+        th.ASC:after, th.DESC:after {
+            content: "";
+            border-left: 5px $hide; 
+            border-right: 5px $hide; 
+            position: relative;
+            left: 8px;
+        }
+        th.ASC:after {
+            border-top: 6px solid $bg;            
+            top: 9px;
+        }
+        th.DESC:after {
+            border-bottom: 6px solid $bg;
+            top: -10px;
         }
         td {
             padding: 12px;

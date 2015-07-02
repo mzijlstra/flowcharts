@@ -20,8 +20,8 @@ class ProjectCtrl {
         $user = $_SESSION['user'];
         $uid = $user['id'];
         $pid = $URI_PARAMS[1];
-        $record = true;
 
+        $record = true;
         if (count($URI_PARAMS) === 3) {
             if ($user['type'] === 'admin') {
                 $uid = $URI_PARAMS[1];
@@ -70,9 +70,21 @@ class ProjectCtrl {
         global $VIEW_DATA;
 
         $uid = $_SESSION['user']['id'];
+        $order = filter_input(INPUT_GET, "order");
+        $direction = filter_input(INPUT_GET, "direction");
+        if ($order === "") {
+            $order = "created";
+        }
+        if ($direction == "") {
+            $direction = "ASC";
+        }
+        if (!preg_match("/(name|created|accessed)/", $order) 
+                || !preg_match("/(ASC|DESC)/", $direction)) {
+            return "error/500.php";
+        }
 
         // Retrieve all projects for this user
-        $projects = $this->projectDao->all($uid);
+        $projects = $this->projectDao->all($uid, $order, $direction);
         $VIEW_DATA['json'] = $projects;
 
         return "json.php";

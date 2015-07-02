@@ -21,10 +21,10 @@ $get_ctrl = array(
     "|/user/(\d+)/project$|" => "ProjectCtrl@getUserProjects",
     "|/user/(\d+)/project/(\d+)$|" => "ProjectCtrl@getProject",
     "|/logout|" => "UserCtrl@logout",
-    "|/project$|" => "ProjectCtrl@getProjects",
     "|/project/recent$|" => "ProjectCtrl@getRecent",
     "|/project/other_recent|" => "ProjectCtrl@getOtherRecent",
     "|/project/(\d+)$|" => "ProjectCtrl@getProject",
+    "|/project\?order=\w+|" => "ProjectCtrl@getProjects",
 );
 
 // Post requests that need a controller

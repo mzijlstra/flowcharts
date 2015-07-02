@@ -108,17 +108,22 @@
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
 
+        <!-- Different types of popup / overlay windows below -->
         <div id="js_code"><pre><code></code></pre></div>
         <div id="hide_js"><div id="close_js">&times;</div></div>
         <div id="projects_disp">
             <table id="project_data">
                 <caption>Projects:</caption>
-                <tr><th>Name</th><th>Created</th><th>Accessed</th><th>Del</th></tr>
+                <tr><th id="proj_by_name">Name</th>
+                    <th id="proj_by_created">Created</th>
+                    <th id="proj_by_accessed">Accessed</th>
+                    <th>Del</th>
+                </tr>
             </table>
         </div>
         <div id="hide_proj"><div id="close_proj">&times;</div></div>
-        <div id="overlay"></div>
-        
+
+        <div id="overlay"></div>        
         <div id="prompt" class="popup">
             <div class="popup_content">
                 <div class="msg">Please enter input:</div>

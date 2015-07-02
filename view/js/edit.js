@@ -879,7 +879,6 @@ $(function () {
         $("#projects_disp").show();
         $("#hide_proj").show();
         var pd = $("#project_data");
-        pd.find(".proj").detach();
 
         var goto_proj = function () {
             var tr = $(this);
@@ -905,33 +904,60 @@ $(function () {
             }
         };
 
-        $.ajax({
-            "dataType": "json",
-            "url": "../project",
-            "success": function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    var proj = data[i];
-                    var row = $("<tr pid='" + proj.id + "' class='proj'>");
-                    row.append("<td class='pname'>" + proj.name + "</td>");
-                    row.append("<td>" + proj.created + "</td>");
-                    row.append("<td>" + proj.accessed + "</td>");
-                    row.append("<td class='del_btn'><div class='del'>&times;" +
-                            "</div></td>");
-                    row.click(goto_proj);
-                    pd.append(row);
-                }
-                // always show at least 10 rows
-                if (data.length < 10) {
-                    for (var j = data.length; j < 10; j++) {
-                        pd.append("<tr><td>&nbsp;</td><td>" +
-                                "</td><td></td><td></td></tr>");
+        var getProjects = function (order, direction) {
+            $.ajax({
+                "dataType": "json",
+                "url": "../project",
+                "data": {"order": order, "direction": direction},
+                "success": function (data) {
+                    pd.find(".proj").detach();
+                    pd.find(".holder").detach();
+                    for (var i = 0; i < data.length; i++) {
+                        var proj = data[i];
+                        var row = $("<tr pid='" + proj.id + "' class='proj'>");
+                        row.append("<td class='pname'>" + proj.name + "</td>");
+                        row.append("<td>" + proj.created + "</td>");
+                        row.append("<td>" + proj.accessed + "</td>");
+                        row.append("<td class='del_btn'>" +
+                                "<div class='del'>&times;</div></td>");
+                        row.click(goto_proj);
+                        pd.append(row);
                     }
-                }
+                    // always show at least 10 rows
+                    if (data.length < 10) {
+                        for (var j = data.length; j < 10; j++) {
+                            pd.append("<tr class='holder'><td>&nbsp;</td><td>" +
+                                    "</td><td></td><td></td></tr>");
+                        }
+                    }
 
-                pd.find(".del").click(del_proj);
-            }
-        });
+                    pd.find(".del").click(del_proj);
+                }
+            });
+        };
+
+        // on initial load show projects ordered by created
+        getProjects("created");
+
+        var getSortFun = function (order) {
+            return function () {
+                var t = $(this);
+                var direction = "ASC";
+                if (t.hasClass("ASC")) {
+                    direction = "DESC";
+                }
+                $("#project_data .DESC").removeClass("DESC");
+                $("#project_data .ASC").removeClass("ASC");
+                t.addClass(direction);
+                getProjects(order, direction);
+            };
+        };
+
+        $("#proj_by_name").click(getSortFun("name"));
+        $("#proj_by_created").click(getSortFun("created"));
+        $("#proj_by_accessed").click(getSortFun("accessed"));
     });
+
 
     // hidie the project list
     $("#hide_proj").click(function () {
