@@ -29,7 +29,6 @@ class ProjectCtrl {
                 $record = false;
             } else {
                 // Show access denied
-                http_response_code(403);
                 return "error/403.php";
             }
         }
@@ -37,7 +36,6 @@ class ProjectCtrl {
         $proj = $this->projectDao->get($pid, $uid, $record);
         if (!$proj) {
             // clearly uid did not match, show access denied
-            http_response_code(403);
             return "error/403.php";
         }
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
@@ -160,7 +158,6 @@ class ProjectCtrl {
             $VIEW_DATA['json'] = $fid;
             return "json.php";
         } else {
-            http_response_code(403);
             return "error/403.php";
         }
     }
@@ -175,7 +172,6 @@ class ProjectCtrl {
             $vdata = filter_input(INPUT_POST, "vdata");
             $this->functionDao->updVars($fid, $vdata);
         } else {
-            http_response_code(403);
             return "error/403.php";
         }
     }
@@ -190,7 +186,6 @@ class ProjectCtrl {
             $idata = filter_input(INPUT_POST, "idata");
             $this->functionDao->updIns($fid, $idata);
         } else {
-            http_response_code(403);
             return "error/403.php";
         }
     }
@@ -205,7 +200,6 @@ class ProjectCtrl {
             $name = filter_input(INPUT_POST, "name");
             $this->functionDao->rename($fid, $name);
         } else {
-            http_response_code(403);
             return "error/403.php";
         }
     }
@@ -219,7 +213,6 @@ class ProjectCtrl {
         if ($this->functionDao->isOwner($fid, $uid)) {
             $this->functionDao->delete($fid);
         } else {
-            http_response_code(403);
             return "error/403.php";
         }
     }

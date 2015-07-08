@@ -11,6 +11,7 @@
 $view_ctrl = array(
     "|^/$|" => "login.php",
     "|/login|" => "login.php",
+    "|/turtle$|" => "turtle.php",
     "|/user/add|" => "userDetails.php",
 );
 
@@ -75,8 +76,7 @@ switch ($MY_METHOD) {
     case "PUT":
     case "DELETE":
     default:
-        http_response_code(403);
-        exit();
+        applyView("error/403.php");
 }
 
 function applyView($view) {
@@ -115,9 +115,7 @@ function matchUriToCtrl($ctrls) {
         }
     }
     // page not found (security mapping exists, but not ctrl mapping)
-    http_response_code(404);
-    require "view/error/404.php";
-    exit();
+    applyView("error/404.php");
 }
 
 function invokeCtrlMethod($class, $method) {
@@ -131,8 +129,6 @@ function invokeCtrlMethod($class, $method) {
     } catch (Exception $e) {
         // Perhaps have some user setting for debug mode
         error_log($e->getMessage());
-        http_response_code(500); // Does not work, not sure why we don't get here
-        require "view/error/500.php";
-        exit();
+        applyView("error/500.php");
     }
 }

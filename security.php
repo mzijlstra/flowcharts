@@ -59,7 +59,6 @@ switch ($my_policy) {
     default:
         isLoggedIn();
         if ($_SESSION['user']['type'] !== 'admin') {
-            http_response_code(403);
             require "view/error/403.php";
             exit();
         }
