@@ -17,6 +17,7 @@
         <script src="exec.js"></script>
         <script src="states.js"></script>
         <script src="highlight.pack.js"></script>
+        <script src="utils.js"></script>
     </head>
     <body>
         <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
@@ -337,6 +338,7 @@
         </div> <!-- end building blocks -->
 
         <!-- Sandbox for executing JS expressions -->
-        <iframe sandbox="allow-scripts allow-same-origin" id="sandbox"></iframe>
+        <iframe src="../sandbox" sandbox="allow-scripts allow-same-origin" id="sandbox">
+        </iframe>
     </body>
 </html>
