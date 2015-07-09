@@ -282,10 +282,15 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
-                var nelem = t.find(".var");
-                var name = nelem.text();
-                frame.ctx[name] = result;
+
+                var result;
+                // result object may be stored in element from call return
+                if (exp[0].result && typeof exp[0].result === "object") {
+                    result = exp[0].result;
+                } else {
+                    result = wr.eval(exp.text(), frame.ctx);
+                    exp[0].result = result;
+                }
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -306,13 +311,17 @@ $(function () {
 
                 // second step, assign to variable
                 frame.steps.push({"exec": function () {
+                        var nelem = t.find(".var");
+                        var name = nelem.text();
+                        frame.ctx[name] = exp[0].result;
+
                         nelem.addClass("executing");
-                        var result = exp.text();
+                        var tresult = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
 
                         // place value in the needed locations
-                        $("#f" + findex + "_" + name).text(result)
+                        $("#f" + findex + "_" + name).text(tresult)
                                 .parent().addClass("executing");
 
                         setTimeout(function () {
@@ -574,6 +583,7 @@ $(function () {
                         "exec": function () {
                             pstmt.addClass("executing");
                             var cur = frame.ret2.text();
+                            frame.ret2[0].result = result;
                             frame.ret2.text(
                                     replaceCall(cur, frame.name, result));
                         }

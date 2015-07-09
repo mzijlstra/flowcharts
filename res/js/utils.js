@@ -16,8 +16,21 @@ var TGWindow = function (width, height) {
     if (!height || typeof (height) !== 'number') {
         height = 300;
     }
-    var features = "width=" + width + ",height=" + height + ",menubar=0" +
-            ",location=0,resizable=0,scrollbars=0,status=0,chrome=1";
+
+    // we may be inside an iframe
+    var w = window;
+    if (window.top) {
+        w = window.top;
+    }
+    
+    var parent_x = w.innerWidth
+            || w.document.documentElement.clientWidth
+            || w.document.body.clientWidth;
+
+    var features = "top=250,left=" + (parent_x - width) + ",width=" + width +
+            ",height=" + height + ",menubar=0,resizable=0";
+    alert(features);
+
     var win = window.open("../turtle", "popup", features);
     win.onload = function () {
         win.document.body.style.overflow = "hidden";

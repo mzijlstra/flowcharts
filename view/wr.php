@@ -9,8 +9,6 @@
         <title>Flow Chart</title>
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
-        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-        <!-- <script src="http://code.jquery.com/jquery-2.1.1.js"></script> -->
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/edit.js"></script>
