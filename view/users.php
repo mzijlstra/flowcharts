@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title>Users</title>
-        <script src="jquery-2.1.1.js"></script>
+        <script src="res/js/lib/jquery-2.1.1.js"></script>
         <script>
             $(function () {
                 "use strict";

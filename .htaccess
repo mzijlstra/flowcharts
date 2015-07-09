@@ -3,16 +3,9 @@
 # Enable Rewriting
 RewriteEngine on 
 
-# send css, js, and images to default directories
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ([^/]+\.(css|map|ttf))$ view/css/$1 [NC,L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-ReWriteRule ([^/]+\.js)$ view/js/$1 [NC,L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-ReWriteRule ([^/]+\.(png|gif|jpg|jpeg))$ view/img/$1 [NC,L]
+ReWriteCond %{REQUEST_FILENAME} !-f
+ReWriteRule .*/res/(.+) res/$1 [NC,L]
 
 # send everything else to the front controller
-RewriteCond %{REQUEST_FILENAME} !\.(css|map|ttf|js|png|gif|jpg|jpeg)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f 
 RewriteRule .* frontController.php

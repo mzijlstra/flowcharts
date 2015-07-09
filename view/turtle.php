@@ -7,8 +7,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Turtle Graphics</title>
-        <script src="jquery-2.1.1.js" ></script>
-        <script src="turtle.js" ></script>
+        <script src="res/js/lib/jquery-2.1.1.js" ></script>
+        <script src="res/js/turtle.js" ></script>
         <style>
             body {
                 margin: 0px;
