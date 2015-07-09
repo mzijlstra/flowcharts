@@ -321,8 +321,11 @@ $(function () {
                         exp.removeClass("eval");
 
                         // place value in the needed locations
-                        $("#f" + findex + "_" + name).text(tresult)
-                                .parent().addClass("executing");
+                        var var_disp = $("#f" + findex + "_" + name);
+                        if (exp[0].result !== undefined) {
+                            var_disp.text(tresult);
+                        }
+                        var_disp.parent().addClass("executing");
 
                         setTimeout(function () {
                             asgn.removeClass("eval");

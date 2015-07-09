@@ -8,7 +8,7 @@
         <title>Web Raptor</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="login.css" type="text/css" />
+        <link rel="stylesheet" href="res/css/login.css" type="text/css" />
 
     </head>
     <body>

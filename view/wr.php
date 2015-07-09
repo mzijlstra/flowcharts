@@ -336,7 +336,7 @@
         </div> <!-- end building blocks -->
 
         <!-- Sandbox for executing JS expressions -->
-        <iframe id="sandbox" src="../sandbox" sandbox="allow-scripts allow-same-origin allow-popups" >
+        <iframe id="sandbox" src="../sandbox" >
         </iframe>
     </body>
 </html>

@@ -173,9 +173,15 @@ $(function () {
             ctx[key] = defaults[vtype];
         }
 
-        // new window creations cause problems
-        if (exp.match(/^\s*new\s+TGWindow()\s*/)) {
+        // new object creations cause problems
+        if (exp.match(/^\s*new\s+.*/)) {
             exp = "{}";
+        }
+        // no nice way to determine the types of properties
+        // TODO fix this by actually executing the statements?
+        if (exp.match(/.+\..+/)) { // anything containing a dot
+            stmt.removeClass("type_error exp_error");
+            return true;
         }
 
         // do the actual evaluation
