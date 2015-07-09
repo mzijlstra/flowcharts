@@ -137,7 +137,13 @@ $(function () {
         var key, val;
         for (key in ctx) {
             val = ctx[key];
-            code += "var " + key + " = " + val + ";\n";
+            // for objects we need the actual reference 
+            if (wr.state.name !== "edit" && typeof val === "object") {
+                code += "var " + key + " = $w.top.wr.stack[" + wr.curfrm +
+                        "].ctx." + key + "\n";
+            } else {
+                code += "var " + key + " = " + val + ";\n";
+            }
         }
         code += "return " + exp + ";\n";
         code += "})();";
@@ -277,6 +283,9 @@ $(function () {
                     exp.attr("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx);
+                var nelem = t.find(".var");
+                var name = nelem.text();
+                frame.ctx[name] = result;
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -297,15 +306,12 @@ $(function () {
 
                 // second step, assign to variable
                 frame.steps.push({"exec": function () {
-                        var nelem = t.find(".var");
                         nelem.addClass("executing");
-                        var name = nelem.text();
                         var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
 
                         // place value in the needed locations
-                        frame.ctx[name] = result;
                         $("#f" + findex + "_" + name).text(result)
                                 .parent().addClass("executing");
 
@@ -636,7 +642,7 @@ $(function () {
         ctx.$w = 'window';
         // add the flowchart functions
         for (var key in wr.functions) {
-            ctx[key] = 'function () { $w.top.wr.doCall("' + key + 
+            ctx[key] = 'function () { $w.top.wr.doCall("' + key +
                     '", arguments) }';
         }
         // add the variables for this function

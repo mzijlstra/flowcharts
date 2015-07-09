@@ -101,7 +101,7 @@ $(function () {
      * @param {function} ok To be executed when OK is clicked
      * @param {function} cancel To be executed when Cancel is clicked
      */
-    wr.confirm = function (text, ok, cancel) { // TODO start using in edit.js
+    wr.confirm = function (text, ok, cancel) {
         var c = $("#confirm");
         var o = $("#overlay");
         var bK = $("#confirm_ok");
@@ -173,13 +173,18 @@ $(function () {
             ctx[key] = defaults[vtype];
         }
 
+        // new window creations cause problems
+        if (exp.match(/^\s*new\s+TGWindow()\s*/)) {
+            exp = "{}";
+        }
+
         // do the actual evaluation
         try {
             var data = wr.eval(exp, ctx);
         } catch (exception) {
             stmt.addClass("exp_error");
             if (!silent) {
-                alert("Error in expression, please check syntax.");
+                wr.alert("Error in expression, please check syntax.");
             }
             e.find("input").focus();
             return false;
