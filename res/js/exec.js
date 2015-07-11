@@ -100,7 +100,7 @@ $(function () {
             return res;
         } catch (exception) {
             $(".executing").addClass("exp_error");
-            iolog("Exception: " + exception, "err");
+            iolog(exception, "err");
             return false;
         }
     };
@@ -313,7 +313,11 @@ $(function () {
                 frame.steps.push({"exec": function () {
                         var nelem = t.find(".var");
                         var name = nelem.text();
+                        if (typeof exp[0].result === "string") {
+                            exp[0].result = '"'+exp[0].result+'"';
+                        }
                         frame.ctx[name] = exp[0].result;
+                        
 
                         nelem.addClass("executing");
                         var tresult = exp.text();
