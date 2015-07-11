@@ -11,7 +11,6 @@
 $view_ctrl = array(
     "|^/$|" => "login.php",
     "|/login|" => "login.php",
-    "|/turtle$|" => "turtle.php",
     "|/sandbox$|" => "sandbox.php",
     "|/user/add|" => "userDetails.php",
 );
