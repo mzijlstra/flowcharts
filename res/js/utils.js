@@ -2,8 +2,16 @@
  Created on : Jul 07, 2015
  Author     : mzijlstra
  */
+$(function () {
+    if (document.getElementById("canvas_window")) {
+        document.getElementById("canvas_window").onclick = function () {
+            return window.open("", '_blank');
+        };
+    }
+});
+
 (function () {
-    var createCanvasPopup = function (width, height) {
+    var createCanvasWindow = function (width, height) {
         if (!width || typeof (width) !== 'number') {
             width = 400;
         }
@@ -19,25 +27,30 @@
 
         var parent_x = $(document).width();
 
-        var features = "top=250,left=" + (parent_x - width) + ",width=" +
-                (width + 1) + ",height=" + (height + 4) + ",menubar=0";
-
-        var win = window.open(undefined, "popup", features);
+        var win = w.$("#canvas_window")[0].onclick();
         var body = $(win.document.body);
-        body.css({"margin": "0"});
-        var canvas = $("<canvas id='canvas' width='" + width + "' height='" + 
+//        body.css({"margin": "0"});
+        var canvas = $("<canvas id='canvas' width='" + width + "' height='" +
                 height + "'>");
+        canvas.css("border", "1px solid black");
         body.append(canvas);
         return win;
     };
 
     var createTurtle = function () {
-        // Create a turtle display
+        // Create a turtle display on top of the existing canvas
+        var canvas = $(this.document).find("#canvas");
+        var b = $(this.document.body);
+        var offset_x = parseInt(b.css("margin-left")) + parseInt(canvas.css("border-left"));
+        var offset_y = parseInt(b.css("margin-top")) + parseInt(canvas.css("border-top"));
+        var x = canvas.width() / 2 + offset_x - 30;
+        var y = canvas.height() / 2 + offset_y - 30;
+        
         var display = $("<canvas width='32' height='32'>");
         display.css({
             "position": "absolute",
-            "top": $(this.document).height() / 2 - 30,
-            "left": $(this.document).width() / 2 - 30,
+            "top": y,
+            "left": x,
             "transform-origin": "30px 30px"
         });
         $(this.document.body).append(display);
@@ -48,14 +61,13 @@
         };
         // TODO make penColor and lineWidth public properties!
         var pen_color = "black";
-        var ctx = $(this.document).find("#canvas")[0].getContext('2d');
+        var ctx = canvas[0].getContext('2d');
         ctx.lineWidth = 2;
         ctx.strokeStyle = pen_color;
         var penDown = true;
         var deg = 0;
-        var x = $(this.document).width() / 2;
-        var y = $(this.document).height() / 2;
 
+        // TODO make a 'arrow' style and the ability to switch styles
         var drawTurtle = function () {
             var ctx = display[0].getContext("2d");
             ctx.clearRect(0, 0, 32, 32);
@@ -159,8 +171,8 @@
                 var dx = Math.cos(toRad(deg)) * amount;
                 var dy = Math.sin(toRad(deg)) * amount;
                 display.css({
-                    "top": y + dy - 30,
-                    "left": x + dx - 30
+                    "top": y + dy + offset_y - 30,
+                    "left": x + dx + offset_x - 30
                 });
                 if (penDown) {
                     var path = new Path2D();
@@ -239,14 +251,14 @@
      * @returns {object} reference to the newly created window
      */
     window.TGWindow = function (width, height) {
-        var win = createCanvasPopup(width, height, "../turtle");
+        var win = createCanvasWindow(width, height, "../turtle");
         win.document.title = "Turtle Graphics";
         win.createTurtle = createTurtle;
         return win;
     };
 
     window.ImgWindow = function (width, height, url) {
-        var win = createCanvasPopup(width, height, "../image");
+        var win = createCanvasWindow(width, height, "../image");
         $(win).load(function () {
             var img = new Image();
             img.src = url;
