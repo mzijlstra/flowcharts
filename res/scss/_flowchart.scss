@@ -79,7 +79,7 @@ div.variable.bottom .del {
     position: relative;
     width: 80px;
     height: 80px;
-    margin-left: 20px; 
+    margin-left: $indent +19px; 
     border: 2*$line $border;
     border-radius: 55px;
 
@@ -107,6 +107,7 @@ div.variable.bottom .del {
 /* connections between statements */
 .connection {
     cursor: pointer;
+    margin-left: $indent;
 
     .line {
         width: 0px;
@@ -172,8 +173,7 @@ div.variable.bottom .del {
 /* statements input/output/assignment */
 .assignment, .input, .output {
     position: relative;
-    padding: 0px 17px;
-    margin-left: 22px;
+    padding: 0px 5px;
 
     .var_container {
         display: inline-block;
@@ -181,7 +181,7 @@ div.variable.bottom .del {
         .menu {
             position: absolute;
             top: 45px;
-            left: 17px;
+            left: 5px;
             min-width: 100px;
             min-height: 10px;
         }
@@ -195,15 +195,17 @@ div.variable.bottom .del {
         border: 2*$line $border;
         padding: 15px;
         display: inline-block;
-        min-width: 13px;
+        min-width: 50px;
     }
     .io {
+        text-align: center;
         border-radius: 10px;
     }
 
     .exp {
         @extend .var;
         position: relative;
+        min-width: 100px;
 
         input[type=text] {
             z-index: 100;
@@ -223,11 +225,15 @@ div.variable.bottom .del {
         vertical-align: middle;
     }
 }
+.input > .io {
+    min-width: 100px;
+}
 
 
 /* decision diamond for IF and WHILE statemetns */
 .diamond {
     position: relative;
+    margin-left: $indent;
 
     .diamond_top_outside {
         width: 0px;
@@ -324,15 +330,15 @@ div.variable.bottom .del {
         top: 0px;
         bottom: 0px;
         width: 0px;
-        margin-left: $size - $line;
+        margin-left: $indent + $size - $line;
         border: $line $border;
     }
 
     .top_connect {
         position: absolute;
         top: -($size + $line);
-        right: -($size + $line);
-        left: ($size * 2) - ($line * 2);
+        right: -($indent + $size + $line);
+        left: $indent + ($size * 2) - ($line * 2);
         height: $size + $line;
         border-top: 2*$line $border;
         border-right: 2*$line $border;
@@ -340,7 +346,7 @@ div.variable.bottom .del {
     .bot_left_connect {
         position: absolute;
         bottom: 0px;
-        left: 0px;
+        left: $indent;
         right: 0px;
         margin-left: $size + $line;
         border: $line $border;
@@ -361,18 +367,19 @@ div.variable.bottom .del {
         bottom: 0px;
         left: 0px;
         height: 0px;
-        width: $size - $line;
+        width: $indent + $size - $line;
         border: $line $border;
     }
 }
 
 /* while statements */
 .while { 
+
     .true_connector {
         position: absolute;
         top: $size - $line;
         left: ($size * 2) - ($line * 2);
-        width: 56px;
+        width: $indent + 56px;
         height: $size - $line;
         border-top: 2*$line $border;
         border-right: 2*$line $border;
@@ -384,7 +391,7 @@ div.variable.bottom .del {
         position: absolute;
         top: 0px;
         bottom: 0px;
-        left: $size - $line;
+        left: $indent + $size - $line;
         width: 0px;
         border: $line $border;
     }
@@ -392,13 +399,13 @@ div.variable.bottom .del {
         position: absolute;
         top: -8px;
         bottom: -2px;
-        left: 79px;
-        width: 95px;
+        left: $indent + 20 + $size - $line;
+        width: $indent + 95px;
         border-left: 2*$line $border;
         border-bottom: 2*$line $border;
     }
     .loop_body {
-        margin-left: 115px;
+        margin-left: $indent + 115px;
     }
     .arrow_up {
         position: absolute;

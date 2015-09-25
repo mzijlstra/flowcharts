@@ -71,7 +71,7 @@ div.variable.bottom .del {
   position: relative;
   width: 80px;
   height: 80px;
-  margin-left: 20px;
+  margin-left: 149px;
   border: 2px solid white;
   border-radius: 55px; }
   .start .text, .stop .text {
@@ -92,7 +92,8 @@ div.variable.bottom .del {
 
 /* connections between statements */
 .connection {
-  cursor: pointer; }
+  cursor: pointer;
+  margin-left: 130px; }
   .connection .line {
     width: 0px;
     height: 15px;
@@ -147,14 +148,13 @@ div.variable.bottom .del {
 /* statements input/output/assignment */
 .assignment, .input, .output {
   position: relative;
-  padding: 0px 17px;
-  margin-left: 22px; }
+  padding: 0px 5px; }
   .assignment .var_container, .input .var_container, .output .var_container {
     display: inline-block; }
     .assignment .var_container .menu, .input .var_container .menu, .output .var_container .menu {
       position: absolute;
       top: 45px;
-      left: 17px;
+      left: 5px;
       min-width: 100px;
       min-height: 10px; }
   .assignment .var_container:hover .menu, .input .var_container:hover .menu, .output .var_container:hover .menu {
@@ -164,11 +164,13 @@ div.variable.bottom .del {
     border: 2px solid white;
     padding: 15px;
     display: inline-block;
-    min-width: 13px; }
+    min-width: 50px; }
   .assignment .io, .input .io, .output .io {
+    text-align: center;
     border-radius: 10px; }
   .assignment .exp, .input .exp, .output .exp {
-    position: relative; }
+    position: relative;
+    min-width: 100px; }
     .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text] {
       z-index: 100;
       position: absolute;
@@ -183,9 +185,13 @@ div.variable.bottom .del {
     line-height: 0px;
     vertical-align: middle; }
 
+.input > .io {
+  min-width: 100px; }
+
 /* decision diamond for IF and WHILE statemetns */
 .diamond {
-  position: relative; }
+  position: relative;
+  margin-left: 130px; }
   .diamond .diamond_top_outside {
     width: 0px;
     height: 0px;
@@ -263,20 +269,20 @@ div.variable.bottom .del {
     top: 0px;
     bottom: 0px;
     width: 0px;
-    margin-left: 59px;
+    margin-left: 189px;
     border: 1px solid white; }
   .if .top_connect {
     position: absolute;
     top: -61px;
-    right: -61px;
-    left: 118px;
+    right: -191px;
+    left: 248px;
     height: 61px;
     border-top: 2px solid white;
     border-right: 2px solid white; }
   .if .bot_left_connect {
     position: absolute;
     bottom: 0px;
-    left: 0px;
+    left: 130px;
     right: 0px;
     margin-left: 61px;
     border: 1px solid white; }
@@ -294,7 +300,7 @@ div.variable.bottom .del {
     bottom: 0px;
     left: 0px;
     height: 0px;
-    width: 59px;
+    width: 189px;
     border: 1px solid white; }
 
 /* while statements */
@@ -302,7 +308,7 @@ div.variable.bottom .del {
   position: absolute;
   top: 59px;
   left: 118px;
-  width: 56px;
+  width: 186px;
   height: 59px;
   border-top: 2px solid white;
   border-right: 2px solid white; }
@@ -312,19 +318,19 @@ div.variable.bottom .del {
   position: absolute;
   top: 0px;
   bottom: 0px;
-  left: 59px;
+  left: 189px;
   width: 0px;
   border: 1px solid white; }
 .while .return_line {
   position: absolute;
   top: -8px;
   bottom: -2px;
-  left: 79px;
-  width: 95px;
+  left: 209px;
+  width: 225px;
   border-left: 2px solid white;
   border-bottom: 2px solid white; }
 .while .loop_body {
-  margin-left: 115px; }
+  margin-left: 245px; }
 .while .arrow_up {
   position: absolute;
   left: -9px;
