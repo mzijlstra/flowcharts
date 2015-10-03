@@ -52,7 +52,7 @@ class ProjectDao {
         return $projects;
     }
 
-    public function all($uid, $order, $direction) {
+    public function all($uid, $order="id", $direction="DESC") {
         $recent = $this->db->prepare(
                 "SELECT * FROM project "
                 . "WHERE user_id = :uid AND active = 1 "
