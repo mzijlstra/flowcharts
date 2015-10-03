@@ -255,7 +255,7 @@
      * @param {int} height
      * @returns {object} reference to the created turtle
      */
-    window.turtleGFX = function(width, height) {
+    window.TurtleGFX = function(width, height) {
         var win = window.TGWindow(width, height);
         return win.createTurtle();
     };
