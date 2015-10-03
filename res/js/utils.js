@@ -247,7 +247,28 @@
         win.createTurtle = createTurtle;
         return win;
     };
-
+    
+    /**
+     * Single function to create a window and a turtle
+     * 
+     * @param {int} width
+     * @param {int} height
+     * @returns {object} reference to the created turtle
+     */
+    window.turtleGFX = function(width, height) {
+        var win = window.TGWindow(width, height);
+        return win.createTurtle();
+    };
+    
+    
+    /**
+     * Global constructor funfction for an image manipulation window
+     * 
+     * @param {type} width
+     * @param {type} height
+     * @param {type} url
+     * @returns {Window|Window.ImgWindow.win}
+     */
     window.ImgWindow = function (width, height, url) {
         var win = createCanvasPopup(width, height, "../image");
         $(win).load(function () {
