@@ -1,3 +1,8 @@
+<?php
+if (!isset($user)) {
+    $user = false;
+}
+?>
 <!DOCTYPE html>
 <!--
  Created on : August 30, 2014, 7:30:00 PM
@@ -16,7 +21,33 @@
                 display: inline-block;
                 width: 100px;
             }
+            table {
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid black;
+            }
+            th.name {
+                min-width: 400px;
+            }
+            th.date {
+                width: 175px;
+            }
         </style>
+        <script>
+            window.onload = function () {
+                var tr = document.getElementsByTagName("TR");
+                for (var i = 0; i < tr.length; i++) {
+                    tr[i].onclick = function () {
+                        var pid = this.getAttribute("id");
+                        if (!pid) {
+                            return false;
+                        }
+                        window.location = window.location + "/project/" + pid;
+                    };
+                }
+            };
+        </script>
     </head>
     <body>
         <h1>User Details:</h1>
@@ -44,9 +75,24 @@
                 <span>Active:</span>
                 <input type="checkbox" name="active" <?= $user && !$user['active'] ? "" : "checked" ?> /> <br />
 
-                <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/>
+                <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/> <a href="../user"><button>Back</button></a>
             </form>
-            <a href="../user"><button>Back</button></a>
         </div>
+        <?php if ($user) : ?>
+        <table>
+            <tr>
+                <th class="name">Project</th>
+                <th class="date">Created</th>
+                <th class="date">Accessed</th>
+            </tr>
+            <?php foreach ($projects as $project) : ?>
+            <tr id="<?= $project['id'] ?>">
+                <td><?= $project['name'] ?></td>
+                <td><?= $project['created'] ?></td>
+                <td><?= $project['accessed'] ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
     </body>
 </html>

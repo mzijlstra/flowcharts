@@ -56,6 +56,15 @@ class UserCtrl {
         }
     }
 
+    // GET /
+    public function loggedIn() {
+        // redirect to the most recent project
+        global $MY_BASE;
+        $user = $_SESSION['user'];
+        $pid = $this->projectDao->recent($user['id']);
+        return "Location: $MY_BASE/project/$pid";
+    }
+
     // GET /logout
     public function logout() {
         session_destroy();
@@ -78,7 +87,9 @@ class UserCtrl {
 
         $user = $this->userDao->retrieve($uid);
         $VIEW_DATA['user'] = $user;
-        $VIEW_DATA['uid'] = $uid;
+        
+        $projects = $this->projectDao->all($uid, "created", "ASC");
+        $VIEW_DATA['projects'] = $projects;
         return "userDetails.php";
     }
 

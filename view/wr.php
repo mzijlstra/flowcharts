@@ -35,7 +35,12 @@
             </div>
         </div>
 
-        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
+        <div id="user">
+            Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
+            <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+                <a href="../user">users</a>
+            <?php endif; ?>
+        </div>
 
         <div id="workspace" class="edit">            
             <div id="var_area">

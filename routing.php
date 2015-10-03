@@ -9,7 +9,6 @@
  * ************************************** */
 // Requests that don't need a controller aka 'view controllers'
 $view_ctrl = array(
-    "|^/$|" => "login.php",
     "|/login|" => "login.php",
     "|/sandbox$|" => "sandbox.php",
     "|/user/add|" => "userDetails.php",
@@ -17,6 +16,7 @@ $view_ctrl = array(
 
 // Get requests that need a controller
 $get_ctrl = array(
+    "|^/$|" => "UserCtrl@loggedIn",
     "|/user$|" => "UserCtrl@all",
     "|/user/(\d+)$|" => "UserCtrl@details",
     "|/user/(\d+)/project$|" => "ProjectCtrl@getUserProjects",
