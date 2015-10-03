@@ -580,6 +580,13 @@ $(function () {
             return true;
         });
     });
+    // call expressions
+    $(".call .exp").click(function () {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // don't show if we're executing
+        }
+        inputHere(this);
+    });
     // if and while condition expressions
     $(".diamond").click(function (event) {
         if ($('#workspace').hasClass('exec')) {
@@ -1049,6 +1056,8 @@ $(function () {
                 } else if (t.children(".assignment").length) {
                     c += t.find(".var").text();
                     c += " = ";
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".call")) {
                     c += t.find(".exp").text() + ";\n";
                 } else if (t.children(".if").length) {
                     c += "if (" + t.find(".exp").first().text() + ") {\n";

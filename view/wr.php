@@ -154,6 +154,7 @@
             <div class="menu_item" id="add_assignment">Assignment</div>
             <div class="menu_item" id="add_if">If Statement</div>
             <div class="menu_item" id="add_while">While Loop</div>
+            <div class="menu_item" id="add_call">Call</div>
         </div>
 
 
@@ -244,6 +245,13 @@
                         <span class="var">&nbsp;</span>
                     </div>
                     <span class="asgn">&#171;</span> 
+                    <span class="exp">&nbsp;</span>
+                </div>
+            </div>
+
+            <div id="call" class="statement">
+                <div class="del">&times;</div>
+                <div class="call">
                     <span class="exp">&nbsp;</span>
                 </div>
             </div>

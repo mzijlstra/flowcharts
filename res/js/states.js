@@ -232,6 +232,12 @@ $(function () {
             return wr.verifyType(exp[0], type, "silent");
         };
     });
+    // call statements are always ready?
+    $(".statement > .call").each(function () {
+        $(this).parent()[0].ready = function () {
+            return true;
+        };
+    });
     // if statements and while statements should have boolean expresssions
     $(".statement > .if, .statement > .while").each(function () {
         $(this).parent()[0].ready = function () {

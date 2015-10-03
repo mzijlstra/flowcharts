@@ -170,8 +170,8 @@ div.variable.bottom .del {
     z-index: 10;
 }
 
-/* statements input/output/assignment */
-.assignment, .input, .output {
+/* statements input/output/assignment/call */
+.assignment, .input, .output, .call {
     position: relative;
     padding: 0px 5px;
 
@@ -227,6 +227,9 @@ div.variable.bottom .del {
 }
 .input > .io {
     min-width: 100px;
+}
+.call > .exp {
+    margin-left: 120px;
 }
 
 

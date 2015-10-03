@@ -314,10 +314,10 @@ $(function () {
                         var nelem = t.find(".var");
                         var name = nelem.text();
                         if (typeof exp[0].result === "string") {
-                            exp[0].result = '"'+exp[0].result+'"';
+                            exp[0].result = '"' + exp[0].result + '"';
                         }
                         frame.ctx[name] = exp[0].result;
-                        
+
 
                         nelem.addClass("executing");
                         var tresult = exp.text();
@@ -335,6 +335,37 @@ $(function () {
                             asgn.removeClass("eval");
                         }, parseFloat($("#delay").text()) * 500);
                     }});
+            };
+        });
+
+        ins.find(".statement > .call").each(function () {
+            $(this).parent()[0].exec = function () {
+                var t = $(this);
+                t.addClass("executing");
+                var frame = wr.stack[wr.curfrm];
+
+                // eval expression 
+                var exp = t.find(".exp");
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
+                var result = wr.eval(exp.text(), frame.ctx);
+
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
+                }
+
+                // otherwise show the result, and line up the next steps
+                if (typeof result === "string") {
+                    result = '"' + result + '"';
+                }
+                exp.text(result);
+                exp.addClass("eval");
+
+                setTimeout(function () {
+                   exp.removeClass("eval");
+                }, parseFloat($("#delay").text()) * 1000);
             };
         });
 

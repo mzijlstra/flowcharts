@@ -145,33 +145,33 @@ div.variable.bottom .del {
   display: block;
   z-index: 10; }
 
-/* statements input/output/assignment */
-.assignment, .input, .output {
+/* statements input/output/assignment/call */
+.assignment, .input, .output, .call {
   position: relative;
   padding: 0px 5px; }
-  .assignment .var_container, .input .var_container, .output .var_container {
+  .assignment .var_container, .input .var_container, .output .var_container, .call .var_container {
     display: inline-block; }
-    .assignment .var_container .menu, .input .var_container .menu, .output .var_container .menu {
+    .assignment .var_container .menu, .input .var_container .menu, .output .var_container .menu, .call .var_container .menu {
       position: absolute;
       top: 45px;
       left: 5px;
       min-width: 100px;
       min-height: 10px; }
-  .assignment .var_container:hover .menu, .input .var_container:hover .menu, .output .var_container:hover .menu {
+  .assignment .var_container:hover .menu, .input .var_container:hover .menu, .output .var_container:hover .menu, .call .var_container:hover .menu {
     display: block; }
-  .assignment .var, .assignment .exp, .assignment .io, .input .var, .input .exp, .input .io, .output .var, .output .exp, .output .io {
+  .assignment .var, .assignment .exp, .assignment .io, .input .var, .input .exp, .input .io, .output .var, .output .exp, .output .io, .call .var, .call .exp, .call .io {
     background-color: #336;
     border: 2px solid white;
     padding: 15px;
     display: inline-block;
     min-width: 50px; }
-  .assignment .io, .input .io, .output .io {
+  .assignment .io, .input .io, .output .io, .call .io {
     text-align: center;
     border-radius: 10px; }
-  .assignment .exp, .input .exp, .output .exp {
+  .assignment .exp, .input .exp, .output .exp, .call .exp {
     position: relative;
     min-width: 100px; }
-    .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text] {
+    .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text], .call .exp input[type=text] {
       z-index: 100;
       position: absolute;
       top: -2px;
@@ -179,7 +179,7 @@ div.variable.bottom .del {
       border: 2px solid white;
       padding: 15px;
       background-color: #336; }
-  .assignment .asgn, .input .asgn, .output .asgn {
+  .assignment .asgn, .input .asgn, .output .asgn, .call .asgn {
     display: inline-block;
     font-size: 300%;
     line-height: 0px;
@@ -187,6 +187,9 @@ div.variable.bottom .del {
 
 .input > .io {
   min-width: 100px; }
+
+.call > .exp {
+  margin-left: 120px; }
 
 /* decision diamond for IF and WHILE statemetns */
 .diamond {
@@ -382,6 +385,8 @@ div.variable.bottom .del {
 .input .exec div.statement .executing.exp,
 .exec div.statement .output .executing.exp,
 .output .exec div.statement .executing.exp,
+.exec div.statement .call .executing.exp,
+.call .exec div.statement .executing.exp,
 .exec .params.executing {
   color: greenyellow; }
 
@@ -919,5 +924,3 @@ footer {
   .popup .center {
     text-align: center;
     margin-top: 1em; }
-
-/*# sourceMappingURL=page.css.map */
