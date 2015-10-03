@@ -35,10 +35,7 @@
             </div>
         </div>
 
-        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
-            <!-- link for opening canvas windows in a new tab -->
-            <span id="canvas_window" >Test</span>
-        </div>
+        <div id="user">Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a></div>
 
         <div id="workspace" class="edit">            
             <div id="var_area">
