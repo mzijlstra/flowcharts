@@ -1057,7 +1057,7 @@ $(function () {
                     c += t.find(".var").text();
                     c += " = ";
                     c += t.find(".exp").text() + ";\n";
-                } else if (t.children(".call")) {
+                } else if (t.children(".call").length) {
                     c += t.find(".exp").text() + ";\n";
                 } else if (t.children(".if").length) {
                     c += "if (" + t.find(".exp").first().text() + ") {\n";
