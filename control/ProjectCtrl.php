@@ -54,8 +54,8 @@ class ProjectCtrl {
         return "Location: $MY_BASE/project/$pid";
     }
 
-    // AJAX GET /project/other_recents
-    // AJAX GET /user/(\d+)/project/other_recents
+    // AJAX GET /project/other_recent
+    // AJAX GET /user/(\d+)/project/other_recent
     public function getOtherRecent() {
         global $VIEW_DATA;
         global $URI_PARAMS;
