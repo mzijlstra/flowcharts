@@ -55,9 +55,21 @@ class ProjectCtrl {
     }
 
     // AJAX GET /project/other_recents
+    // AJAX GET /user/(\d+)/project/other_recents
     public function getOtherRecent() {
         global $VIEW_DATA;
+        global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
+        
+        if (count($URI_PARAMS) === 2) {
+            if ($_SESSION['user']['type'] === 'admin') {
+                $uid = $URI_PARAMS[1];
+            } else {
+                // Show access denied
+                return "error/403.php";
+            }
+        }
+
         $pid = filter_input(INPUT_GET, "pid");
         $VIEW_DATA['json'] = $this->projectDao->otherRecent($uid, $pid);
         return "json.php";
