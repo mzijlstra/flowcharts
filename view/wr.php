@@ -1,3 +1,6 @@
+<?php 
+global $MY_BASE;
+?>
 <!DOCTYPE html>
 <!--
     Created on : May 3, 2014, 6:10:01 PM
@@ -38,7 +41,7 @@
         <div id="user">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
-                <a href="../user">users</a>
+                <a href="<?= $MY_BASE ?>/user">users</a>
             <?php endif; ?>
         </div>
 
