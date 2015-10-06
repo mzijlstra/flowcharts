@@ -14,6 +14,7 @@ $sec = array(
     "|GET@/project|" => "user",
     "|POST@/project|" => "user",
     "|POST@/function|" => "user",
+    "|GET@/sandbox|" => "user",
     "|GET@/user|" => "admin",
     "|POST@/user|" => "admin"
 );
