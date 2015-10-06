@@ -2,6 +2,8 @@
  Created on : Jul 07, 2015
  Author     : mzijlstra
  */
+var __turtle_win = false;
+
 (function () {
     var createCanvasPopup = function (width, height) {
         if (!width || typeof (width) !== 'number') {
@@ -256,8 +258,12 @@
      * @returns {object} reference to the created turtle
      */
     window.TurtleGFX = function(width, height) {
-        var win = window.TGWindow(width, height);
-        return win.createTurtle();
+        // global variable!
+        if (__turtle_win) {
+            __turtle_win.close();
+        }
+        __turtle_win = window.TGWindow(width, height);
+        return __turtle_win.createTurtle();
     };
     
     
