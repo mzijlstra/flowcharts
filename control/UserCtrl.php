@@ -39,7 +39,7 @@ class UserCtrl {
             // update the last accessed time
             $this->userDao->updateAccessed($row['id']);
 
-            $redirect = "Location: $MY_BASE/";
+            $redirect = "Location: $MY_BASE";
             if (isset($_SESSION['login_to'])) {
                 // redirect to original requested URL
                 $redirect .= $_SESSION['login_to'];
@@ -47,7 +47,7 @@ class UserCtrl {
             } else {
                 // redirect to the most recent project
                 $pid = $this->projectDao->recent($row['id']);
-                $redirect .= "project/$pid";
+                $redirect .= "/project/$pid";
             }
             return $redirect;
         } else {
