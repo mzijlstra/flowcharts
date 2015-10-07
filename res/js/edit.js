@@ -122,8 +122,8 @@ $(function () {
         // dynamically resize field based on contents
         var resize = function () {
             var length = i.val().length * 8;
-            if (length < 150) {
-                length = 150;
+            if (length < 50) {
+                length = 50;
             }
             i.css("width", length);
         };
@@ -461,6 +461,15 @@ $(function () {
         }
     });
 
+    $("div.var_container > span.var").click(function () {
+        if ($('#workspace').hasClass('exec')) {
+            return false; // not if we're executing
+        }
+        $(this).siblings(".menu").hide();
+        inputHere(this);
+    });
+
+
     // repopulate var select menu (asgn) on mouse enter
     $(".var_container").mouseenter(function () {
         if ($('#workspace').hasClass('exec')) {
@@ -473,7 +482,14 @@ $(function () {
 
         menu.empty();
         for (var k in wr.curvars) {
-            menu.append("<div class='menu_item'>" + k + "</div>");
+            // append [] to arrays
+            var type = $(wr.curvars[k]).siblings(".type_container")
+                    .find(".type").text();
+            if (type == "array") {
+                menu.append("<div class='menu_item'>" + k + "[]</div>");
+            } else {
+                menu.append("<div class='menu_item'>" + k + "</div>");
+            }
         }
         // highlight current
         if (cur && cur !== " ") {
@@ -557,8 +573,7 @@ $(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        var exp = this;
-        inputHere(exp, function (t) {
+        inputHere(this, function (t) {
             wr.verifyType(t, "string");
             return true;
         });

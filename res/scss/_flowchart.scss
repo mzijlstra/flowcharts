@@ -197,6 +197,15 @@ div.variable.bottom .del {
         display: inline-block;
         min-width: 50px;
     }
+    .var > input[type=text] {
+        z-index: 100;
+        position: absolute;
+        top: 0px;
+        left: 5px;
+        border: 2*$line $border;
+        padding: 15px;
+        background-color: $bg;
+    }
     .io {
         text-align: center;
         border-radius: 10px;

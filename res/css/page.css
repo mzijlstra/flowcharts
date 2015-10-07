@@ -165,6 +165,14 @@ div.variable.bottom .del {
     padding: 15px;
     display: inline-block;
     min-width: 50px; }
+  .assignment .var > input[type=text], .assignment .exp > input[type=text], .assignment .input .exp > input[type=text], .assignment .output .exp > input[type=text], .assignment .call .exp > input[type=text], .input .var > input[type=text], .input .assignment .exp > input[type=text], .input .exp > input[type=text], .input .output .exp > input[type=text], .input .call .exp > input[type=text], .output .var > input[type=text], .output .assignment .exp > input[type=text], .output .input .exp > input[type=text], .output .exp > input[type=text], .output .call .exp > input[type=text], .call .var > input[type=text], .call .assignment .exp > input[type=text], .call .input .exp > input[type=text], .call .output .exp > input[type=text], .call .exp > input[type=text] {
+    z-index: 100;
+    position: absolute;
+    top: 0px;
+    left: 5px;
+    border: 2px solid white;
+    padding: 15px;
+    background-color: #336; }
   .assignment .io, .input .io, .output .io, .call .io {
     text-align: center;
     border-radius: 10px; }
@@ -924,5 +932,3 @@ footer {
   .popup .center {
     text-align: center;
     margin-top: 1em; }
-
-/*# sourceMappingURL=page.css.map */
