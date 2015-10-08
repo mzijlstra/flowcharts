@@ -175,6 +175,7 @@ var __turtle_win = false;
                 }
                 x += dx;
                 y += dy;
+                return this;
             },
             'rotate': function (degree) {
                 deg += degree;
@@ -182,16 +183,19 @@ var __turtle_win = false;
                 display.css({
                     "transform": "rotate(" + deg + "deg)"
                 });
+                return this;
             },
             'penUp': function () {
                 penDown = false;
                 drawTurtle();
                 drawPenUp();
+                return this;
             },
             'penDown': function () {
                 penDown = true;
                 drawTurtle();
                 drawPenDown();
+                return this;
             },
             'penColor': function (color) {
                 pen_color = color;
@@ -202,15 +206,19 @@ var __turtle_win = false;
                     drawPenUp();
                 }
                 ctx.strokeStyle = color;
+                return this;
             },
             'penWidth': function (width) {
                 ctx.lineWidth = width;
+                return this;
             },
             'show': function () {
                 display.show();
+                return this;
             },
             'hide': function () {
                 display.hide();
+                return this;
             },
             'moveTo': function (nx, ny) {
                 display.css({
@@ -225,13 +233,14 @@ var __turtle_win = false;
                 }
                 x = nx;
                 y = ny;
+                return this;
             },
             'rotateTo': function (degree) {
                 deg = degree % 360;
                 display.css({
                     "transform": "rotate(" + (deg + 90) + "deg)"
                 });
-
+                return this;
             }
         };
         return turtle;

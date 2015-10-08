@@ -147,6 +147,10 @@ $(function () {
      * @returns {boolean} true if matches desired type
      */
     wr.verifyType = function (elem, type, silent) {
+        if (!type) {
+            return true;
+        }
+        
         var e = $(elem);
         var exp = e.val() || e.text();
         var stmt = e.closest(".statement");
@@ -179,7 +183,7 @@ $(function () {
         }
         // no nice way to determine the types of properties
         // TODO fix this by actually executing the statements?
-        if (exp.match(/.+\..+/)) { // anything containing a dot
+        if (exp.match(/.+(\.|\[).+/)) { // anything containing a dot or [
             stmt.removeClass("type_error exp_error");
             return true;
         }
@@ -200,7 +204,7 @@ $(function () {
         var result = typeof data;
         var match = false;
         if (result === 'object') {
-            if (type === 'array' && data.length) {
+            if (type === 'array' && $.isArray(data)) {
                 match = true;
             } else if (type === 'object') {
                 match = true;

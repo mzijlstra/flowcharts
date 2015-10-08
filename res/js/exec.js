@@ -189,10 +189,12 @@ $(function () {
                 var asgn = t.find(".asgn");
                 var delay = parseFloat($("#delay").text());
                 var input = null;
+                var disp = null;
                 wr.prompt("Please enter input:", function (inp) {
                     iolog("IN : " + '"' + inp + '"', "in");
-                    input = '"' + inp + '"'; // input is always a string
-                    io.text(input);
+                    input = inp // input is always a string
+                    disp = JSON.stringify(inp);
+                    io.text('"' + input + '"');
                     io.addClass("eval");
 
                     setTimeout(function () {
@@ -213,8 +215,18 @@ $(function () {
                         var name = nelem.text();
 
                         // place value in the needed locations
-                        frame.ctx[name] = input;
-                        $("#f" + wr.curfrm + "_" + name).text(input)
+                        var found = name.match(/^(\w+)(\[|\.)(\w+)/);
+                        if (found) {
+                            // assignment into array or object
+                            name = found[1];
+                            var index = wr.eval(found[3], frame.ctx);
+                            frame.ctx[name][index] = input;
+                            disp = JSON.stringify(frame.ctx[name]);
+                        } else {
+                            frame.ctx[name] = '"' + input + '"';
+                        }
+                        $("#f" + wr.curfrm + "_" + name)
+                                .text(disp)
                                 .parent().addClass("executing");
 
                         io.text("INPUT");
@@ -298,10 +310,10 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-                if (typeof result === "string") {
-                    result = '"' + result + '"';
-                }
-                exp.text(result);
+//                if (typeof result === "string") {
+//                    result = '"' + result + '"';
+//                }
+                exp.text(JSON.stringify(result));
                 exp.addClass("eval");
 
                 var asgn = t.find(".asgn");
@@ -313,14 +325,23 @@ $(function () {
                 frame.steps.push({"exec": function () {
                         var nelem = t.find(".var");
                         var name = nelem.text();
-                        if (typeof exp[0].result === "string") {
-                            exp[0].result = '"' + exp[0].result + '"';
-                        }
-                        frame.ctx[name] = exp[0].result;
 
+                        var found = name.match(/^(\w+)(\[|\.)(\w+)/);
+                        if (found) {
+                            // assignment into array or object
+                            name = found[1];
+                            var index = wr.eval(found[3], frame.ctx);
+                            frame.ctx[name][index] = exp[0].result;
+                        } else {
+                            if (typeof exp[0].result === "string") {
+                                exp[0].result = '"' + exp[0].result + '"';
+                            }
+                            frame.ctx[name] = exp[0].result;
+                        }
 
                         nelem.addClass("executing");
-                        var tresult = exp.text();
+                        //var tresult = exp.text();
+                        var tresult = JSON.stringify(frame.ctx[name]);
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
 
@@ -356,15 +377,10 @@ $(function () {
                     return;
                 }
 
-                // otherwise show the result, and line up the next steps
-                if (typeof result === "string") {
-                    result = '"' + result + '"';
-                }
-                exp.text(result);
                 exp.addClass("eval");
 
                 setTimeout(function () {
-                   exp.removeClass("eval");
+                    exp.removeClass("eval");
                 }, parseFloat($("#delay").text()) * 1000);
             };
         });

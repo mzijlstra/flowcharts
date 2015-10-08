@@ -461,12 +461,17 @@ $(function () {
         }
     });
 
+    // handle click on variable in statement to edit it
     $("div.var_container > span.var").click(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // not if we're executing
         }
-        $(this).siblings(".menu").hide();
-        inputHere(this);
+        var t = $(this);
+        t.siblings(".menu").hide();
+        inputHere(this, function () {
+            // in case it has it
+            t.closest(".statement").removeClass("type_error exp_error"); 
+        });
     });
 
 
@@ -482,14 +487,7 @@ $(function () {
 
         menu.empty();
         for (var k in wr.curvars) {
-            // append [] to arrays
-            var type = $(wr.curvars[k]).siblings(".type_container")
-                    .find(".type").text();
-            if (type == "array") {
-                menu.append("<div class='menu_item'>" + k + "[]</div>");
-            } else {
-                menu.append("<div class='menu_item'>" + k + "</div>");
-            }
+            menu.append("<div class='menu_item'>" + k + "</div>");
         }
         // highlight current
         if (cur && cur !== " ") {

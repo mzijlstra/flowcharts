@@ -196,9 +196,10 @@ $(function () {
             if (name === "") {
                 t.addClass("name_error");
                 return false;
-            }
+            } 
             var type = $(wr.functions[func][name]).prev().find(".type").text();
-            if (type !== "string") {
+            // type will be empty for arary and object index
+            if (type && type !== "string") {
                 t.addClass("type_error");
                 return false;
             }
