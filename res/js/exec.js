@@ -636,12 +636,12 @@ $(function () {
                     // in reverse order, show that we're back in the previous
                     // function, then put our result in place of the call
                     // and then re-execute the original statement 
-                    pframe.steps.push(pstmt);
+                    pframe.steps.push(pstmt[0]);
                     pframe.steps.push({
                         "exec": function () {
                             var exp = frame.ret2;
                             pstmt.addClass("executing");
-                            var cur = exp;
+                            var cur = exp.text();
                             exp.result = result;
                             exp.text(replaceCall(cur, frame.name, result));
                         }
