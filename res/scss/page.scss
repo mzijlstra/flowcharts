@@ -487,6 +487,7 @@ footer {
     color: black;
     padding: 1em;
     z-index: 10;
+    overflow: auto;
 }
 #hide_js {
     display: none;
@@ -520,7 +521,6 @@ footer {
     border-left: $line $border;
     background-color: $bg;; 
     color: $fg;
-    overflow: auto;
 
     table {
         width: 100%;
