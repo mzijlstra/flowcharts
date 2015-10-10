@@ -393,7 +393,9 @@ $(function () {
 
                 // eval expression
                 var exp = t.find(".exp").first();
-                exp.attr("exp", exp.text());
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
                 var result = wr.eval(exp.text(), frame.ctx);
 
                 // exit if there was a doCall() in the exp
@@ -415,7 +417,7 @@ $(function () {
                 if (result) {
                     // get all the elements on the right branch
                     elems = $(document).find(
-                            ".executing > .if > table > tbody > tr > .right"
+                            ".active .executing > .if > table > tbody > tr > .right"
                             ).children().get().reverse();
 
                     var absolute_right = elems.pop(); // needed for exit
@@ -494,7 +496,9 @@ $(function () {
 
                 // eval expression
                 var exp = t.find(".exp").first();
-                exp.attr("exp", exp.text());
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
                 var result = wr.eval(exp.text(), frame.ctx);
 
                 // exit if there was a doCall() in the exp
@@ -616,7 +620,9 @@ $(function () {
 
                 // eval expression and show in exp span
                 var exp = t.find(".exp");
-                exp.attr("exp", exp.text());
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
                 var result = wr.eval(exp.text(), frame.ctx);
                 if (typeof result === "string") {
                     result = '"' + result + '"';
@@ -627,7 +633,7 @@ $(function () {
 
                 if (wr.curfrm !== -1) {
                     var pframe = wr.stack[wr.curfrm];
-                    var pstmt = frame.ret2.closest(".statement");
+                    var pstmt = frame.ret2.closest(".statement").first();
 
                     // in reverse order, show that we're back in the previous
                     // function, then put our result in place of the call
@@ -635,11 +641,11 @@ $(function () {
                     pframe.steps.push(pstmt[0]);
                     pframe.steps.push({
                         "exec": function () {
+                            var exp = frame.ret2;
                             pstmt.addClass("executing");
-                            var cur = frame.ret2.text();
-                            frame.ret2[0].result = result;
-                            frame.ret2.text(
-                                    replaceCall(cur, frame.name, result));
+                            var cur = exp.text();
+                            exp.result = result;
+                            exp.text(replaceCall(cur, frame.name, result));
                         }
                     });
                     pframe.steps.push({
@@ -692,7 +698,7 @@ $(function () {
         // find where we have to return to (if we're not main starting up)
         var ret2 = false;
         if (wr.curfrm !== 0) {
-            ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp");
+            ret2 = wr.stack[wr.curfrm - 1].ins.find(".executing .exp").first();
             // if we can't find it we aren't the fist call for the expression
             // return so that we can be evaluated later (keeps sequence correct)
             if (!ret2.length) {
