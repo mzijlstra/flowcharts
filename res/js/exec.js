@@ -620,7 +620,9 @@ $(function () {
 
                 // eval expression and show in exp span
                 var exp = t.find(".exp");
-                exp.attr("exp", exp.text());
+                if (!exp.attr("exp")) {
+                    exp.attr("exp", exp.text());
+                }
                 var result = wr.eval(exp.text(), frame.ctx);
                 if (typeof result === "string") {
                     result = '"' + result + '"';
