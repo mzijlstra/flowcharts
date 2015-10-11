@@ -382,6 +382,7 @@ $(function () {
 
                 setTimeout(function () {
                     exp.removeClass("eval");
+                    exp.text(exp.attr("exp"))
                 }, parseFloat($("#delay").text()) * 1000);
             };
         });
