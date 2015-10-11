@@ -814,7 +814,8 @@ footer {
   background-color: #F0F0F0;
   color: black;
   padding: 1em;
-  z-index: 10; }
+  z-index: 10;
+  overflow: auto; }
 
 #hide_js, #hide_proj {
   display: none;
@@ -844,8 +845,7 @@ footer {
 #projects_disp {
   border-left: 1px solid white;
   background-color: #336;
-  color: white;
-  overflow: auto; }
+  color: white; }
   #projects_disp table {
     width: 100%;
     border-collapse: collapse; }
