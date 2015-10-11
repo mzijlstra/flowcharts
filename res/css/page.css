@@ -168,10 +168,10 @@ div.variable.bottom .del {
   .assignment .var > input[type=text], .assignment .exp > input[type=text], .assignment .input .exp > input[type=text], .assignment .output .exp > input[type=text], .assignment .call .exp > input[type=text], .input .var > input[type=text], .input .assignment .exp > input[type=text], .input .exp > input[type=text], .input .output .exp > input[type=text], .input .call .exp > input[type=text], .output .var > input[type=text], .output .assignment .exp > input[type=text], .output .input .exp > input[type=text], .output .exp > input[type=text], .output .call .exp > input[type=text], .call .var > input[type=text], .call .assignment .exp > input[type=text], .call .input .exp > input[type=text], .call .output .exp > input[type=text], .call .exp > input[type=text] {
     z-index: 100;
     position: absolute;
-    top: 0px;
-    left: 5px;
-    border: 2px solid white;
-    padding: 15px;
+    top: 1px;
+    left: 7px;
+    border: none;
+    padding: 13px;
     background-color: #336; }
   .assignment .io, .input .io, .output .io, .call .io {
     text-align: center;
@@ -182,19 +182,16 @@ div.variable.bottom .del {
     .assignment .exp input[type=text], .input .exp input[type=text], .output .exp input[type=text], .call .exp input[type=text] {
       z-index: 100;
       position: absolute;
-      top: -2px;
-      left: -2px;
-      border: 2px solid white;
-      padding: 15px;
+      top: 0px;
+      left: 0px;
+      border: none;
+      padding: 13px;
       background-color: #336; }
   .assignment .asgn, .input .asgn, .output .asgn, .call .asgn {
     display: inline-block;
     font-size: 300%;
     line-height: 0px;
     vertical-align: middle; }
-
-.input > .io {
-  min-width: 100px; }
 
 .call > .exp {
   margin-left: 120px; }
@@ -246,7 +243,7 @@ div.variable.bottom .del {
       position: absolute;
       top: 0px;
       left: 0px;
-      border: 1px solid white;
+      border: none;
       background: #336; }
   .diamond .label_stmt {
     position: absolute;
@@ -599,7 +596,8 @@ div#projects:hover #project_menu {
       position: absolute;
       left: 45px;
       top: -2px;
-      width: 27px; }
+      width: 27px;
+      border: none; }
   #controls #step_btn {
     display: none; }
   #controls #corner_ctrl {
@@ -932,3 +930,5 @@ footer {
   .popup .center {
     text-align: center;
     margin-top: 1em; }
+
+/*# sourceMappingURL=page.css.map */

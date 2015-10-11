@@ -200,10 +200,10 @@ div.variable.bottom .del {
     .var > input[type=text] {
         z-index: 100;
         position: absolute;
-        top: 0px;
-        left: 5px;
-        border: 2*$line $border;
-        padding: 15px;
+        top: 1px;
+        left: 7px;
+        border: none;
+        padding: 13px;
         background-color: $bg;
     }
     .io {
@@ -219,10 +219,10 @@ div.variable.bottom .del {
         input[type=text] {
             z-index: 100;
             position: absolute;
-            top: -2px;
-            left: -2px;
-            border: 2*$line $border;
-            padding: 15px;
+            top: 0px;
+            left: 0px;
+            border: none;
+            padding: 13px;
             background-color: $bg;
         }
     }
@@ -233,9 +233,6 @@ div.variable.bottom .del {
         line-height: 0px;
         vertical-align: middle;
     }
-}
-.input > .io {
-    min-width: 100px;
 }
 .call > .exp {
     margin-left: 120px;
@@ -297,7 +294,7 @@ div.variable.bottom .del {
             position: absolute;
             top: 0px;
             left: 0px;
-            border: $line $border;
+            border: none;
             background: $bg;
         }
     }
