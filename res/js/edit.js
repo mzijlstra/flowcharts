@@ -471,6 +471,7 @@ $(function () {
         inputHere(this, function () {
             // in case it has it
             t.closest(".statement").removeClass("type_error exp_error"); 
+            return true;
         });
     });
 
@@ -957,7 +958,7 @@ $(function () {
         };
 
         // on initial load show projects ordered by created
-        getProjects("created");
+        getProjects("accessed", "DESC");
 
         var getSortFun = function (order) {
             return function () {
