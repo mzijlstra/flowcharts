@@ -88,7 +88,7 @@ class UserCtrl {
         $user = $this->userDao->retrieve($uid);
         $VIEW_DATA['user'] = $user;
         
-        $projects = $this->projectDao->all($uid, "created", "ASC");
+        $projects = $this->projectDao->all($uid, "accessed", "DESC");
         $VIEW_DATA['projects'] = $projects;
         return "userDetails.php";
     }
