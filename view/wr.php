@@ -56,7 +56,7 @@ global $MY_BASE;
                     <?php endforeach; ?>
                 </div>
                 <div id="stack">
-                    <div class="label">Stack:</div>
+                    <div class="label">Stack &#8613;</div>
                 </div>
             </div> <!-- end var_area -->
 
