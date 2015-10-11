@@ -310,10 +310,12 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-//                if (typeof result === "string") {
-//                    result = '"' + result + '"';
-//                }
-                exp.text(JSON.stringify(result));
+                var disp = JSON.stringify(result);
+                if (typeof result === "object" && !$.isArray(result) &&
+                        typeof result.toString === "function") {
+                    disp = result.toString();
+                }
+                exp.text(disp);
                 exp.addClass("eval");
 
                 var asgn = t.find(".asgn");
@@ -332,6 +334,7 @@ $(function () {
                             name = found[1];
                             var index = wr.eval(found[3], frame.ctx);
                             frame.ctx[name][index] = exp[0].result;
+                            disp = JSON.stringify(frame.ctx[name]);
                         } else {
                             if (typeof exp[0].result === "string") {
                                 exp[0].result = '"' + exp[0].result + '"';
@@ -340,15 +343,13 @@ $(function () {
                         }
 
                         nelem.addClass("executing");
-                        //var tresult = exp.text();
-                        var tresult = JSON.stringify(frame.ctx[name]);
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
 
                         // place value in the needed locations
                         var var_disp = $("#f" + findex + "_" + name);
                         if (exp[0].result !== undefined) {
-                            var_disp.text(tresult);
+                            var_disp.text(disp);
                         }
                         var_disp.parent().addClass("executing");
 
@@ -669,7 +670,7 @@ $(function () {
                     frame.steps.push({
                         "exec": function () {
                             iolog("- Execution complete, click edit or play " +
-                                    "to continue. -", "done");
+                                    "to continue -", "done");
                             frame.data.detach();
                             wr.stack.pop();
                             wr.curfrm -= 1;
@@ -776,9 +777,7 @@ $(function () {
             $("#frameI" + fnum).addClass("active");
         });
         fdata.append(vars);
-        $("#stack").append(fdata);
-        var va = $("#var_area")[0];
-        va.scrollTop = va.scrollHeight; // always scroll to bottom
+        $("#stack").prepend(fdata);
 
         // setup the steps for this function call;
         var steps = [];
