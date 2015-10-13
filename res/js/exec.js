@@ -744,10 +744,7 @@ $(function () {
         var label = "<div class='flabel'>" + fname + "(";
         if (args) {
             for (var i = 0; i < args.length; i++) {
-                if (typeof args[i] === "string") {
-                    args[i] = '"' + args[i] + '"';
-                }
-                label += args[i] + ", ";
+                label += JSON.stringify(args[i]) + ", ";
             }
             label = label.substring(0, label.length - 2);
         }
