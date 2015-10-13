@@ -626,10 +626,8 @@ $(function () {
                     exp.attr("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx);
-                if (typeof result === "string") {
-                    result = '"' + result + '"';
-                }
-                exp.text(result);
+                var disp = JSON.stringify(result);
+                exp.text(disp);
                 exp.addClass("eval");
                 wr.curfrm -= 1;
 
@@ -647,7 +645,7 @@ $(function () {
                             pstmt.addClass("executing");
                             var cur = exp.text();
                             exp.result = result;
-                            exp.text(replaceCall(cur, frame.name, result));
+                            exp.text(replaceCall(cur, frame.name, disp));
                         }
                     });
                     pframe.steps.push({
@@ -727,10 +725,7 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    var val = args[i];
-                    if (typeof val === "string") {
-                        val = '"' + val + '"';
-                    }
+                    var val = JSON.stringify(args[i]);
                     ctx[name] = val;
                 }
             });
