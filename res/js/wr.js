@@ -150,7 +150,7 @@ $(function () {
         if (!type) {
             return true;
         }
-        
+
         var e = $(elem);
         var exp = e.val() || e.text();
         var stmt = e.closest(".statement");
@@ -179,7 +179,11 @@ $(function () {
 
         // new object creations cause problems
         if (exp.match(/^\s*new\s+.*/)) {
-            exp = "{}";
+            if (exp.match(/^\s*new\s+Array/)) {
+                exp = "[]";
+            } else {
+                exp = "{}";
+            }
         }
         // no nice way to determine the types of properties
         // TODO fix this by actually executing the statements?
