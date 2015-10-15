@@ -41,6 +41,7 @@
 .exec div.statement span.executing,  // input, output, and assingment
 .exec .executing.statement > .output > .exp, 
 .exec .executing.statement > .assignment > .exp, 
+.exec .executing.statement > .call > .exp,
 .exec .asgn.executing
 {
     border-color: $exec;
