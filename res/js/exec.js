@@ -190,7 +190,8 @@ $(function () {
                 var delay = parseFloat($("#delay").text());
                 var input = null;
                 var disp = null;
-                wr.prompt("Please enter input:", function (inp) {
+
+                var processInput = function (inp) {
                     iolog("IN : " + '"' + inp + '"', "in");
                     input = inp // input is always a string
                     disp = JSON.stringify(inp);
@@ -205,6 +206,10 @@ $(function () {
                     if (wr.state.name === "play") {
                         setTimeout(wr.play, delay * 1000 + 1);
                     }
+                };
+
+                wr.prompt("Please enter input:", processInput, function () {
+                    processInput("");
                 });
 
                 // second step, assign the input 
@@ -376,6 +381,17 @@ $(function () {
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
                     return;
+                }
+
+                var matches = exp.text().match(/^\s*(\w+)(\.|\[)/);
+                if (matches) {
+                    var name = matches[1];
+                    var disp = JSON.stringify(result);
+
+                    // place value in the needed locations
+                    var var_disp = $("#f" + wr.curfrm + "_" + name);
+                    var_disp.text(disp);
+                    var_disp.parent().addClass("executing");
                 }
 
                 exp.addClass("eval");
