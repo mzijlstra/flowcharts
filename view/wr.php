@@ -1,4 +1,4 @@
-<?php 
+<?php
 global $MY_BASE;
 ?>
 <!DOCTYPE html>
@@ -136,7 +136,10 @@ global $MY_BASE;
                 <div class="msg">Please enter input:</div>
                 <div><input type="text" /></div>
             </div>
-            <div class="center"><button>OK</button></div>
+            <div class="center">
+                <button id="prompt_cancel">Cancel</button>
+                <button id="prompt_ok">OK</button>
+            </div>
         </div>
         <div id="confirm" class="popup">
             <div class="popup_content">

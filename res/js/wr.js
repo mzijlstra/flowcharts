@@ -65,26 +65,43 @@ $(function () {
      * disabled, and also has a cancel button, both of which are no good)
      * 
      * @param {string} text To be displayed in popup window
-     * @param {function} click callback when OK button is pressed, is given 
+     * @param {function} ok callback when OK button is pressed, is given 
      * the value of the input element inside (the text the user entered)
+     * @param {function} cancel callback for when Cancel button is pressed
      */
-    wr.prompt = function (text, click) {
+    wr.prompt = function (text, ok, cancel) {
         var p = $("#prompt");
         var o = $("#overlay");
         var i = p.find("input");
-        var b = p.find("button");
-        p.find(".msg").text(text);
+        var bK = $("#prompt_ok");
+        var bC = $("#prompt_cancel");
 
-        var doClick = function () {
-            if (!click || !click(i.val())) {
-                p.hide();
-                o.hide();
-                i.val(""); // clear input
-                b.off("click", doClick);
+        var hide = function () {
+            bK.off("click", doOk);
+            bC.off("click", doCancel);
+            i.val("");
+            p.hide();
+            o.hide();
+        };
+
+        var doOk = function () {
+            if (ok && ok(i.val())) {
+                // don't hide if handler returns true
+            } else {
+                hide();
             }
         };
-        b.on("click", doClick);
 
+        var doCancel = function () {
+            if (cancel) {
+                cancel();
+            }
+            hide();
+        };
+
+        bK.on("click", doOk);
+        bC.on("click", doCancel);
+        p.find(".msg").text(text);
         o.show();
         p.show();
         i.focus();

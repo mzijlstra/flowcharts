@@ -470,7 +470,7 @@ $(function () {
         t.siblings(".menu").hide();
         inputHere(this, function () {
             // in case it has it
-            t.closest(".statement").removeClass("type_error exp_error"); 
+            t.closest(".statement").removeClass("type_error exp_error");
             return true;
         });
     });
@@ -754,16 +754,16 @@ $(function () {
         }
 
         var n = $(this).find(".name");
+        if (n.text() === "main") {
+            wr.alert("Cannot rename function main. \n\n" +
+                    "It is needed as entry point for the program.");
+            n.text("main");
+            return false;
+
+        }
         n.attr("cur", n.text());
         inputHere(n.get(0), function (t) {
             var cur = n.attr("cur");
-            if (cur === "main") {
-                wr.alert("Cannot rename function main. \n\n" +
-                        "It is needed as entry point for the program.");
-                n.text("main");
-                return false;
-            }
-
             if (cur !== t.val()) {
                 var upd = t.val();
 
@@ -879,7 +879,11 @@ $(function () {
     // create a new project
     $("#new_proj").click(function () {
         wr.prompt("Project Name:", function (name) {
-            name = name.trim();
+            if (!name || !name.trim()) {
+                wr.alert("Project name appears to be empty.");
+                return true; // causes prompt to stay on screen
+            } 
+            name = name.trim();            
             if (name.match(/^\d/)) {
                 wr.alert("Project name cannot start with a number.");
                 return true; // causes prompt to stay on screen
