@@ -137,8 +137,8 @@ global $MY_BASE;
                 <div><input type="text" /></div>
             </div>
             <div class="center">
-                <button id="prompt_cancel">Cancel</button>
                 <button id="prompt_ok">OK</button>
+                <button id="prompt_cancel">Cancel</button>
             </div>
         </div>
         <div id="confirm" class="popup">
