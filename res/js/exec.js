@@ -376,12 +376,7 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
 
-                // exit if there was a doCall() in the exp
-                if (wr.stack[wr.curfrm] !== frame) {
-                    return;
-                }
 
                 var matches = exp.text().match(/^\s*(\w+)(\.|\[)/);
                 if (matches) {
@@ -399,6 +394,13 @@ $(function () {
                     var var_disp = $("#f" + wr.curfrm + "_" + name);
                     var_disp.text(disp);
                     var_disp.parent().addClass("executing");
+                } else {
+                    var result = wr.eval(exp.text(), frame.ctx);
+                }
+
+                // exit if there was a doCall() in the exp
+                if (wr.stack[wr.curfrm] !== frame) {
+                    return;
                 }
 
                 exp.addClass("eval");
