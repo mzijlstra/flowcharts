@@ -355,8 +355,12 @@ $(function () {
                         var var_disp = $("#f" + findex + "_" + name);
                         if (exp[0].result !== undefined) {
                             var_disp.text(disp);
+                            
+                            // clear exp[0].result
+                            delete exp[0].result;
                         }
                         var_disp.parent().addClass("executing");
+                        
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
