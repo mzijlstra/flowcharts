@@ -385,8 +385,15 @@ $(function () {
 
                 var matches = exp.text().match(/^\s*(\w+)(\.|\[)/);
                 if (matches) {
+                    // On a call there may be a side effect that can change
+                    // the array or object -- we want to capture the new
+                    // value of the object and put it into our context
+                    result = wr.eval(
+                            "[" + exp.text() + "," + matches[1] + "]",
+                            frame.ctx);
                     var name = matches[1];
                     var disp = JSON.stringify(result);
+                    frame.ctx[matches[1]] = result[1];
 
                     // place value in the needed locations
                     var var_disp = $("#f" + wr.curfrm + "_" + name);
