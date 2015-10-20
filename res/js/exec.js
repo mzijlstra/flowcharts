@@ -392,7 +392,7 @@ $(function () {
                             "[" + exp.text() + "," + matches[1] + "]",
                             frame.ctx);
                     var name = matches[1];
-                    var disp = JSON.stringify(result);
+                    var disp = JSON.stringify(result[1]);
                     frame.ctx[matches[1]] = result[1];
 
                     // place value in the needed locations
