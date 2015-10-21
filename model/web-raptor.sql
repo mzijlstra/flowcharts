@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `function`;
 CREATE TABLE `function` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `instructions` text NOT NULL,
+  `instructions` longtext NOT NULL,
   `variables` text NOT NULL,
   `created` timestamp NULL,
   `modified` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
