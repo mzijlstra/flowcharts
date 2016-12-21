@@ -3,6 +3,11 @@
  Author     : mzijlstra
  */
 
+/*
+ * This is the top level JS file for the application, it contains the 
+ * wr global object, and the public function definitions
+ */
+
 var wr = {};
 
 $(function () {
