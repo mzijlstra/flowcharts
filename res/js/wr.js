@@ -180,7 +180,7 @@ $(function () {
         // create an evaluation context with defaults for current variables
         var defaults = {
             "string": "''",
-            "number": "1",
+            "number": 1,
             "boolean": "true",
             "array": "[]",
             "object": "{}"
