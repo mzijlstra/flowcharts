@@ -3,13 +3,6 @@
  Author     : mzijlstra
  */
 
-/*
- * This is the top level JS file for the application, it contains the 
- * wr global object, and the code for the control buttons that move 
- * the application between the different states
- */
-
-
 var wr; // wr namespace declared in wr.js
 
 $(function () {
@@ -129,12 +122,23 @@ $(function () {
      * @param {object} [ctx] variables with wich code will be evaluated
      * @returns {data} The result of the evaluation
      */
-    wr.eval = function (exp, ctx) {
+    wr.eval = function (exp, ctx, sys) {
         if (!ctx) {
             ctx = {};
         }
+        if (!sys) {
+            sys = {};
+        }
         var code = "(function () {\n";
         var key, val;
+
+        // place system vars directly into code without escape
+        for (key in sys) {
+            val = sys[key];
+            code += "var " + key + " = " + val + ";\n";
+        }
+
+        // create variables for the context vars 
         for (key in ctx) {
             val = ctx[key];
             // for objects we need the actual reference 
@@ -142,13 +146,39 @@ $(function () {
                 code += "var " + key + " = $w.top.wr.stack[" + wr.curfrm +
                         "].ctx." + key + "\n";
             } else {
-                code += "var " + key + " = " + val + ";\n";
+                code += "var " + key + " = " + JSON.stringify(val) + ";\n";
             }
         }
-        code += "return " + exp + ";\n";
+
+        // execute the expression 
+        code += "var $r = " + exp + ";\n";
+
+        // update the values in the context (apply side effects)
+        if (wr.state.name !== 'edit') {
+            for (key in ctx) {
+                code += "$w.top.wr.stack[" + wr.curfrm + "].ctx." +
+                        key + " = " + key + ";\n";
+            }
+        }
+
+        code += "return $r;\n";
         code += "})();";
 
-        return $('#sandbox')[0].contentWindow.eval(code);
+        var result = $('#sandbox')[0].contentWindow.eval(code);
+
+        // show side effects / accidental updates as well
+        if (wr.state.name !== 'edit') {
+            for (key in ctx) {
+                val = ctx[key];
+                if (typeof val === "object" && !$.isArray(val) &&
+                        typeof val.toString === "function") {
+                    val= val.toString();
+                }
+                $("#f" + wr.curfrm + "_" + key).text(JSON.stringify(val));
+            }
+        }
+
+        return result;
     };
 
     /**
@@ -221,14 +251,13 @@ $(function () {
 
                         // place value in the needed locations
                         var found = name.match(/^(\w+)(\[|\.)(\w+)/);
-                        if (found) {
-                            // assignment into array or object
+                        if (found) { // assignment into array or object
                             name = found[1];
-                            var index = wr.eval(found[3], frame.ctx);
+                            var index = wr.eval(found[3], frame.ctx, frame.sys);
                             frame.ctx[name][index] = input;
                             disp = JSON.stringify(frame.ctx[name]);
                         } else {
-                            frame.ctx[name] = '"' + input + '"';
+                            frame.ctx[name] = input;
                         }
                         $("#f" + wr.curfrm + "_" + name)
                                 .text(disp)
@@ -256,7 +285,7 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
+                var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -264,7 +293,7 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-                exp.text('"' + result + '"');
+                exp.text(result);
                 exp.addClass("eval");
 
                 var asgn = t.find(".asgn");
@@ -305,7 +334,7 @@ $(function () {
                 if (exp[0].result && typeof exp[0].result === "object") {
                     result = exp[0].result;
                 } else {
-                    result = wr.eval(exp.text(), frame.ctx);
+                    result = wr.eval(exp.text(), frame.ctx, frame.sys);
                     exp[0].result = result;
                 }
 
@@ -334,16 +363,12 @@ $(function () {
                         var name = nelem.text();
 
                         var found = name.match(/^(\w+)(\[|\.)(\w+)/);
-                        if (found) {
-                            // assignment into array or object
+                        if (found) { // assignment into array or object
                             name = found[1];
-                            var index = wr.eval(found[3], frame.ctx);
+                            var index = wr.eval(found[3], frame.ctx, frame.sys);
                             frame.ctx[name][index] = exp[0].result;
                             disp = JSON.stringify(frame.ctx[name]);
                         } else {
-                            if (typeof exp[0].result === "string") {
-                                exp[0].result = '"' + exp[0].result + '"';
-                            }
                             frame.ctx[name] = exp[0].result;
                         }
 
@@ -355,12 +380,12 @@ $(function () {
                         var var_disp = $("#f" + findex + "_" + name);
                         if (exp[0].result !== undefined) {
                             var_disp.text(disp);
-                            
+
                             // clear exp[0].result
                             delete exp[0].result;
                         }
                         var_disp.parent().addClass("executing");
-                        
+
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
@@ -381,26 +406,7 @@ $(function () {
                     exp.attr("exp", exp.text());
                 }
 
-
-                var matches = exp.text().match(/^\s*(\w+)(\.|\[)/);
-                if (matches) {
-                    // On a call there may be a side effect that can change
-                    // the array or object -- we want to capture the new
-                    // value of the object and put it into our context
-                    result = wr.eval(
-                            "[" + exp.text() + "," + matches[1] + "]",
-                            frame.ctx);
-                    var name = matches[1];
-                    var disp = JSON.stringify(result[1]);
-                    frame.ctx[matches[1]] = result[1];
-
-                    // place value in the needed locations
-                    var var_disp = $("#f" + wr.curfrm + "_" + name);
-                    var_disp.text(disp);
-                    var_disp.parent().addClass("executing");
-                } else {
-                    var result = wr.eval(exp.text(), frame.ctx);
-                }
+                var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -427,7 +433,7 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
+                var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -530,7 +536,7 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
+                var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
                 // exit if there was a doCall() in the exp
                 if (wr.stack[wr.curfrm] !== frame) {
@@ -654,7 +660,7 @@ $(function () {
                 if (!exp.attr("exp")) {
                     exp.attr("exp", exp.text());
                 }
-                var result = wr.eval(exp.text(), frame.ctx);
+                var result = wr.eval(exp.text(), frame.ctx, frame.sys);
                 var disp = JSON.stringify(result);
                 exp.text(disp);
                 exp.addClass("eval");
@@ -736,15 +742,17 @@ $(function () {
             }
         }
 
-        // create the context for this call
-        var ctx = {};
-        ctx.$w = 'window';
-        // add the flowchart functions
+        // create the system and variables context for this call
+        var sys = {};
+        sys.$w = 'window';
+        // add the flowchart functions to the system context
         for (var key in wr.functions) {
-            ctx[key] = 'function () { $w.top.wr.doCall("' + key +
+            sys[key] = 'function () { $w.top.wr.doCall("' + key +
                     '", arguments) }';
         }
-        // add the variables for this function
+
+        // add the variables for this function to the regular context
+        var ctx = {};
         for (var key in wr.functions[fname]) {
             ctx[key] = 'undefined';
         }
@@ -754,8 +762,11 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    var val = JSON.stringify(args[i]);
-                    ctx[name] = val;
+                    ctx[name] = JSON.stringify(args[i]);
+                    ;
+                    if (typeof args[i] === "object") {
+                        ctx[name] = args[i];
+                    }
                 }
             });
         }
@@ -823,6 +834,7 @@ $(function () {
             'name': fname,
             'ret2': ret2,
             'ctx': ctx,
+            'sys': sys,
             'ins': ins,
             'data': fdata,
             'steps': steps
