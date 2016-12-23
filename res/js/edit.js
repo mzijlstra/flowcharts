@@ -114,7 +114,7 @@ $(function () {
         }
 
         // create input element and set text
-        i = $($("<input type='text' />"));
+        i = $("<input type='text' />");
         var old = t.text().trim();
         i.val(old);
         t.text("_"); // so that block doesn't show (weird)
@@ -131,11 +131,14 @@ $(function () {
 
         // onkeydown resize and also blur when enter is pressed
         i.keydown(function (event) {
-            resize();
             if (event.which === 13) {
                 this.blur();
             }
+
         });
+        i[0].oninput = function (event) {
+            resize();
+        };
 
         // on call optional fun (that can block blur), and assign new val
         i.blur(function () {
@@ -573,7 +576,7 @@ $(function () {
             return false; // don't show if we're executing
         }
         inputHere(this, function (t) {
-            // output no longer requires expression to be string
+            wr.verifyType(t, "any");
             return true;
         });
     });
@@ -599,7 +602,10 @@ $(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        inputHere(this);
+        inputHere(this, function(t) {
+            wr.verifyType(t, "any");
+            return true;            
+        });
     });
     // if and while condition expressions
     $(".diamond").click(function (event) {
@@ -882,8 +888,8 @@ $(function () {
             if (!name || !name.trim()) {
                 wr.alert("Project name appears to be empty.");
                 return true; // causes prompt to stay on screen
-            } 
-            name = name.trim();            
+            }
+            name = name.trim();
             if (name.match(/^\d/)) {
                 wr.alert("Project name cannot start with a number.");
                 return true; // causes prompt to stay on screen

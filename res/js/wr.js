@@ -207,12 +207,6 @@ $(function () {
                 exp = "{}";
             }
         }
-        // no nice way to determine the types of properties
-        // TODO fix this by actually executing the statements?
-        if (exp.match(/.+(\.|\[).+/)) { // anything containing a dot or [
-            stmt.removeClass("type_error exp_error");
-            return true;
-        }
 
         // do the actual evaluation
         try {
@@ -227,6 +221,10 @@ $(function () {
         }
 
         // check the resulting type
+        if (type === "any") {
+            stmt.removeClass("type_error exp_error");
+            return true;
+        }
         var result = typeof data;
         var match = false;
         if (result === 'object') {
