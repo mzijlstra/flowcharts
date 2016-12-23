@@ -16,12 +16,9 @@ $(function () {
      */
     // Should I put this onto the global wr object? I only need it here
     var iolog = function (text, cname) {
-        var add = $("<div>");
-        if (typeof text === "string" && text[0] === '"') {
-            text = text.substr(1);
-            text = text.substr(0, text.length - 1);
-        }
-        add.text(text);
+        var add = $("<span>");
+        text = text.replace("\n", "<br />");
+        add.html(text);
         if (cname) {
             add.addClass(cname);
         }
@@ -222,8 +219,8 @@ $(function () {
                 var disp = null;
 
                 var processInput = function (inp) {
-                    iolog("IN : " + '"' + inp + '"', "in");
-                    input = inp // input is always a string
+                    iolog(inp + "<br />", "in");
+                    input = inp; // input is always a string
                     disp = JSON.stringify(inp);
                     io.text('"' + input + '"');
                     io.addClass("eval");
@@ -307,7 +304,7 @@ $(function () {
                         var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
-                        iolog("OUT: " + result);
+                        iolog(result, "out");
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
@@ -703,7 +700,7 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            iolog("- Execution complete, click edit or play " +
+                            iolog("\n- Execution complete, click edit or play " +
                                     "to continue -", "done");
                             frame.data.detach();
                             wr.stack.pop();

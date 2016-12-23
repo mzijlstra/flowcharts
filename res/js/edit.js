@@ -573,7 +573,7 @@ $(function () {
             return false; // don't show if we're executing
         }
         inputHere(this, function (t) {
-            wr.verifyType(t, "string");
+            // output no longer requires expression to be string
             return true;
         });
     });

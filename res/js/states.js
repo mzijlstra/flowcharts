@@ -206,10 +206,10 @@ $(function () {
             return true;
         };
     });
-    // outputs are ready if their expression evaluates to a string
+    // outputs are always ready (no longer require expression to be string)
     $(".statement > .output").each(function () {
         $(this).parent()[0].ready = function () {
-            return wr.verifyType($(this).find(".exp")[0], "string", "silent");
+            return true;
         };
     });
     // assignments are ready if their variable and expression have same type
