@@ -705,7 +705,9 @@ $(function () {
                             frame.data.detach();
                             wr.stack.pop();
                             wr.curfrm -= 1;
-                            $("#play_pause").click();
+                            if (wr.state.name === "play") {
+                                $("#play_pause").click();
+                            }
                             return true; // stops execution
                         }
                     });
