@@ -17,7 +17,9 @@ $(function () {
     // Should I put this onto the global wr object? I only need it here
     var iolog = function (text, cname) {
         var add = $("<span>");
-        text = text.replace("\n", "<br />");
+        if (typeof text === "string") {
+            text = text.replace("\n", "<br />");
+        }
         add.html(text);
         if (cname) {
             add.addClass(cname);
@@ -25,6 +27,15 @@ $(function () {
         var o = $("#out");
         o.append(add);
         o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
+    };
+
+    var stringify = function (val) {
+        if (typeof val === "object" && !$.isArray(val) &&
+                typeof val.toString === "function") {
+            return val.toString();
+        } else {
+            return JSON.stringify(val);
+        }
     };
 
     /**
@@ -117,6 +128,7 @@ $(function () {
      * provided object
      * @param {string} exp The expression we want evaluated
      * @param {object} [ctx] variables with wich code will be evaluated
+     * @param {object} [sys] system items: the window obj and other funcs
      * @returns {data} The result of the evaluation
      */
     wr.eval = function (exp, ctx, sys) {
@@ -143,7 +155,7 @@ $(function () {
                 code += "var " + key + " = $w.top.wr.stack[" + wr.curfrm +
                         "].ctx." + key + "\n";
             } else {
-                code += "var " + key + " = " + JSON.stringify(val) + ";\n";
+                code += "var " + key + " = " + stringify(val) + ";\n";
             }
         }
 
@@ -169,9 +181,11 @@ $(function () {
                 val = ctx[key];
                 if (typeof val === "object" && !$.isArray(val) &&
                         typeof val.toString === "function") {
-                    val= val.toString();
+                    val = val.toString();
+                } else {
+                    val = stringify(val);
                 }
-                $("#f" + wr.curfrm + "_" + key).text(JSON.stringify(val));
+                $("#f" + wr.curfrm + "_" + key).text(val);
             }
         }
 
@@ -221,7 +235,7 @@ $(function () {
                 var processInput = function (inp) {
                     iolog(inp + "<br />", "in");
                     input = inp; // input is always a string
-                    disp = JSON.stringify(inp);
+                    disp = stringify(inp);
                     io.text('"' + input + '"');
                     io.addClass("eval");
 
@@ -252,7 +266,7 @@ $(function () {
                             name = found[1];
                             var index = wr.eval(found[3], frame.ctx, frame.sys);
                             frame.ctx[name][index] = input;
-                            disp = JSON.stringify(frame.ctx[name]);
+                            disp = stringify(frame.ctx[name]);
                         } else {
                             frame.ctx[name] = input;
                         }
@@ -341,7 +355,7 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-                var disp = JSON.stringify(result);
+                var disp = stringify(result);
                 if (typeof result === "object" && !$.isArray(result) &&
                         typeof result.toString === "function") {
                     disp = result.toString();
@@ -364,7 +378,7 @@ $(function () {
                             name = found[1];
                             var index = wr.eval(found[3], frame.ctx, frame.sys);
                             frame.ctx[name][index] = exp[0].result;
-                            disp = JSON.stringify(frame.ctx[name]);
+                            disp = stringify(frame.ctx[name]);
                         } else {
                             frame.ctx[name] = exp[0].result;
                         }
@@ -658,7 +672,7 @@ $(function () {
                     exp.attr("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
-                var disp = JSON.stringify(result);
+                var disp = stringify(result);
                 exp.text(disp);
                 exp.addClass("eval");
                 wr.curfrm -= 1;
@@ -761,7 +775,7 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    ctx[name] = JSON.stringify(args[i]);
+                    ctx[name] = stringify(args[i]);
                     ;
                     if (typeof args[i] === "object") {
                         ctx[name] = args[i];
@@ -783,7 +797,7 @@ $(function () {
         var label = "<div class='flabel'>" + fname + "(";
         if (args) {
             for (var i = 0; i < args.length; i++) {
-                label += JSON.stringify(args[i]) + ", ";
+                label += stringify(args[i]) + ", ";
             }
             label = label.substring(0, label.length - 2);
         }

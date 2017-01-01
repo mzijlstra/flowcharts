@@ -33,6 +33,9 @@ var __turtle_win = false;
         var canvas = $("<canvas id='canvas' width='" + width + "' height='" + 
                 height + "'>");
         body.append(canvas);
+        win.toString = function () {
+            return "[object CanvasWindow]";
+        };
         return win;
     };
 
@@ -253,7 +256,7 @@ var __turtle_win = false;
      * @returns {object} reference to the newly created window
      */
     window.TGWindow = function (width, height) {
-        var win = createCanvasPopup(width, height, "../turtle");
+        var win = createCanvasPopup(width, height);
         win.document.title = "Turtle Graphics";
         win.createTurtle = createTurtle;
         return win;
@@ -285,7 +288,7 @@ var __turtle_win = false;
      * @returns {Window|Window.ImgWindow.win}
      */
     window.ImgWindow = function (width, height, url) {
-        var win = createCanvasPopup(width, height, "../image");
+        var win = createCanvasPopup(width, height);
         $(win).load(function () {
             var img = new Image();
             img.src = url;

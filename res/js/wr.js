@@ -207,6 +207,11 @@ $(function () {
                 exp = "{}";
             }
         }
+        // no nice way to determine the types of properties
+        if (exp.match(/.+(\.|\[).+/)) { // anything containing a dot or [
+            stmt.removeClass("type_error exp_error");
+            return true;
+        }
 
         // do the actual evaluation
         try {
