@@ -33,6 +33,11 @@ $(function () {
         if (wr.curfrm === -1) {
             $("#out").empty();
             $(".frame").detach();
+            
+            // close all previously opened GfxWindow popups 
+            wr.eval("$__closePopups()");
+            
+            // start the execution
             wr.doCall("main");
         }
         wr.play();
@@ -196,7 +201,7 @@ $(function () {
             if (name === "") {
                 t.addClass("name_error");
                 return false;
-            } 
+            }
             var type = $(wr.functions[func][name]).prev().find(".type").text();
             // type will be empty for arary and object index
             if (type && type !== "string") {

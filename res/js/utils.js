@@ -2,11 +2,12 @@
  Created on : Jul 07, 2015
  Author     : mzijlstra
  */
-var __turtle_win = false;
+
+var $__popupCount = 0;
+var $__gfxWindows = [];
 
 (function () {
     // private variable to count graphics windows
-    var windowCount = 0;
 
     // private helper function
     var toRad = function (deg) {
@@ -275,16 +276,14 @@ var __turtle_win = false;
         var features = "top=250,left=" + (parent_x - width) + ",width=" +
                 (width + 1) + ",height=" + (height + 4) + ",menubar=0";
 
-        var win = window.open(undefined, "popup" + windowCount, features);
+        var win = window.open(undefined, "popup" + $__popupCount, features);
         if (!win) {
             throw "Unable to create window -- is the popup blocked?";
         }
-        // TODO check if popup was still open from refresh
-        // so that we can close old windows before opening new ones!
-        
-        
-        windowCount++;
-        win.document.title = "Graphics Window " + windowCount;
+        $__gfxWindows[$__popupCount] = win;
+
+        $__popupCount++;
+        win.document.title = "Graphics Window " + $__popupCount;
 
         // create the window content
         var body = $(win.document.body);
@@ -299,6 +298,12 @@ var __turtle_win = false;
             return "[object CanvasWindow]";
         };
         return win;
+    };
+    window.$__closePopups = function () {
+        $__gfxWindows.forEach(function (elem) {
+            elem.close();
+        });
+        $__popupCount = 0;
     };
 }());
 
