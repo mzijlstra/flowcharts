@@ -775,11 +775,7 @@ $(function () {
                 var t = $(e);
                 var name = t.children("input").val();
                 if (!t.hasClass("bottom") && name !== "") {
-                    ctx[name] = stringify(args[i]);
-                    ;
-                    if (typeof args[i] === "object") {
-                        ctx[name] = args[i];
-                    }
+                    ctx[name] = args[i];
                 }
             });
         }
