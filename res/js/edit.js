@@ -419,21 +419,9 @@ $(function () {
 
     // display insertion menu when clicking on a connection block
     $(".connection").click(function (event) {
-        // get the amount of variables declared, compatible with old brwsrs
-        var size = 0;
-        if (Object.keys) {
-            size = Object.keys(wr.curvars).length;
-        } else {
-            for (var k in wr.curvars)
-                size++;
-        }
-
         // check if we should insert
         if ($('#workspace').hasClass("exec")) {
             // silently inore request to show menu
-        } else if (size === 0) {
-            wr.alert("Please declare a variable first.");
-            $('.variable .var').focus();
         } else if (ins_menu.css("display") === "none") {
             ins_menu.css("top", event.pageY);
             ins_menu.css("left", event.pageX);
