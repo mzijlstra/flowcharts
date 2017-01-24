@@ -138,7 +138,7 @@ $(function () {
         if (!sys) {
             sys = {};
         }
-        var code = "(function () {\n";
+        var code = "$w = window;\n(function () {\n";
         var key, val;
 
         // place system vars directly into code without escape
@@ -757,7 +757,6 @@ $(function () {
 
         // create the system and variables context for this call
         var sys = {};
-        sys.$w = 'window';
         // add the flowchart functions to the system context
         for (var key in wr.functions) {
             sys[key] = 'function () { $w.top.wr.doCall("' + key +
