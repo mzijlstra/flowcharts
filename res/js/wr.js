@@ -179,11 +179,11 @@ $(function () {
 
         // create an evaluation context with defaults for current variables
         var defaults = {
-            "string": "''",
+            "string": "",
             "number": 1,
-            "boolean": "true",
-            "array": "[]",
-            "object": "{}"
+            "boolean": true,
+            "array": "[]", // TODO not actually an array, but string!
+            "object": "{}" // TODO not actually an object, but string!
         };
         var ctx = {};
         var key, vtype;
