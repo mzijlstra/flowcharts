@@ -249,6 +249,41 @@ var $__gfxWindows = [];
         return turtle;
     };
 
+    var getPixel = function (t, x, y) {
+        var ctx = $(t.document).find("#canvas")[0].getContext('2d');
+        return ctx.getImageData(x, y, 1, 1);
+    }
+    var getRed = function (x, y) {
+        return getPixel(this, x, y).data[0];
+    }
+    var getGreen = function (x, y) {
+        return getPixel(this, x, y).data[1];
+    }
+    var getBlue = function (x, y) {
+        return getPixel(this, x, y).data[2];
+    }
+    var getAlpha = function (x, y) {
+        return getPixel(this, x, y).data[3];
+    }
+    var setPixel = function (t, x, y, col, val) {
+        var ctx = $(t.document).find("#canvas")[0].getContext('2d');
+        var pixel = ctx.getImageData(x, y, 1, 1);
+        pixel.data[col] = val;
+        ctx.putImageData(pixel, x, y);
+    }
+    var setRed = function (x, y, val) {
+        setPixel(this, x, y, 0, val);
+    }
+    var setGreen = function (x, y, val) {
+        setPixel(this, x, y, 1, val);
+    }
+    var setBlue = function (x, y, val) {
+        setPixel(this, x, y, 2, val);
+    }
+    var setAlpha = function (x, y, val) {
+        setPixel(this, x, y, 3, val);
+    }
+
     /**
      * public function to create a graphics window
      * 
@@ -291,9 +326,21 @@ var $__gfxWindows = [];
         var canvas = $("<canvas id='canvas' width='" + width + "' height='" +
                 height + "'>");
         body.append(canvas);
+        var ctx = $(body).find("#canvas")[0].getContext("2d");
+        ctx.fillStyle = '#FFF';
+        ctx.fillRect(0, 0, width, height);
+
 
         // add the window public methods
         win.createTurtle = createTurtle;
+        win.getRed = getRed;
+        win.getGreen = getGreen;
+        win.getBlue = getBlue;
+        win.getAlpha = getAlpha;
+        win.setRed = setRed;
+        win.setGreen = setGreen;
+        win.setBlue = setBlue;
+        win.setAlpha = setAlpha;
         win.toString = function () {
             return "[object CanvasWindow]";
         };
