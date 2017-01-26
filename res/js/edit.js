@@ -1020,7 +1020,13 @@ $(function () {
 
         var genFunc = function (name) {
             // function declaration
-            var code = "function " + name + "(";
+            var code = "";
+            if (name === "main") {
+                code += "async function main (";
+            } else {
+                code += "function " + name + "(";
+            }
+            
             $("#vars_" + name + " .parameter").each(function () {
                 var t = $(this);
                 var n = t.children("input").val();

@@ -160,7 +160,11 @@ $(function () {
         }
 
         // execute the expression 
-        code += "var $r = " + exp + ";\n";
+        if (exp.match(/^await /)) {
+            code += "var $r = " + exp.substring(6, exp.length) + ";\n";
+        } else {
+            code += "var $r = " + exp + ";\n";
+        }
 
         // update the values in the context (apply side effects)
         if (wr.state.name !== 'edit') {

@@ -250,14 +250,20 @@ var $__gfxWindows = [];
     };
 
     var loadImage = function (file) {
-        var img = new Image();
-        img.src = 'res/img/' + file;
         var canvas = $(this.document).find("#canvas")[0];
-        var ctx = canvas.getContext('2d');
-        img.onload = function () {
-            ctx.drawImage(img, 0, 0);
-            img.style.display = 'none';
-        };
+        return new Promise(function (resolve, reject) {
+            var img = new Image();
+            img.src = 'res/img/' + file;
+            var ctx = canvas.getContext('2d');
+            img.onload = function () {
+                ctx.drawImage(img, 0, 0);
+                img.style.display = 'none';
+                resolve(img);
+            };
+            img.onerror = function (e) {
+                reject(e);
+            };
+        });
     };
 
     var getPixel = function (x, y) {
@@ -302,13 +308,16 @@ var $__gfxWindows = [];
      * @param {int} height
      * @returns {object|Window.TGWindow.win|Window|utils_L7.createCanvasPopup.win|window.TGWindow.win}
      */
-    window.GfxWindow = function (width, height) {
+    window.GfxWindow = function (width, height, color) {
         // parameter defaults (if not provided)
         if (!width || typeof (width) !== 'number') {
             width = 400;
         }
         if (!height || typeof (height) !== 'number') {
             height = 300;
+        }
+        if (!color) {
+            color = "#FFF";
         }
 
         // we may be inside an iframe
@@ -338,7 +347,7 @@ var $__gfxWindows = [];
                 height + "'>");
         body.append(canvas);
         var ctx = $(body).find("#canvas")[0].getContext("2d");
-        ctx.fillStyle = '#FFF';
+        ctx.fillStyle = color;
         ctx.fillRect(0, 0, width, height);
 
 
