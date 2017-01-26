@@ -116,8 +116,13 @@ global $MY_BASE;
         </div> <!-- end workspace -->
 
         <!-- Different types of popup / overlay windows below -->
-        <div id="js_code"><pre><code></code></pre></div>
-        <div id="hide_js"><div id="close_js">&times;</div></div>
+        <div id="js_code">
+            <pre><code></code></pre>
+            <div id="play_js_btn"><div id="play_js"></div></div>
+            <div id="hide_js"><div id="close_js">&times;</div></div>
+        </div>
+        
+
         <div id="projects_disp">
             <table id="project_data">
                 <caption>Projects:</caption>
@@ -127,8 +132,8 @@ global $MY_BASE;
                     <th>Del</th>
                 </tr>
             </table>
+            <div id="hide_proj"><div id="close_proj">&times;</div></div>
         </div>
-        <div id="hide_proj"><div id="close_proj">&times;</div></div>
 
         <div id="overlay"></div>        
         <div id="prompt" class="popup">

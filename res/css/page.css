@@ -822,10 +822,9 @@ footer {
   overflow: auto; }
 
 #hide_js, #hide_proj {
-  display: none;
   position: fixed;
   right: 15px;
-  top: 45px;
+  bottom: 45px;
   padding: 10px;
   background-color: black;
   color: #F0F0F0;
@@ -845,6 +844,24 @@ footer {
 
 #hide_js:hover, #hide_proj:hover {
   opacity: 1; }
+
+#play_js_btn {
+  cursor: pointer;
+  background: radial-gradient(circle, #AAD 1%, #336 57%, #F0F0F0 60%);
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  width: 75px;
+  height: 75px; }
+  #play_js_btn #play_js {
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    border-left: 22px solid white;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent; }
 
 #projects_disp {
   border-left: 1px solid #336;
@@ -895,6 +912,7 @@ footer {
   background: radial-gradient(circle, #AAD 1%, #336 57%, #f8f8f8 60%);
   border: none;
   opacity: 0.9;
+  top: 45px;
   left: 20px;
   right: initial; }
   #hide_proj #close_proj {

@@ -249,40 +249,51 @@ var $__gfxWindows = [];
         return turtle;
     };
 
-    var getPixel = function (t, x, y) {
-        var ctx = $(t.document).find("#canvas")[0].getContext('2d');
+    var loadImage = function (file) {
+        var img = new Image();
+        img.src = 'res/img/' + file;
+        var canvas = $(this.document).find("#canvas")[0];
+        var ctx = canvas.getContext('2d');
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+            img.style.display = 'none';
+        };
+    };
+
+    var getPixel = function (x, y) {
+        var ctx = $(this.document).find("#canvas")[0].getContext('2d');
         return ctx.getImageData(x, y, 1, 1);
-    }
+    };
     var getRed = function (x, y) {
-        return getPixel(this, x, y).data[0];
-    }
+        return getPixel.call(this, x, y).data[0];
+    };
     var getGreen = function (x, y) {
-        return getPixel(this, x, y).data[1];
-    }
+        return getPixel.call(this, x, y).data[1];
+    };
     var getBlue = function (x, y) {
-        return getPixel(this, x, y).data[2];
-    }
+        return getPixel.call(this, x, y).data[2];
+    };
     var getAlpha = function (x, y) {
-        return getPixel(this, x, y).data[3];
-    }
-    var setPixel = function (t, x, y, col, val) {
-        var ctx = $(t.document).find("#canvas")[0].getContext('2d');
+        return getPixel.call(this, x, y).data[3];
+    };
+    var setPixel = function (x, y, col, val) {
+        var ctx = $(this.document).find("#canvas")[0].getContext('2d');
         var pixel = ctx.getImageData(x, y, 1, 1);
         pixel.data[col] = val;
         ctx.putImageData(pixel, x, y);
-    }
+    };
     var setRed = function (x, y, val) {
-        setPixel(this, x, y, 0, val);
-    }
+        setPixel.call(this, x, y, 0, val);
+    };
     var setGreen = function (x, y, val) {
-        setPixel(this, x, y, 1, val);
-    }
+        setPixel.call(this, x, y, 1, val);
+    };
     var setBlue = function (x, y, val) {
-        setPixel(this, x, y, 2, val);
-    }
+        setPixel.call(this, x, y, 2, val);
+    };
     var setAlpha = function (x, y, val) {
-        setPixel(this, x, y, 3, val);
-    }
+        setPixel.call(this, x, y, 3, val);
+    };
 
     /**
      * public function to create a graphics window
@@ -333,6 +344,7 @@ var $__gfxWindows = [];
 
         // add the window public methods
         win.createTurtle = createTurtle;
+        win.loadImage = loadImage;
         win.getRed = getRed;
         win.getGreen = getGreen;
         win.getBlue = getBlue;

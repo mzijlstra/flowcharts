@@ -1120,13 +1120,19 @@ $(function () {
         // insert and show generated code
         var here = $("#js_code > pre > code");
         here.empty().text(program);
+        here.data("code", program);
         hljs.highlightBlock(here[0]);
         $("#js_code").show();
-        $("#hide_js").show();
+    });
+    
+    $("#play_js_btn").click(function() {
+        var program = $("#js_code > pre > code").data("code");
+        var sandbox = $('#sandbox')[0].contentWindow;
+        sandbox.eval("$__closePopups()");
+        sandbox.eval(program);
     });
 
     $("#hide_js").click(function () {
         $("#js_code").hide();
-        $("#hide_js").hide();
     });
 });

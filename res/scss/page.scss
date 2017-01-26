@@ -493,10 +493,9 @@ footer {
     overflow: auto;
 }
 #hide_js {
-    display: none;
     position: fixed;
     right: 15px;
-    top: 45px;
+    bottom: 45px;
     padding: 10px;
     background-color: black;
     color: #F0F0F0;
@@ -518,6 +517,27 @@ footer {
 }
 #hide_js:hover{
     opacity: 1;
+}
+#play_js_btn {
+    cursor: pointer;
+    background: radial-gradient(circle, #AAD 1%, $fg 57%, #F0F0F0 60%);
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    width: 75px;
+    height: 75px;
+    
+    
+    #play_js {
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        border-left: 22px solid $bg;
+        border-top: 15px $hide;
+        border-bottom: 15px $hide;
+    }
 }
 #projects_disp {
     @extend #js_code;
@@ -584,6 +604,7 @@ footer {
     background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
     border: none;
     opacity: 0.9;
+    top: 45px;
     left: 20px;
     right: initial;
     #close_proj {
