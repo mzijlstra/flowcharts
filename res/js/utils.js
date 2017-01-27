@@ -253,7 +253,7 @@ var $__gfxWindows = [];
         var canvas = $(this.document).find("#canvas")[0];
         return new Promise(function (resolve, reject) {
             var img = new Image();
-            img.src = 'res/img/' + file;
+            img.src = "res/img/" + file;
             var ctx = canvas.getContext('2d');
             img.onload = function () {
                 ctx.drawImage(img, 0, 0);
@@ -266,39 +266,140 @@ var $__gfxWindows = [];
         });
     };
 
-    var getPixel = function (x, y) {
-        var ctx = $(this.document).find("#canvas")[0].getContext('2d');
-        return ctx.getImageData(x, y, 1, 1);
+    var getRedAt = function (x, y) {
+        var w = this.width;
+        var d = this.data;
+        return d[(4 * y * w) + (4 * x) + 0];
     };
-    var getRed = function (x, y) {
-        return getPixel.call(this, x, y).data[0];
+    var getGreenAt = function (x, y) {
+        var w = this.width;
+        var d = this.data;
+        return d[(4 * y * w) + (4 * x) + 1];
     };
-    var getGreen = function (x, y) {
-        return getPixel.call(this, x, y).data[1];
+    var getBlueAt = function (x, y) {
+        var w = this.width;
+        var d = this.data;
+        return d[(4 * y * w) + (4 * x) + 2];
     };
-    var getBlue = function (x, y) {
-        return getPixel.call(this, x, y).data[2];
+    var getAlphaAt = function (x, y) {
+        var w = this.width;
+        var d = this.data;
+        return d[(4 * y * w) + (4 * x) + 3];
     };
-    var getAlpha = function (x, y) {
-        return getPixel.call(this, x, y).data[3];
+    var setRedAt = function (x, y, val) {
+        var w = this.width;
+        var d = this.data;
+        d[(4 * y * w) + (4 * x) + 0] = val;
+        return this;
     };
-    var setPixel = function (x, y, col, val) {
-        var ctx = $(this.document).find("#canvas")[0].getContext('2d');
-        var pixel = ctx.getImageData(x, y, 1, 1);
-        pixel.data[col] = val;
-        ctx.putImageData(pixel, x, y);
+    var setGreenAt = function (x, y, val) {
+        var w = this.width;
+        var d = this.data;
+        d[(4 * y * w) + (4 * x) + 1] = val;
+        return this;
     };
-    var setRed = function (x, y, val) {
-        setPixel.call(this, x, y, 0, val);
+    var setBlueAt = function (x, y, val) {
+        var w = this.width;
+        var d = this.data;
+        d[(4 * y * w) + (4 * x) + 2] = val;
+        return this;
     };
-    var setGreen = function (x, y, val) {
-        setPixel.call(this, x, y, 1, val);
+    var setAlphaAt = function (x, y, val) {
+        var w = this.width;
+        var d = this.data;
+        d[(4 * y * w) + (4 * x) + 3] = val;
+        return this;
     };
-    var setBlue = function (x, y, val) {
-        setPixel.call(this, x, y, 2, val);
+
+    var getImageData = function () {
+        var canvas = $(this.document).find("#canvas")[0];
+        var ctx = canvas.getContext('2d');
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        data.getRedAt = getRedAt;
+        data.getGreenAt = getGreenAt;
+        data.getBlueAt = getBlueAt;
+        data.getAplphaAt = getAlphaAt;
+        data.setRedAt = setRedAt;
+        data.setGreenAt = setGreenAt;
+        data.setBlueAt = setBlueAt;
+        data.setAlphaAt = setAlphaAt;
+        return data;
     };
-    var setAlpha = function (x, y, val) {
-        setPixel.call(this, x, y, 3, val);
+
+    var putImageData = function (imgData, x, y) {
+        if (!x) {
+            x = 0;
+        }
+        if (!y) {
+            y = 0;
+        }
+        var canvas = $(this.document).find("#canvas")[0];
+        var ctx = canvas.getContext('2d');
+        ctx.putImageData(imgData, x, y);
+    };
+
+    var getPixels = function () {
+        var win = this;
+        var data = getImageData.call(this);
+
+        var getRed = function () {
+            return data.getRedAt(this.x, this.y);
+        };
+        var getGreen = function () {
+            return data.getGreenAt(this.x, this.y);
+        };
+        var getBlue = function () {
+            return data.getBlueAt(this.x, this.y);
+        };
+        var getAlpha = function () {
+            return data.getAlphaAt(this.x, this.y);
+        };
+        var setRed = function (val) {
+            data.setRedAt(this.x, this.y, val);
+            return this;
+        };
+        var setGreen = function (val) {
+            data.setGreenAt(this.x, this.y, val);
+            return this;
+        };
+        var setBlue = function (val) {
+            data.setBlueAt(this.x, this.y, val);
+            return this;
+        };
+        var setAlpha = function (val) {
+            data.setAlphaAt(this.x, this.y, val);
+            return this;
+        };
+        var createPixel = function (x, y) {
+            return {
+                "x": x,
+                "y": y,
+                "getRed": getRed,
+                "getGreen": getGreen,
+                "getBlue": getBlue,
+                "getAlpha": getAlpha,
+                "setRed": setRed,
+                "setGreen": setGreen,
+                "setBlue": setBlue,
+                "setAlpha": setAlpha
+            };
+        };
+        var pixels = {};
+        var count = 0;
+        for (var y = 0; y < data.height; y++) {
+            for (var x = 0; x < data.width; x++) {
+                pixels[count] = (createPixel(x, y));
+                count++;
+            }
+        }
+        pixels.length = count;
+        pixels.show = function() {
+            putImageData.call(win, data);
+        };
+        pixels.toString = function () {
+            return "[array PixelData]";
+        };
+        return pixels;
     };
 
     /**
@@ -306,6 +407,7 @@ var $__gfxWindows = [];
      * 
      * @param {int} width
      * @param {int} height
+     * @param {string} color
      * @returns {object|Window.TGWindow.win|Window|utils_L7.createCanvasPopup.win|window.TGWindow.win}
      */
     window.GfxWindow = function (width, height, color) {
@@ -354,14 +456,9 @@ var $__gfxWindows = [];
         // add the window public methods
         win.createTurtle = createTurtle;
         win.loadImage = loadImage;
-        win.getRed = getRed;
-        win.getGreen = getGreen;
-        win.getBlue = getBlue;
-        win.getAlpha = getAlpha;
-        win.setRed = setRed;
-        win.setGreen = setGreen;
-        win.setBlue = setBlue;
-        win.setAlpha = setAlpha;
+        win.getImageData = getImageData;
+        win.putImageData = putImageData;
+        win.getPixels = getPixels;
         win.toString = function () {
             return "[object CanvasWindow]";
         };
