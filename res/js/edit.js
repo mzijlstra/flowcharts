@@ -590,9 +590,9 @@ $(function () {
         if ($('#workspace').hasClass('exec')) {
             return false; // don't show if we're executing
         }
-        inputHere(this, function(t) {
+        inputHere(this, function (t) {
             wr.verifyType(t, "any");
-            return true;            
+            return true;
         });
     });
     // if and while condition expressions
@@ -1020,13 +1020,8 @@ $(function () {
 
         var genFunc = function (name) {
             // function declaration
-            var code = "";
-            if (name === "main") {
-                code += "async function main (";
-            } else {
-                code += "function " + name + "(";
-            }
-            
+            var code = "function " + name + "(";
+
             $("#vars_" + name + " .parameter").each(function () {
                 var t = $(this);
                 var n = t.children("input").val();
@@ -1108,7 +1103,12 @@ $(function () {
                 return c;
             };
             $("#ins_" + name + " > .statement").each(function () {
-                code += addInstruction(this, 1);
+                var ins = addInstruction(this, 1);
+                if (name === "main" && !code.match(/^async/)
+                        && ins.match(/^\s*await /)) {
+                    code = "async " + code;
+                }
+                code += ins;
             });
             // close function
             code += "}\n\n";
@@ -1130,9 +1130,14 @@ $(function () {
         hljs.highlightBlock(here[0]);
         $("#js_code").show();
     });
-    
-    $("#play_js_btn").click(function() {
+
+    $("#play_js_btn").click(function () {
         var program = $("#js_code > pre > code").data("code");
+        if (program.match(/async function main/) &&
+                !(/Chrome/.test(navigator.userAgent)
+                        && /Google Inc/.test(navigator.vendor))) {
+            alert("May only work on Google Chrome");
+        }
         var sandbox = $('#sandbox')[0].contentWindow;
         sandbox.eval("$__closePopups()");
         sandbox.eval(program);
