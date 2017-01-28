@@ -102,8 +102,21 @@ class UserCtrl {
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
 
-        if (!$first || !$last || !$email || !$pass) {
-            return "Location: user/add?error=" . urlencode("Incorrect input!");
+        $error = "";
+        if (!$first) {
+            $error .= "first ";
+        }
+        if (!last) {
+            $error .= "last ";
+        }
+        if (!$email) {
+            $error .= "email ";
+        }
+        if (!$pass) {
+            $error .= "pass ";
+        }
+        if ($error) {
+            return "Location: user/add?error=" . urlencode("Incorrect $error");
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
