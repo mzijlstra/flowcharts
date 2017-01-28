@@ -97,7 +97,7 @@ class UserCtrl {
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_STRING);
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
