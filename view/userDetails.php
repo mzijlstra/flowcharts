@@ -33,6 +33,9 @@ if (!isset($user)) {
             th.date {
                 width: 175px;
             }
+            div.error {
+                color: red;
+            }
         </style>
         <script>
             window.onload = function () {
@@ -50,9 +53,12 @@ if (!isset($user)) {
         </script>
     </head>
     <body>
+        <?php if ($_GET['error']) : ?>
+            <div class="error"><?= htmlspecialchars($_GET['error']) ?></div>
+        <?php endif; ?>
         <h1>User Details:</h1>
         <div class="fields">
-            <form method="post" action="<?= $user ? $user['id'] : "../user"?>">
+            <form method="post" action="<?= $user ? $user['id'] : "../user" ?>">
                 <span>First Name:</span>
                 <input type="text" name="first" value="<?= $user ? $user['firstname'] : "" ?>" /> <br />
 
@@ -79,20 +85,20 @@ if (!isset($user)) {
             </form>
         </div>
         <?php if ($user) : ?>
-        <table>
-            <tr>
-                <th class="name">Project</th>
-                <th class="date">Created</th>
-                <th class="date">Accessed</th>
-            </tr>
-            <?php foreach ($projects as $project) : ?>
-            <tr id="<?= $project['id'] ?>">
-                <td><?= $project['name'] ?></td>
-                <td><?= $project['created'] ?></td>
-                <td><?= $project['accessed'] ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
+            <table>
+                <tr>
+                    <th class="name">Project</th>
+                    <th class="date">Created</th>
+                    <th class="date">Accessed</th>
+                </tr>
+                <?php foreach ($projects as $project) : ?>
+                    <tr id="<?= $project['id'] ?>">
+                        <td><?= $project['name'] ?></td>
+                        <td><?= $project['created'] ?></td>
+                        <td><?= $project['accessed'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
         <?php endif; ?>
     </body>
 </html>

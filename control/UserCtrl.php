@@ -103,7 +103,7 @@ class UserCtrl {
         $active = filter_input(INPUT_POST, "active");
 
         if (!$first || !$last || !$email || !$pass) {
-            return "userDetails.php";
+            return "Location: user/add?error=" . urlencode("Incorrect input!");
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
