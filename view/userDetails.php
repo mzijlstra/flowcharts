@@ -49,6 +49,10 @@ if (!isset($user)) {
                         window.location = window.location + "/project/" + pid;
                     };
                 }
+                document.getElementById("back").onclick = function () {
+                    window.location.assign("../user");
+                    return false;
+                };
             };
         </script>
     </head>
@@ -81,7 +85,10 @@ if (!isset($user)) {
                 <span>Active:</span>
                 <input type="checkbox" name="active" <?= $user && !$user['active'] ? "" : "checked" ?> /> <br />
 
-                <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/> <a href="../user"><button>Back</button></a>
+                <input type="submit" value='<?= $user ? 'Update' : 'Add' ?>'/> 
+                <a href="../user">
+                    <button id="back">Back</button>
+                </a>
             </form>
         </div>
         <?php if ($user) : ?>
