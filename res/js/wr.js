@@ -57,7 +57,6 @@ $(function () {
         var o = $("#overlay");
         a.find(".msg").text(text);
         var doClick = function (evt) {
-            evt.stopPropagation();
             if (click) {
                 click();
 
@@ -67,6 +66,7 @@ $(function () {
                 o.hide();
             }
             a.off("click", doClick);
+            evt.stopPropagation();
         };
         a.on("click", doClick);
         o.show();
@@ -90,29 +90,29 @@ $(function () {
         var bC = $("#prompt_cancel");
 
         var hide = function (evt) {
-            evt.stopPropagation();
             bK.off("click", doOk);
             bC.off("click", doCancel);
             i.val("");
             p.hide();
             o.hide();
+            evt.stopPropagation();
         };
 
         var doOk = function (evt) {
-            evt.stopPropagation();
             if (ok && ok(i.val())) {
                 // don't hide if handler returns true
             } else {
                 hide();
             }
+            evt.stopPropagation();
         };
 
         var doCancel = function (evt) {
-            evt.stopPropagation();
             if (cancel) {
                 cancel();
             }
             hide();
+            evt.stopPropagation();
         };
 
         bK.on("click", doOk);
@@ -141,27 +141,27 @@ $(function () {
         var bC = $("#confirm_cancel");
 
         var hide = function (evt) {
-            evt.stopPropagation();
             bK.off("click", doOk);
             bC.off("click", doCancel);
             c.hide();
             o.hide();
+            evt.stopPropagation();
         };
 
         var doOk = function (evt) {
-            evt.stopPropagation();
             if (ok) {
                 ok();
             }
             hide();
+            evt.stopPropagation();
         };
 
         var doCancel = function (evt) {
-            evt.stopPropagation();
             if (cancel) {
                 cancel();
             }
             hide();
+            evt.stopPropagation();
         };
 
         bK.on("click", doOk);
