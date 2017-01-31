@@ -28,7 +28,7 @@
     position: relative;
 
     .del {
-        top: 2px;
+        top: -2px;
         left: 0px;
     }
     .type_container {
@@ -43,9 +43,10 @@ div.variable.bottom .del {
     display: none;
 }
 .variable.inuse .del {
-    background-color: $menu;
+    background-color: $bg;
     border-color: $hl;
     color: $hl;
+    cursor: default;
 }
 
 /* Types in var section and start statement */

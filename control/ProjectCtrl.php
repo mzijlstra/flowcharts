@@ -42,6 +42,8 @@ class ProjectCtrl {
 
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
+        
+        $VIEW_DATA['imgs'] = scandir("res/img");
 
         return "wr.php";
     }

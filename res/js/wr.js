@@ -17,11 +17,15 @@ $(function () {
      * Global variables in the wr namespace
      */
     wr.functions = {'main': {}};// the flowcharts the user has made
+    wr.state;                   // set by code in states.js [edit,play,pause]
+
+    // TODO move these two edit state related variables into EDIT state
     wr.curfun = 'main';         // the chart currently being edited
     wr.curvars = wr.functions.main; // the variables for that chart
+
+    // QUESTION Put these into the EXEC state?
     wr.curfrm = -1;             // index of currently executing stack frame
     wr.stack = [];              // will hold call stack when executing (play)
-    wr.state;                   // set by code in states.js [edit,play,pause]
     wr.playing;                 // will hold the timeout variable when playing
     wr.maxrec = 250;            // maximum recursion depth
 
@@ -37,6 +41,8 @@ $(function () {
      */
     wr.alert;
     wr.prompt;
+    wr.confirm;
+    wr.iolog;
     wr.verifyType;
     wr.ready;
 
@@ -156,6 +162,28 @@ $(function () {
         o.show();
         c.show();
     };
+
+    /**
+     * Helper that puts given text into the output box shown during execution
+     * 
+     * @param {type} text to be displayed in I/O window
+     * @param {type} cname CSS class name to be used for the text
+     */
+    wr.iolog = function (text, cname) {
+        var o = $("#out"); 
+        var add = $("<span>");
+        if (typeof text === "string") {
+            text = text.replace("\n", "<br />");
+        }
+        add.html(text);
+        if (cname) {
+            add.addClass(cname);
+        }
+        o.append(add);
+        o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
+    };
+
+
 
 
     /**

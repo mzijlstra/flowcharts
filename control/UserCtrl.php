@@ -18,7 +18,7 @@ class UserCtrl {
         // start session, and clean any login errors 
         unset($_SESSION['error']);
 
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $email = filter_input(INPUT_POST, "email");
         $pass = filter_input(INPUT_POST, "pass");
 
         // check if this is a valid login
@@ -146,13 +146,23 @@ class UserCtrl {
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
         $pass = filter_input(INPUT_POST, "pass");
 
-        if (!$first || !$last || !$email) {
-            // FIXME set $VIEW_DATA and redirect back
+        $error = "";
+        if (!$first) {
+            $error .= "first ";
+        }
+        if (!last) {
+            $error .= "last ";
+        }
+        if (!$email) {
+            $error .= "email ";
+        }
+        if ($error) {
+            return "Location: $uid?error=" . urlencode("Incorrect $error");
         }
 
         $actv = 1;

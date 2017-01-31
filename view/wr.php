@@ -45,6 +45,15 @@ global $MY_BASE;
             <?php endif; ?>
         </div>
 
+        <div class="view activeView" id="flowcharts_btn">
+            Flowcharts
+        </div>
+        <div class="view" id="javascript_btn">
+            JavaScript
+        </div>
+        <div class="view" id="images_btn">
+            Images
+        </div>
         <div id="workspace" class="edit">            
             <div id="var_area">
                 <div class="separator"></div>
@@ -73,26 +82,17 @@ global $MY_BASE;
                         </span>
                     <?php endforeach; ?>
 
-                    <div id="controls">
-                        <div id="play_pause">
-                            <div id="play_btn">
+                    <div class="controls">
+                        <div class="circle_btn" id="play_pause">
+                            <div id="play_btn" class="play">
                             </div>
                             <div id="pause_btn">
                                 <div class="pause_bar"></div>
                                 <div class="pause_bar"></div>
                             </div>
                         </div>
-                        <div id="reset" class="control">
-                            EDIT
-                        </div>
-                        <div id="delay_disp" class="control">
-                            DELAY <span id="delay">0.5</span>
-                        </div>
-                        <div id="step_btn" class="control">
-                            STEP
-                        </div>
-                        <div id="corner_ctrl">
-                            <div id="corner_menu"></div>
+                        <div id="delay_disp">
+                            <span id="delay">0.5</span>
                         </div>
                     </div>
 
@@ -106,22 +106,33 @@ global $MY_BASE;
                     <?php endforeach; ?>
                 </div> <!-- end instructions -->
 
-                <div id="gen_js" title="Generate JavaScript">JS</div>
-                <div id="output_disp">
-                    <div class="label">INPUT/OUTPUT</div>
-                    <div id="out"> 
-                    </div>
-                </div>
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
+
+        <div id="output_disp">
+            <div class="label">INPUT/OUTPUT</div>
+            <div id="out"> 
+            </div>
+        </div>
 
         <!-- Different types of popup / overlay windows below -->
         <div id="js_code">
             <pre><code></code></pre>
-            <div id="play_js_btn"><div id="play_js"></div></div>
-            <div id="hide_js"><div id="close_js">&times;</div></div>
+            <div class="controls">
+                <div id="play_js_btn" class="circle_btn">
+                    <div class="play"></div>
+                </div>
+            </div>
         </div>
-        
+
+        <div id="images">
+            <?php foreach ($imgs as $img) : ?>
+                <?php if ($img[0] !== "."): ?>
+                    <h2><?= $img ?></h2>
+                    <img id="<?= $img ?>" src="res/img/<?= $img ?>" />
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
 
         <div id="projects_disp">
             <table id="project_data">

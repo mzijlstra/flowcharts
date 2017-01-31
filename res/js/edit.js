@@ -31,13 +31,19 @@ $(function () {
         });
         wr.curvars = wr.functions.main;
     }());
-
+    
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
         wr.alert("Network Error\n\n" +
                 "Please check your connection and try again.");
     });
-
+    
+    $("#flowcharts_btn").click(function() {
+        $("#js_code").hide();
+        $("#images").hide();
+        $(".activeView").removeClass("activeView");
+        $("#flowcharts_btn").addClass("activeView");
+    });
 
 
 
@@ -454,9 +460,6 @@ $(function () {
 
     // handle click on variable in statement to edit it
     $("div.var_container > span.var").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // not if we're executing
-        }
         var t = $(this);
         t.siblings(".menu").hide();
         inputHere(this, function () {
@@ -560,9 +563,6 @@ $(function () {
      ********************************************************/
     // output expressions
     $(".output .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         inputHere(this, function (t) {
             wr.verifyType(t, "any");
             return true;
@@ -570,9 +570,6 @@ $(function () {
     });
     // assignment expressions
     $(".assignment .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         var name = $(this).siblings(".var_container").children(".var")
                 .text().trim();
         if (name === "") {
@@ -587,9 +584,6 @@ $(function () {
     });
     // call expressions
     $(".call .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         inputHere(this, function (t) {
             wr.verifyType(t, "any");
             return true;
@@ -597,9 +591,6 @@ $(function () {
     });
     // if and while condition expressions
     $(".diamond").click(function (event) {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         event.stopPropagation(); // in case we clicked .exp inside diamond
         var exp = this;
         if ($(this).hasClass("diamond")) {
@@ -612,9 +603,6 @@ $(function () {
     });
     // return expressions
     $(".stop").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         var exp = $(this).find(".exp")[0];
         var type = $('.active .start .type').text();
         inputHere(exp, function (t) {
@@ -1009,7 +997,7 @@ $(function () {
     /********************************************************
      * Generate JavaScript from flowchart
      ********************************************************/
-    $("#gen_js").click(function () {
+    $("#javascript_btn").click(function () {
         if (!wr.ready()) {
             wr.alert("Cannot generate JavaScript,\n there are errors in this " +
                     "project\n\n" +
@@ -1017,7 +1005,7 @@ $(function () {
                     " please check all functions");
             return;
         }
-
+        
         var genFunc = function (name) {
             // function declaration
             var code = "function " + name + "(";
@@ -1104,10 +1092,6 @@ $(function () {
             };
             $("#ins_" + name + " > .statement").each(function () {
                 var ins = addInstruction(this, 1);
-                if (name === "main" && !code.match(/^async/)
-                        && ins.match(/^\s*await /)) {
-                    code = "async " + code;
-                }
                 code += ins;
             });
             // close function
@@ -1128,22 +1112,17 @@ $(function () {
         here.empty().text(program);
         here.data("code", program);
         hljs.highlightBlock(here[0]);
+        
+        $(".activeView").removeClass("activeView");
+        $("#javascript_btn").addClass("activeView");
         $("#js_code").show();
     });
-
-    $("#play_js_btn").click(function () {
-        var program = $("#js_code > pre > code").data("code");
-        if (program.match(/async function main/) &&
-                !(/Chrome/.test(navigator.userAgent)
-                        && /Google Inc/.test(navigator.vendor))) {
-            alert("May only work on Google Chrome");
-        }
-        var sandbox = $('#sandbox')[0].contentWindow;
-        sandbox.eval("$__closePopups()");
-        sandbox.eval(program);
-    });
-
-    $("#hide_js").click(function () {
+    
+    /********************************************************
+     * Show the Images page
+     ********************************************************/
+    $("#images_btn").click(function () {
         $("#js_code").hide();
+        $("#images").show();
     });
 });

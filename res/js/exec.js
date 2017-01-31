@@ -8,27 +8,7 @@ var wr; // wr namespace declared in wr.js
 $(function () {
     "use strict";
 
-    /**
-     * Helper that puts given text into the output box shown during execution
-     * 
-     * @param {type} text to be displayed in I/O window
-     * @param {type} cname CSS class name to be used for the text
-     */
-    // Should I put this onto the global wr object? I only need it here
-    var iolog = function (text, cname) {
-        var add = $("<span>");
-        if (typeof text === "string") {
-            text = text.replace("\n", "<br />");
-        }
-        add.html(text);
-        if (cname) {
-            add.addClass(cname);
-        }
-        var o = $("#out");
-        o.append(add);
-        o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
-    };
-
+    // QUESTION: put stringify function into global wr object?
     var stringify = function (val) {
         if (typeof val === "object" && !$.isArray(val) &&
                 typeof val.toString === "function") {
@@ -101,7 +81,8 @@ $(function () {
             return res;
         } catch (exception) {
             $(".executing").addClass("exp_error");
-            iolog(exception, "err");
+            wr.iolog(exception, "err");
+            wr.stack = []; // clear execution stack / stop execution
             return false;
         }
     };
@@ -113,7 +94,6 @@ $(function () {
     wr.play = function () {
         if (wr.curfrm < 0 || wr.stack[wr.curfrm].steps.length === 0) {
             $('#play_pause').click();
-            $("#step_btn").css("display", "none");
             $("#delay_disp").css("display", "block");
         } else {
             if (wr.step()) {
@@ -160,11 +140,7 @@ $(function () {
         }
 
         // execute the expression 
-        if (exp.match(/^await /)) {
-            code += "var $r = " + exp.substring(6, exp.length) + ";\n";
-        } else {
-            code += "var $r = " + exp + ";\n";
-        }
+        code += "var $r = " + exp + ";\n";
 
         // update the values in the context (apply side effects)
         if (wr.state.name !== 'edit') {
@@ -237,7 +213,7 @@ $(function () {
                 var disp = null;
 
                 var processInput = function (inp) {
-                    iolog(inp + "<br />", "in");
+                    wr.iolog(inp + "<br />", "in");
                     input = inp; // input is always a string
                     disp = stringify(inp);
                     io.text('"' + input + '"');
@@ -322,7 +298,7 @@ $(function () {
                         var result = exp.text();
                         exp.text(exp.attr("exp"));
                         exp.removeClass("eval");
-                        iolog(result, "out");
+                        wr.iolog(result, "out");
 
                         setTimeout(function () {
                             asgn.removeClass("eval");
@@ -718,7 +694,7 @@ $(function () {
                     wr.curfrm = 0;
                     frame.steps.push({
                         "exec": function () {
-                            iolog("\n- Execution complete, click edit or play " +
+                            wr.iolog("\n- Execution complete, click edit or play " +
                                     "to continue -", "done");
                             frame.data.detach();
                             wr.stack.pop();

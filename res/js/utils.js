@@ -251,19 +251,9 @@ var $__gfxWindows = [];
 
     var loadImage = function (file) {
         var canvas = $(this.document).find("#canvas")[0];
-        return new Promise(function (resolve, reject) {
-            var img = new Image();
-            img.src = "res/img/" + file;
-            var ctx = canvas.getContext('2d');
-            img.onload = function () {
-                ctx.drawImage(img, 0, 0);
-                img.style.display = 'none';
-                resolve(img);
-            };
-            img.onerror = function (e) {
-                reject(e);
-            };
-        });
+        var ctx = canvas.getContext('2d');
+        var img = window.parent.document.getElementById(file);
+        ctx.drawImage(img, 0, 0);
     };
 
     var getRedAt = function (x, y) {
@@ -393,7 +383,7 @@ var $__gfxWindows = [];
             }
         }
         pixels.length = count;
-        pixels.show = function() {
+        pixels.show = function () {
             putImageData.call(win, data);
         };
         pixels.toString = function () {
@@ -470,6 +460,17 @@ var $__gfxWindows = [];
         });
         $__popupCount = 0;
     };
+
+    // make console.log calls also appear in the output window
+    (function () {
+        var oldlog = console.log;
+        var wr = window.parent.wr;
+        console.log = function () {
+            oldlog.apply(console, arguments);
+            wr.iolog.apply(wr, arguments);
+        };
+    }());
+
 }());
 
 

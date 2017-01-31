@@ -6,7 +6,7 @@
 // global variables
 $bg: white;
 $fg: #336;
-$menu: #f8f8f8;
+$menu: #d8d8d8;
 $hl: #dde;
 $disable: #ccc;
 $border: solid $fg;
@@ -112,42 +112,76 @@ div#projects:hover #project_menu {
     display: none;
 }
 
+.view {
+    position: fixed;
+    right: 0px;
+    width: 15px;
+    transform-origin: 0 0;
+    transform: rotate(90deg);
+    padding-top: 2px;
+    padding-left: 8px;
+    padding-bottom: 0px;
+    border: $line $border;
+    background-color: $menu;
+    z-index: 100;
+    cursor: pointer;
+}
+.view.activeView {
+    border-bottom: 0px;
+    padding-bottom: 1px;
+    background-color: $bg;
+}
+#flowcharts_btn {
+    top: 40px;
+    right: -77px;
+    width: 80px;
+}
+#javascript_btn {
+    top: 140px;
+    right: -77px;
+    width: 80px;
+}
+#images_btn {
+    top: 240px;
+    width: 60px;
+    right: -57px;
+}
+
 #workspace {
     position: fixed;
     top: 40px;
     bottom: 20px;
     left: 10px;
-    right: 2px;
+    right: 30px;
     border-top: $line $border;
     border-bottom: $line $border;
     border-right: $line $border;
 }
 
-#controls {
-    z-index: 100;
-    position: absolute;
-    bottom: -77px;
-    right: 0px;
+.controls {
+    position: fixed;
+    top: 75px;
+    right: 45px;
     width: 75px;
     height: 75px;
-    border-left: $line $border;
-    border-bottom: $line $border;
+
+    z-index: 100;
     cursor: pointer; 
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 
-    #play_pause {
+    .circle_btn {
         position: absolute;
         top: 0px;
         left: 0px;
         right: 0px;
         bottom: 0px;
         //background: radial-gradient(circle, #99D 1%, $fg 57%, $menu 60%);
-        background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
+        background: radial-gradient(circle, #AAD 1%, $fg 57%, $bg 60%);
 
-        #play_btn {
+        .play {
             width: 0px;
             height: 0px;
             position: absolute;
@@ -175,54 +209,21 @@ div#projects:hover #project_menu {
         }        
     }
 
-    .control {
+    #delay_disp {
         width: 75px;
         text-align: center;
-        border: $line $border;
         position: absolute;        
-        background-color: $menu;
-        border-left: none;
-        border-right: none;
-    }
-    #reset {
-        left: -15px - $line;
-        top: 75px + $line;
-        transform: rotate(-90deg);
-        transform-origin: 0 0;
-        color: $disable;
-    }
-    #step_btn, #delay_disp {
-        bottom: -15px -$line;
         left: -$line;
-        border-right: none;
+        top: 70px;
+        font-size: 25pt;
 
         input {
             position: absolute;
-            left: 45px;
+            left: 0px;
             top: -2px;
-            width: 27px;
+            width: 75px;
             border: none;
-        }
-    }
-    #step_btn {
-        display: none;
-    }
-
-    #corner_ctrl {
-        position: absolute;
-        left: -16px;
-        bottom: -16px;
-        width: 0px;
-        height: 0px;
-        border-right: 15px solid $fg;
-        border-bottom: 15px $hide;
-
-        #corner_menu {
-            position: absolute;
-            top: 0px;
-            right: -16px;
-            border-right: 15px solid $menu;
-            border-bottom: 15px $hide;
+            text-align: center;
         }
     }
 }
@@ -388,58 +389,47 @@ div#projects:hover #project_menu {
             display: block;
         }
     }
+}
 
-    #gen_js, #output_disp {
-        z-index: 10;
-        border: $line $border;
-        border-bottom: none;
-        background-color: $bg;
-        color: $fg;
-        position: absolute;
-        bottom: 0px;
-        right: 15px;        
-    }
-    #gen_js {
-        padding: 5px;
-        padding-bottom: 1px;
+#output_disp {
+    z-index: 11;
+    border: $line $border;
+    background-color: $bg;
+    color: $fg;
+    position: fixed;
+    bottom: 20px;
+    right: 45px;        
+    display: none;
+    width: 410px; // 55 characters wide
+    height: 150px;
+
+    .label {
         font-weight: bold;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        cursor: pointer;
-        right: 16px;
+        color: $bg;
+        background-color: $fg;
+        border-bottom: $line $border;
     }
-    #output_disp {
-        display: none;
-        width: 403px; // 55 characters wide
-        height: 150px;
 
-        .label {
+    #out {
+        padding: 3px;
+        overflow: auto;
+        height: 130px;
+        white-space: pre-wrap;
+
+        .err {
+            color: red;
+        }
+        .in {
             font-weight: bold;
-            color: $bg;
+            background-color: $menu;
+        }
+        .done {
             background-color: $fg;
-            border-bottom: $line $border;
-        }
-
-        #out {
-            padding: 3px;
-            overflow: auto;
-            height: 130px;
-            white-space: pre-wrap;
-
-            .err {
-                color: red;
-            }
-            .in {
-                font-weight: bold;
-                background-color: $menu;
-            }
-            .done {
-                background-color: $fg;
-                color: $exec;
-            } 
-        }
+            color: $exec;
+        } 
     }
 }
+
 
 /* all custom menus */
 .menu {
@@ -483,66 +473,17 @@ footer {
     text-align: center;
 }
 // JS code related items do not participate in the color scheme
-#js_code {
+#js_code, #images {
     @extend #workspace;
     display: none;
-    background-color: #F0F0F0; 
-    color: black;
     padding: 1em;
+    border-left: $line $border;
+    background-color: $bg;
     z-index: 10;
     overflow: auto;
 }
-#hide_js {
-    position: fixed;
-    right: 15px;
-    bottom: 45px;
-    padding: 10px;
-    background-color: black;
-    color: #F0F0F0;
-    font-weight: bold;
-    font-size: 300%;
-    border: 1px solid black;
-    border-radius: 50px;
-    height: 22px;
-    width: 22px;
-    opacity: 0.65;
-    cursor: pointer;
-    z-index: 10;
-
-    #close_js {
-        position: relative;
-        bottom: 7px;
-        right: 1px;
-    }
-}
-#hide_js:hover{
-    opacity: 1;
-}
-#play_js_btn {
-    cursor: pointer;
-    background: radial-gradient(circle, #AAD 1%, $fg 57%, #F0F0F0 60%);
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    width: 75px;
-    height: 75px;
-    
-    
-    #play_js {
-        width: 0px;
-        height: 0px;
-        position: absolute;
-        top: 20px;
-        left: 30px;
-        border-left: 22px solid $bg;
-        border-top: 15px $hide;
-        border-bottom: 15px $hide;
-    }
-}
 #projects_disp {
     @extend #js_code;
-    border-left: $line $border;
-    background-color: $bg;; 
     color: $fg;
 
     table {
@@ -600,15 +541,25 @@ footer {
     }
 }
 #hide_proj {
-    @extend #hide_js;
-    background: radial-gradient(circle, #AAD 1%, $fg 57%, $menu 60%);
+    position: fixed;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 300%;
+    height: 22px;
+    width: 22px;
+    cursor: pointer;
+    z-index: 10;
+
+    background: radial-gradient(circle, #AAD 1%, $fg 57%, $bg 60%);
     border: none;
     opacity: 0.9;
     top: 45px;
     left: 20px;
     right: initial;
     #close_proj {
-        @extend #close_js;
+        position: relative;
+        bottom: 7px;
+        right: 1px;
         color: $bg;
     }
 }

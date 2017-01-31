@@ -29,7 +29,7 @@
   padding-left: 15px;
   position: relative; }
   .variable .del {
-    top: 2px;
+    top: -2px;
     left: 0px; }
   .variable .type_container {
     width: 62px;
@@ -42,9 +42,10 @@ div.variable.bottom .del {
   display: none; }
 
 .variable.inuse .del {
-  background-color: #f8f8f8;
+  background-color: white;
   border-color: #dde;
-  color: #dde; }
+  color: #dde;
+  cursor: default; }
 
 /* Types in var section and start statement */
 .type_container {
@@ -494,7 +495,7 @@ iframe {
   display: none !important; }
 
 div#projects {
-  background-color: #f8f8f8;
+  background-color: #d8d8d8;
   position: absolute;
   top: 10px;
   left: 10px;
@@ -524,38 +525,70 @@ div#projects:hover #project_menu {
 #building_blocks {
   display: none; }
 
-#workspace, #js_code, #projects_disp {
+.view {
+  position: fixed;
+  right: 0px;
+  width: 15px;
+  transform-origin: 0 0;
+  transform: rotate(90deg);
+  padding-top: 2px;
+  padding-left: 8px;
+  padding-bottom: 0px;
+  border: 1px solid #336;
+  background-color: #d8d8d8;
+  z-index: 100;
+  cursor: pointer; }
+
+.view.activeView {
+  border-bottom: 0px;
+  padding-bottom: 1px;
+  background-color: white; }
+
+#flowcharts_btn {
+  top: 40px;
+  right: -77px;
+  width: 80px; }
+
+#javascript_btn {
+  top: 140px;
+  right: -77px;
+  width: 80px; }
+
+#images_btn {
+  top: 240px;
+  width: 60px;
+  right: -57px; }
+
+#workspace, #js_code, #projects_disp, #images {
   position: fixed;
   top: 40px;
   bottom: 20px;
   left: 10px;
-  right: 2px;
+  right: 30px;
   border-top: 1px solid #336;
   border-bottom: 1px solid #336;
   border-right: 1px solid #336; }
 
-#controls {
-  z-index: 100;
-  position: absolute;
-  bottom: -77px;
-  right: 0px;
+.controls {
+  position: fixed;
+  top: 75px;
+  right: 45px;
   width: 75px;
   height: 75px;
-  border-left: 1px solid #336;
-  border-bottom: 1px solid #336;
+  z-index: 100;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-  #controls #play_pause {
+  .controls .circle_btn {
     position: absolute;
     top: 0px;
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background: radial-gradient(circle, #AAD 1%, #336 57%, #f8f8f8 60%); }
-    #controls #play_pause #play_btn {
+    background: radial-gradient(circle, #AAD 1%, #336 57%, white 60%); }
+    .controls .circle_btn .play {
       width: 0px;
       height: 0px;
       position: absolute;
@@ -564,58 +597,32 @@ div#projects:hover #project_menu {
       border-left: 22px solid white;
       border-top: 15px solid transparent;
       border-bottom: 15px solid transparent; }
-    #controls #play_pause #pause_btn {
+    .controls .circle_btn #pause_btn {
       display: none;
       position: absolute;
       top: 23px;
       left: 28px; }
-      #controls #play_pause #pause_btn .pause_bar {
+      .controls .circle_btn #pause_btn .pause_bar {
         width: 0px;
         height: 0px;
         display: inline-block;
         border-left: 10px solid white;
         border-top: 25px solid white;
         margin-left: -3px; }
-  #controls .control {
+  .controls #delay_disp {
     width: 75px;
     text-align: center;
-    border: 1px solid #336;
     position: absolute;
-    background-color: #f8f8f8;
-    border-left: none;
-    border-right: none; }
-  #controls #reset {
-    left: -16px;
-    top: 76px;
-    transform: rotate(-90deg);
-    transform-origin: 0 0;
-    color: #ccc; }
-  #controls #step_btn, #controls #delay_disp {
-    bottom: -16px;
     left: -1px;
-    border-right: none; }
-    #controls #step_btn input, #controls #delay_disp input {
+    top: 70px;
+    font-size: 25pt; }
+    .controls #delay_disp input {
       position: absolute;
-      left: 45px;
+      left: 0px;
       top: -2px;
-      width: 27px;
-      border: none; }
-  #controls #step_btn {
-    display: none; }
-  #controls #corner_ctrl {
-    position: absolute;
-    left: -16px;
-    bottom: -16px;
-    width: 0px;
-    height: 0px;
-    border-right: 15px solid #336;
-    border-bottom: 15px solid transparent; }
-    #controls #corner_ctrl #corner_menu {
-      position: absolute;
-      top: 0px;
-      right: -16px;
-      border-right: 15px solid #f8f8f8;
-      border-bottom: 15px solid transparent; }
+      width: 75px;
+      border: none;
+      text-align: center; }
 
 .cornerb, .cornerw {
   position: absolute;
@@ -663,7 +670,7 @@ div#projects:hover #project_menu {
       border: 1px solid #336;
       margin-top: 2px;
       margin-left: 2px;
-      background-color: #f8f8f8;
+      background-color: #d8d8d8;
       cursor: pointer; }
     #var_area #stack .frame.active {
       background-color: white;
@@ -706,7 +713,7 @@ div#projects:hover #project_menu {
       position: relative;
       display: inline-block;
       border: 1px solid #336;
-      background-color: #f8f8f8;
+      background-color: #d8d8d8;
       cursor: default;
       padding-top: 2px;
       padding-left: 8px;
@@ -739,52 +746,43 @@ div#projects:hover #project_menu {
       display: none; }
     #functions #instructions .instructions.active {
       display: block; }
-  #functions #gen_js, #functions #output_disp {
-    z-index: 10;
-    border: 1px solid #336;
-    border-bottom: none;
-    background-color: white;
-    color: #336;
-    position: absolute;
-    bottom: 0px;
-    right: 15px; }
-  #functions #gen_js {
-    padding: 5px;
-    padding-bottom: 1px;
+
+#output_disp {
+  z-index: 11;
+  border: 1px solid #336;
+  background-color: white;
+  color: #336;
+  position: fixed;
+  bottom: 20px;
+  right: 45px;
+  display: none;
+  width: 410px;
+  height: 150px; }
+  #output_disp .label {
     font-weight: bold;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    cursor: pointer;
-    right: 16px; }
-  #functions #output_disp {
-    display: none;
-    width: 403px;
-    height: 150px; }
-    #functions #output_disp .label {
+    color: white;
+    background-color: #336;
+    border-bottom: 1px solid #336; }
+  #output_disp #out {
+    padding: 3px;
+    overflow: auto;
+    height: 130px;
+    white-space: pre-wrap; }
+    #output_disp #out .err {
+      color: red; }
+    #output_disp #out .in {
       font-weight: bold;
-      color: white;
+      background-color: #d8d8d8; }
+    #output_disp #out .done {
       background-color: #336;
-      border-bottom: 1px solid #336; }
-    #functions #output_disp #out {
-      padding: 3px;
-      overflow: auto;
-      height: 130px;
-      white-space: pre-wrap; }
-      #functions #output_disp #out .err {
-        color: red; }
-      #functions #output_disp #out .in {
-        font-weight: bold;
-        background-color: #f8f8f8; }
-      #functions #output_disp #out .done {
-        background-color: #336;
-        color: greenyellow; }
+      color: greenyellow; }
 
 /* all custom menus */
 .menu {
   display: none;
   position: absolute;
   border: 1px solid #336;
-  background-color: #f8f8f8;
+  background-color: #d8d8d8;
   z-index: 10; }
   .menu .menu_item, .menu .menu_edit {
     padding: 3px;
@@ -813,59 +811,15 @@ footer {
   margin-left: -150px;
   text-align: center; }
 
-#js_code, #projects_disp {
+#js_code, #projects_disp, #images {
   display: none;
-  background-color: #F0F0F0;
-  color: black;
   padding: 1em;
+  border-left: 1px solid #336;
+  background-color: white;
   z-index: 10;
   overflow: auto; }
 
-#hide_js, #hide_proj {
-  position: fixed;
-  right: 15px;
-  bottom: 45px;
-  padding: 10px;
-  background-color: black;
-  color: #F0F0F0;
-  font-weight: bold;
-  font-size: 300%;
-  border: 1px solid black;
-  border-radius: 50px;
-  height: 22px;
-  width: 22px;
-  opacity: 0.65;
-  cursor: pointer;
-  z-index: 10; }
-  #hide_js #close_js, #hide_proj #close_js, #hide_proj #close_proj {
-    position: relative;
-    bottom: 7px;
-    right: 1px; }
-
-#hide_js:hover, #hide_proj:hover {
-  opacity: 1; }
-
-#play_js_btn {
-  cursor: pointer;
-  background: radial-gradient(circle, #AAD 1%, #336 57%, #F0F0F0 60%);
-  position: fixed;
-  top: 50px;
-  right: 10px;
-  width: 75px;
-  height: 75px; }
-  #play_js_btn #play_js {
-    width: 0px;
-    height: 0px;
-    position: absolute;
-    top: 20px;
-    left: 30px;
-    border-left: 22px solid white;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent; }
-
 #projects_disp {
-  border-left: 1px solid #336;
-  background-color: white;
   color: #336; }
   #projects_disp table {
     width: 100%;
@@ -878,7 +832,7 @@ footer {
       border-top: 1px solid #336;
       cursor: pointer; }
     #projects_disp table tr:nth-child(even) {
-      background-color: #f8f8f8; }
+      background-color: #d8d8d8; }
     #projects_disp table tr:first-child {
       width: 50%; }
     #projects_disp table th {
@@ -909,13 +863,24 @@ footer {
       top: 8px; }
 
 #hide_proj {
-  background: radial-gradient(circle, #AAD 1%, #336 57%, #f8f8f8 60%);
+  position: fixed;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 300%;
+  height: 22px;
+  width: 22px;
+  cursor: pointer;
+  z-index: 10;
+  background: radial-gradient(circle, #AAD 1%, #336 57%, white 60%);
   border: none;
   opacity: 0.9;
   top: 45px;
   left: 20px;
   right: initial; }
   #hide_proj #close_proj {
+    position: relative;
+    bottom: 7px;
+    right: 1px;
     color: white; }
 
 #overlay {

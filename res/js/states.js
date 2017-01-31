@@ -14,8 +14,6 @@ $(function () {
      *****************************************************/
     var play_btn = $("#play_btn");
     var pause_btn = $("#pause_btn");
-    var delay_disp = $('#delay_disp');
-    var step_btn = $('#step_btn');
     var workspace = $("#workspace");
     var variables = $("#variables");
     var stack = $("#stack");
@@ -25,18 +23,16 @@ $(function () {
     var toPlayState = function () {
         pause_btn.css("display", "block");
         play_btn.css("display", "none");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
         wr.state = states.play;
 
         // if we're not executing, start executing main
         if (wr.curfrm === -1) {
             $("#out").empty();
             $(".frame").detach();
-            
+
             // close all previously opened GfxWindow popups 
             wr.eval("$__closePopups()");
-            
+
             // start the execution
             wr.doCall("main");
         }
@@ -45,8 +41,6 @@ $(function () {
     var toEditState = function () {
         pause_btn.css("display", "none");
         play_btn.css("display", "block");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
         workspace.removeClass("exec");
         workspace.addClass("edit");
         stack.hide();
@@ -72,8 +66,6 @@ $(function () {
     var toPauseState = function () {
         pause_btn.css("display", "none");
         play_btn.css("display", "block");
-        step_btn.css("display", "block");
-        delay_disp.css("display", "none");
         clearTimeout(wr.playing);
         wr.state = states.pause;
     };
@@ -137,15 +129,37 @@ $(function () {
     wr.state = states.edit;
 
     // Hook up button clicks that move us between the states
-    $("#play_pause").click(function () {
+    $(document.body).click(function (evt) {
+        var t = $(evt.target);
+        if (wr.state.name === "play") {
+            wr.state.playpause();
+        } else if (wr.state.name === "pause") {
+            if (wr.stack[wr.curfrm] === undefined) {
+                // if there is nothing left to execute, go back to edit
+                wr.state.reset();
+                return;
+            }
+            // if they click in the general white space 
+            // while there is something to execute
+            if (t.hasClass("input")
+                    || t.hasClass("output")
+                    || t.hasClass("assignment")
+                    || t.hasClass("diamond")
+                    || t.hasClass("call")
+                    || t.hasClass("connection")) {
+                wr.step();
+            } else { // otherwise they clicked on something to edit
+                wr.state.reset();
+            }
+        }
+    });
+
+    $("#play_pause").click(function (evt) {
         wr.state.playpause();
+        evt.stopPropagation();
     });
-    $("#reset").click(function () {
-        wr.state.reset();
-    });
-    $("#step_btn").click(wr.step);
     // and the control to change the delay between steps
-    $("#delay_disp").click(function () {
+    $("#delay_disp").click(function (evt) {
         var t = $(this);
         var delay = $("#delay");
         var input = $("<input>");
@@ -168,9 +182,25 @@ $(function () {
         });
         t.append(input);
         input.focus();
+        evt.stopPropagation();
     });
 
-
+    $("#play_js_btn").click(function () {
+        var program = $("#js_code > pre > code").data("code");
+        
+        // TODO remove this once images tab is working
+        if (program.match(/async function main/) &&
+                !(/Chrome/.test(navigator.userAgent)
+                        && /Google Inc/.test(navigator.vendor))) {
+            alert("May only work on Google Chrome");
+        }
+        
+        $("#out").empty();
+        $("#output_disp").show(); 
+        var sandbox = $('#sandbox')[0].contentWindow;
+        sandbox.eval("$__closePopups()");
+        sandbox.eval(program);
+    });
 
 
 
