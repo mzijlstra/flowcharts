@@ -56,9 +56,11 @@ $(function () {
         var a = $("#alert");
         var o = $("#overlay");
         a.find(".msg").text(text);
-        var doClick = function () {
+        var doClick = function (evt) {
+            evt.stopPropagation();
             if (click) {
                 click();
+
             }
             a.hide();
             if ($("#prompt").css("display") !== "block") {
@@ -87,7 +89,8 @@ $(function () {
         var bK = $("#prompt_ok");
         var bC = $("#prompt_cancel");
 
-        var hide = function () {
+        var hide = function (evt) {
+            evt.stopPropagation();
             bK.off("click", doOk);
             bC.off("click", doCancel);
             i.val("");
@@ -95,7 +98,8 @@ $(function () {
             o.hide();
         };
 
-        var doOk = function () {
+        var doOk = function (evt) {
+            evt.stopPropagation();
             if (ok && ok(i.val())) {
                 // don't hide if handler returns true
             } else {
@@ -103,7 +107,8 @@ $(function () {
             }
         };
 
-        var doCancel = function () {
+        var doCancel = function (evt) {
+            evt.stopPropagation();
             if (cancel) {
                 cancel();
             }
@@ -135,21 +140,24 @@ $(function () {
         var bK = $("#confirm_ok");
         var bC = $("#confirm_cancel");
 
-        var hide = function () {
+        var hide = function (evt) {
+            evt.stopPropagation();
             bK.off("click", doOk);
             bC.off("click", doCancel);
             c.hide();
             o.hide();
         };
 
-        var doOk = function () {
+        var doOk = function (evt) {
+            evt.stopPropagation();
             if (ok) {
                 ok();
             }
             hide();
         };
 
-        var doCancel = function () {
+        var doCancel = function (evt) {
+            evt.stopPropagation();
             if (cancel) {
                 cancel();
             }
@@ -170,7 +178,7 @@ $(function () {
      * @param {type} cname CSS class name to be used for the text
      */
     wr.iolog = function (text, cname) {
-        var o = $("#out"); 
+        var o = $("#out");
         var add = $("<span>");
         if (typeof text === "string") {
             text = text.replace("\n", "<br />");
