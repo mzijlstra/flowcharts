@@ -146,6 +146,7 @@ $(function () {
                     || t.hasClass("assignment")
                     || t.hasClass("diamond")
                     || t.hasClass("call")
+                    || t.hasClass("statement")
                     || t.hasClass("connection")) {
                 wr.step();
             } else { // otherwise they clicked on something to edit
