@@ -42,8 +42,18 @@ class ProjectCtrl {
 
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
-        
-        $VIEW_DATA['imgs'] = scandir("res/img");
+
+        $files = glob('res/img/*');
+        // sort images by upload date
+        usort($files, function($a, $b) {
+            return filemtime($a) < filemtime($b);
+        });
+        // strip leading directory name
+        $imgs = array();
+        foreach ($files as $file) {
+            $imgs[] = basename($file);
+        }
+        $VIEW_DATA['imgs'] = $imgs;
 
         return "wr.php";
     }
@@ -62,7 +72,7 @@ class ProjectCtrl {
         global $VIEW_DATA;
         global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
-        
+
         if (count($URI_PARAMS) === 2) {
             if ($_SESSION['user']['type'] === 'admin') {
                 $uid = $URI_PARAMS[1];
@@ -90,8 +100,8 @@ class ProjectCtrl {
         if ($direction == "") {
             $direction = "ASC";
         }
-        if (!preg_match("/(name|created|accessed)/", $order) 
-                || !preg_match("/(ASC|DESC)/", $direction)) {
+        if (!preg_match("/(name|created|accessed)/", $order) ||
+                !preg_match("/(ASC|DESC)/", $direction)) {
             return "error/500.php";
         }
 
@@ -229,6 +239,15 @@ class ProjectCtrl {
         } else {
             return "error/403.php";
         }
+    }
+
+    public function uploadImages() {
+        $pid = filter_input(INPUT_POST, "pid");
+        if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
+            $name = $_FILES["image"]["name"];
+            move_uploaded_file($_FILES["image"]["tmp_name"], "res/img/$name");
+        }
+        return "Location: project/$pid#images";
     }
 
 }

@@ -31,18 +31,19 @@ $(function () {
         });
         wr.curvars = wr.functions.main;
     }());
-    
+
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
-        wr.alert("Network Error\n\n" +
-                "Please check your connection and try again.");
+        // almost all cases that errors occured were due to session timeout
+        window.location.assign("../login");
     });
-    
-    $("#flowcharts_btn").click(function() {
+
+    $("#flowcharts_btn").click(function () {
         $("#js_code").hide();
         $("#images").hide();
         $(".activeView").removeClass("activeView");
         $("#flowcharts_btn").addClass("activeView");
+        window.location.assign("#");
     });
 
 
@@ -1005,7 +1006,7 @@ $(function () {
                     " please check all functions");
             return;
         }
-        
+
         var genFunc = function (name) {
             // function declaration
             var code = "function " + name + "(";
@@ -1112,17 +1113,21 @@ $(function () {
         here.empty().text(program);
         here.data("code", program);
         hljs.highlightBlock(here[0]);
-        
+
         $(".activeView").removeClass("activeView");
         $("#javascript_btn").addClass("activeView");
         $("#js_code").show();
+        window.location.assign("#javascript");
     });
-    
+
     /********************************************************
      * Show the Images page
      ********************************************************/
     $("#images_btn").click(function () {
         $("#js_code").hide();
         $("#images").show();
+        $(".activeView").removeClass("activeView");
+        $("#images_btn").addClass("activeView");
+        window.location.assign("#images");
     });
 });

@@ -481,6 +481,10 @@ input {
   border-color: #336;
   color: #336; }
 
+input[type=submit] {
+  background-color: buttonface;
+  color: buttontext; }
+
 h1 {
   position: relative;
   margin-left: 35px;
@@ -818,6 +822,10 @@ footer {
   background-color: white;
   z-index: 10;
   overflow: auto; }
+
+#images > form {
+  border-bottom: 1px solid #336;
+  padding-bottom: 10px; }
 
 #projects_disp {
   color: #336; }

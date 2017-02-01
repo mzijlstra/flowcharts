@@ -51,6 +51,10 @@ input {
     border-color: $fg;
     color: $fg;
 }
+input[type=submit] {
+    background-color: buttonface;
+    color: buttontext;
+}
 
 h1 {
     position: relative;
@@ -481,6 +485,10 @@ footer {
     background-color: $bg;
     z-index: 10;
     overflow: auto;
+}
+#images > form {
+    border-bottom: $line $border;
+    padding-bottom: 10px;
 }
 #projects_disp {
     @extend #js_code;

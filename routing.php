@@ -40,6 +40,7 @@ $post_ctrl = array(
     "|/function/(\d+)/ins|" => "ProjectCtrl@updIns",
     "|/function/(\d+)/rename|" => "ProjectCtrl@renameFunction",
     "|/function/(\d+)/delete|" => "ProjectCtrl@deleteFunction",
+    "|/images|" => "ProjectCtrl@uploadImages",
     "|/user$|" => "UserCtrl@create",
     "|/user/(\d+)$|" => "UserCtrl@update",
 );

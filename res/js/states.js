@@ -8,6 +8,15 @@ var wr; // global object declared in wr.js
 $(function () {
     "use strict";
 
+    // switch to the correct page (images or javascript) on page load
+    (function () {
+        if (window.location.hash) {
+            setTimeout(function () {
+                $(window.location.hash + "_btn").click();
+            }, 100);
+        }
+    }());
+
     /*****************************************************
      * The 3 different states that the program can be in
      * The code below uses the state pattern for the states
@@ -188,16 +197,8 @@ $(function () {
 
     $("#play_js_btn").click(function () {
         var program = $("#js_code > pre > code").data("code");
-        
-        // TODO remove this once images tab is working
-        if (program.match(/async function main/) &&
-                !(/Chrome/.test(navigator.userAgent)
-                        && /Google Inc/.test(navigator.vendor))) {
-            alert("May only work on Google Chrome");
-        }
-        
         $("#out").empty();
-        $("#output_disp").show(); 
+        $("#output_disp").show();
         var sandbox = $('#sandbox')[0].contentWindow;
         sandbox.eval("$__closePopups()");
         sandbox.eval(program);

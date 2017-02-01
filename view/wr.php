@@ -126,9 +126,16 @@ global $MY_BASE;
         </div>
 
         <div id="images">
+            <h2>Upload new:</h2>
+            <form action="../images" method="post" enctype="multipart/form-data">
+                <input type="file" name="image" />
+                <input type="hidden" name="pid" value="<?= $pid ?>" />
+                <input type="submit" value="upload" />
+            </form>
+            <h2>Already Uploaded:</h2>
             <?php foreach ($imgs as $img) : ?>
                 <?php if ($img[0] !== "."): ?>
-                    <h2><?= $img ?></h2>
+                    <h3><?= $img ?></h3>
                     <img id="<?= $img ?>" src="res/img/<?= $img ?>" />
                 <?php endif; ?>
             <?php endforeach; ?>
