@@ -198,7 +198,8 @@ $(function () {
      */
     wr.stringify = function (val) {
         if (typeof val === "object" && !$.isArray(val) &&
-                typeof val.toString === "function") {
+                typeof val.toString === "function" && 
+                val.toString() !== "[object Object]") {
             return val.toString();
         } else {
             return JSON.stringify(val);
@@ -235,11 +236,12 @@ $(function () {
             "object": {} 
         };
         var ctx = {};
+        var sys = {};
         var key, vtype;
         // add in functions that return default values based on their type
         for (key in wr.functions) {
             vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return " +
+            sys[key] = "function () { return " +
                     wr.stringify(defaults[vtype]) + "}";
         }
         // add variables for the function that the elem is inside of
@@ -265,7 +267,7 @@ $(function () {
 
         // do the actual evaluation
         try {
-            var data = wr.eval(exp, ctx);
+            var data = wr.eval(exp, ctx, sys);
         } catch (exception) {
             stmt.addClass("exp_error");
             if (!silent) {
