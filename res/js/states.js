@@ -138,7 +138,7 @@ $(function () {
     wr.state = states.edit;
 
     // Hook up button clicks that move us between the states
-    $("#workspace").click(function (evt) {
+    $("#functions").click(function (evt) {
         var t = $(evt.target);
         if (wr.state.name === "play") {
             wr.state.playpause();
