@@ -108,6 +108,8 @@ $(function () {
         if (!sys) {
             sys = {};
         }
+        // inside doCall() wr.curfrm changes, need to keep the real current
+        var curfrm = wr.curfrm;
         var code = "$w = window;\n(function () {\n";
         var key, val;
 
@@ -155,7 +157,7 @@ $(function () {
                 } else {
                     val = wr.stringify(val);
                 }
-                $("#f" + wr.curfrm + "_" + key).text(val);
+                $("#f" + curfrm + "_" + key).text(val);
             }
         }
 
