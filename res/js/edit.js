@@ -41,6 +41,7 @@ $(function () {
     $("#flowcharts_btn").click(function () {
         $("#js_code").hide();
         $("#images").hide();
+        $("#output_disp").hide();
         $(".activeView").removeClass("activeView");
         $("#flowcharts_btn").addClass("activeView");
         window.location.assign("#");
@@ -1116,6 +1117,7 @@ $(function () {
 
         $(".activeView").removeClass("activeView");
         $("#javascript_btn").addClass("activeView");
+        $("#images").hide();
         $("#js_code").show();
         window.location.assign("#javascript");
     });
@@ -1125,6 +1127,7 @@ $(function () {
      ********************************************************/
     $("#images_btn").click(function () {
         $("#js_code").hide();
+        $("#output_disp").hide();
         $("#images").show();
         $(".activeView").removeClass("activeView");
         $("#images_btn").addClass("activeView");

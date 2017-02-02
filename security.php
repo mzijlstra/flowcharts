@@ -1,9 +1,10 @@
 <?php
+
 /*
  * Michael Zijlstra 11/14/2014
  */
 
-/* **************************
+/* * *************************
  * Security to URL 
  * ************************ */
 $sec = array(
@@ -12,14 +13,15 @@ $sec = array(
     "|POST@/login|" => "none",
     "|GET@/$|" => "user",
     "|GET@/project|" => "user",
-    "|POST@/project|" => "user", 
-    "|POST@/function|" => "user",
+    "|POST@/project|" => "user",
+    "|POST@/project|" => "user",
+    "|POST@/images|" => "user",
     "|GET@/sandbox|" => "user",
     "|GET@/user|" => "admin",
     "|POST@/user|" => "admin"
 );
 
-/* ****************************
+/* * ***************************
  * Do actual Security checks
  * ************************** */
 
@@ -38,7 +40,7 @@ function isLoggedIn() {
         $_SESSION['error'] = "Please Login:";
         header("Location: ${MY_BASE}/login");
         exit();
-    }    
+    }
 }
 
 $my_policy = "admin";

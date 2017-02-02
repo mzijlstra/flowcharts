@@ -8,16 +8,6 @@ var wr; // wr namespace declared in wr.js
 $(function () {
     "use strict";
 
-    // QUESTION: put stringify function into global wr object?
-    var stringify = function (val) {
-        if (typeof val === "object" && !$.isArray(val) &&
-                typeof val.toString === "function") {
-            return val.toString();
-        } else {
-            return JSON.stringify(val);
-        }
-    };
-
     /**
      * The function used to take a flowchart execution step
      */
@@ -135,7 +125,7 @@ $(function () {
                 code += "var " + key + " = $w.top.wr.stack[" + wr.curfrm +
                         "].ctx." + key + "\n";
             } else {
-                code += "var " + key + " = " + stringify(val) + ";\n";
+                code += "var " + key + " = " + wr.stringify(val) + ";\n";
             }
         }
 
@@ -163,7 +153,7 @@ $(function () {
                         typeof val.toString === "function") {
                     val = val.toString();
                 } else {
-                    val = stringify(val);
+                    val = wr.stringify(val);
                 }
                 $("#f" + wr.curfrm + "_" + key).text(val);
             }
@@ -201,6 +191,48 @@ $(function () {
             };
         });
 
+        /**
+         * helper function to put the resulting value into a variable
+         * works with multi-dimensional arrays and object references
+         * 
+         * @param {type} name variable name as typed by user
+         * @param {type} input the value that should go in
+         * @returns {undefined}
+         */
+        var intoVariable = function (name, input) {
+            var frame = wr.stack[wr.curfrm];
+            var found = name.match(/^(\w+)((\[|\.)(\w+)]?)/);
+            if (found) { // assignment into array or object
+                var actual = frame.ctx[found[1]];
+                var index;
+                if (found[3] === "[") {
+                    index = wr.eval(found[4], frame.ctx, frame.sys);
+                } else {
+                    index = found[4];
+                }
+
+                // could be multiple levels of . or [ ]
+                name = name.substr(found[1].length + found[2].length, name.length);
+                found = name.match(/^((\[|\.)(\w+)]?)/);
+                while (found) {
+                    actual = actual[index];
+                    if (found[2] === "[") {
+                        index = wr.eval(found[3], frame.ctx, frame.sys);
+                    } else {
+                        index = found[3];
+                    }
+                    name = name.substr(found[1].length, name.length);
+                    found = name.match(/^((\[|\.)(\w+)]?)/);
+                }
+
+                actual[index] = input;
+                return wr.stringify(frame.ctx[name]);
+            } else {
+                frame.ctx[name] = input;
+                return wr.stringify(input);
+            }
+        };
+
         ins.find(".statement > .input").each(function () {
             $(this).parent()[0].exec = function () {
                 var t = $(this);
@@ -215,7 +247,7 @@ $(function () {
                 var processInput = function (inp) {
                     wr.iolog(inp + "<br />", "in");
                     input = inp; // input is always a string
-                    disp = stringify(inp);
+                    disp = wr.stringify(inp);
                     io.text('"' + input + '"');
                     io.addClass("eval");
 
@@ -241,15 +273,8 @@ $(function () {
                         var name = nelem.text();
 
                         // place value in the needed locations
-                        var found = name.match(/^(\w+)(\[|\.)(\w+)/);
-                        if (found) { // assignment into array or object
-                            name = found[1];
-                            var index = wr.eval(found[3], frame.ctx, frame.sys);
-                            frame.ctx[name][index] = input;
-                            disp = stringify(frame.ctx[name]);
-                        } else {
-                            frame.ctx[name] = input;
-                        }
+                        disp = intoVariable(name, input);
+
                         $("#f" + wr.curfrm + "_" + name)
                                 .text(disp)
                                 .parent().addClass("executing");
@@ -335,7 +360,7 @@ $(function () {
                 }
 
                 // otherwise show the result, and line up the next steps
-                var disp = stringify(result);
+                var disp = wr.stringify(result);
                 if (typeof result === "object" && !$.isArray(result) &&
                         typeof result.toString === "function") {
                     disp = result.toString();
@@ -353,15 +378,7 @@ $(function () {
                         var nelem = t.find(".var");
                         var name = nelem.text();
 
-                        var found = name.match(/^(\w+)(\[|\.)(\w+)/);
-                        if (found) { // assignment into array or object
-                            name = found[1];
-                            var index = wr.eval(found[3], frame.ctx, frame.sys);
-                            frame.ctx[name][index] = exp[0].result;
-                            disp = stringify(frame.ctx[name]);
-                        } else {
-                            frame.ctx[name] = exp[0].result;
-                        }
+                        disp = intoVariable(name, exp[0].result);
 
                         nelem.addClass("executing");
                         exp.text(exp.attr("exp"));
@@ -652,7 +669,7 @@ $(function () {
                     exp.attr("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
-                var disp = stringify(result);
+                var disp = wr.stringify(result);
                 exp.text(disp);
                 exp.addClass("eval");
                 wr.curfrm -= 1;
@@ -772,7 +789,7 @@ $(function () {
         var label = "<div class='flabel'>" + fname + "(";
         if (args) {
             for (var i = 0; i < args.length; i++) {
-                label += stringify(args[i]) + ", ";
+                label += wr.stringify(args[i]) + ", ";
             }
             label = label.substring(0, label.length - 2);
         }

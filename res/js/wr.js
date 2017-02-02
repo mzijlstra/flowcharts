@@ -43,6 +43,7 @@ $(function () {
     wr.prompt;
     wr.confirm;
     wr.iolog;
+    wr.stringify;
     wr.verifyType;
     wr.ready;
 
@@ -89,20 +90,19 @@ $(function () {
         var bK = $("#prompt_ok");
         var bC = $("#prompt_cancel");
 
-        var hide = function (evt) {
+        var hide = function () {
             bK.off("click", doOk);
             bC.off("click", doCancel);
             i.val("");
             p.hide();
             o.hide();
-            evt.stopPropagation();
         };
 
         var doOk = function (evt) {
             if (ok && ok(i.val())) {
                 // don't hide if handler returns true
             } else {
-                hide();
+                hide(evt);
             }
             evt.stopPropagation();
         };
@@ -111,7 +111,7 @@ $(function () {
             if (cancel) {
                 cancel();
             }
-            hide();
+            hide(evt);
             evt.stopPropagation();
         };
 
@@ -140,19 +140,18 @@ $(function () {
         var bK = $("#confirm_ok");
         var bC = $("#confirm_cancel");
 
-        var hide = function (evt) {
+        var hide = function () {
             bK.off("click", doOk);
             bC.off("click", doCancel);
             c.hide();
             o.hide();
-            evt.stopPropagation();
         };
 
         var doOk = function (evt) {
             if (ok) {
                 ok();
             }
-            hide();
+            hide(evt);
             evt.stopPropagation();
         };
 
@@ -160,7 +159,7 @@ $(function () {
             if (cancel) {
                 cancel();
             }
-            hide();
+            hide(evt);
             evt.stopPropagation();
         };
 
@@ -191,6 +190,20 @@ $(function () {
         o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
     };
 
+    /**
+     * Helper function to turn things into strings
+     * 
+     * @param {type} val The thing that needs to become a string
+     * @returns {String}
+     */
+    wr.stringify = function (val) {
+        if (typeof val === "object" && !$.isArray(val) &&
+                typeof val.toString === "function") {
+            return val.toString();
+        } else {
+            return JSON.stringify(val);
+        }
+    };
 
 
 
@@ -218,15 +231,16 @@ $(function () {
             "string": "",
             "number": 1,
             "boolean": true,
-            "array": "[]", // TODO not actually an array, but string!
-            "object": "{}" // TODO not actually an object, but string!
+            "array": [], 
+            "object": {} 
         };
         var ctx = {};
         var key, vtype;
         // add in functions that return default values based on their type
         for (key in wr.functions) {
             vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return " + defaults[vtype] + "}";
+            ctx[key] = "function () { return " +
+                    wr.stringify(defaults[vtype]) + "}";
         }
         // add variables for the function that the elem is inside of
         var fun = $(elem).closest(".instructions").attr("id").substring(4);

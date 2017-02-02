@@ -138,7 +138,7 @@ $(function () {
     wr.state = states.edit;
 
     // Hook up button clicks that move us between the states
-    $(document.body).click(function (evt) {
+    $("#workspace").click(function (evt) {
         var t = $(evt.target);
         if (wr.state.name === "play") {
             wr.state.playpause();
@@ -201,7 +201,11 @@ $(function () {
         $("#output_disp").show();
         var sandbox = $('#sandbox')[0].contentWindow;
         sandbox.eval("$__closePopups()");
-        sandbox.eval(program);
+        try {
+            sandbox.eval(program);
+        } catch (e) {
+            wr.iolog(e, "err");
+        }
     });
 
 
