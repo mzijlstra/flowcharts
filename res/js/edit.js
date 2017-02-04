@@ -729,6 +729,8 @@ $(function () {
         // also switch over global vars
         wr.curvars = wr.functions[n];
         wr.curfun = n;
+        
+        window.location.assign("#fun_" + n);
     });
 
     // renaming a function

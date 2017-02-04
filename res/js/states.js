@@ -10,9 +10,21 @@ $(function () {
 
     // switch to the correct page (images or javascript) on page load
     (function () {
-        if (window.location.hash) {
+        var hash = window.location.hash;
+        if (hash) {
+            var goto;
+            if (hash.substr(0, 5) === "#fun_") {
+                var fun = hash.substring(5, hash.length);
+                $("#fun-names .name").each(function (i, e) {
+                    if ($(e).text() === fun) {
+                        goto = $(e);
+                    }
+                });
+            } else {
+                goto = $(window.location.hash + "_btn");
+            }
             setTimeout(function () {
-                $(window.location.hash + "_btn").click();
+                goto.click();
             }, 100);
         }
     }());
@@ -61,6 +73,17 @@ $(function () {
         clearTimeout(wr.playing);
         wr.state = states.edit;
 
+        // find which function we're executing
+        var goto = $(".fun").first();
+        if (wr.stack.length) {
+            var fun = wr.stack[wr.curfrm].name;
+            $("#fun-names .name").each(function (i, e) {
+                if ($(e).text() === fun) {
+                    goto = $(e);
+                }
+            });
+        }
+
         // clear the stack, and the HTML frames (both data and instruction)
         wr.stack = [];
         wr.curfrm = -1;
@@ -69,8 +92,8 @@ $(function () {
         stack.hide();
         output.hide();
 
-        // show main function
-        $(".fun").first().click();
+        // show function we were running now available for edit
+        goto.click();
     };
     var toPauseState = function () {
         pause_btn.css("display", "none");

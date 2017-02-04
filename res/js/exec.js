@@ -768,7 +768,7 @@ $(function () {
             ctx[key] = 'undefined';
         }
         // set args values
-        if (args) {
+        if (args && args.length) {
             $("#vars_" + fname + " .parameter").each(function (i, e) {
                 var t = $(e);
                 var name = t.children("input").val();
@@ -789,7 +789,7 @@ $(function () {
         var fdata = $("<div class='frame' id='frameD" + wr.curfrm + "'>");
         fdata.append("<span class='cornerb'><span class='cornerw'></span></span>");
         var label = "<div class='flabel'>" + fname + "(";
-        if (args) {
+        if (args && args.length) {
             for (var i = 0; i < args.length; i++) {
                 label += wr.stringify(args[i]) + ", ";
             }
