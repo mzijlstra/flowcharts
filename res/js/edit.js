@@ -729,7 +729,7 @@ $(function () {
         // also switch over global vars
         wr.curvars = wr.functions[n];
         wr.curfun = n;
-        
+
         window.location.assign("#fun_" + n);
     });
 
@@ -1002,6 +1002,10 @@ $(function () {
      * Generate JavaScript from flowchart
      ********************************************************/
     $("#javascript_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
         if (!wr.ready()) {
             wr.alert("Cannot generate JavaScript,\n there are errors in this " +
                     "project\n\n" +
@@ -1128,6 +1132,10 @@ $(function () {
      * Show the Images page
      ********************************************************/
     $("#images_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
         $("#js_code").hide();
         $("#output_disp").hide();
         $("#images").show();
