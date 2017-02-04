@@ -249,11 +249,20 @@ var $__gfxWindows = [];
         return turtle;
     };
 
+    // draws image without repositioning or scaling
     var loadImage = function (file) {
         var canvas = $(this.document).find("#canvas")[0];
         var ctx = canvas.getContext('2d');
         var img = window.parent.document.getElementById(file);
         ctx.drawImage(img, 0, 0);
+    };
+
+    // draws image with repositioning and scaling
+    var drawImage = function (file, sx, sy, sw, sh, dx, dy, dw, dh) {
+        var canvas = $(this.document).find("#canvas")[0];
+        var ctx = canvas.getContext('2d');
+        var img = window.parent.document.getElementById(file);
+        ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
     };
 
     var getRedAt = function (x, y) {
@@ -446,6 +455,7 @@ var $__gfxWindows = [];
         // add the window public methods
         win.createTurtle = createTurtle;
         win.loadImage = loadImage;
+        win.drawImage = drawImage;
         win.getImageData = getImageData;
         win.putImageData = putImageData;
         win.getPixels = getPixels;
