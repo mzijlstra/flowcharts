@@ -38,24 +38,43 @@ class ProjectCtrl {
             // clearly uid did not match, show access denied
             return "error/403.php";
         }
-        $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
 
+        $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
+        $VIEW_DATA['imgs'] = $this->getImages($uid);
 
-        $files = glob('res/img/*');
+        return "wr.php";
+    }
+
+    private function getImages($uid) {
+        if (!file_exists("res/img/$uid")) {
+            mkdir("res/img/$uid");
+
+            // QUESTION do we want to link default starter images?
+            $files = glob("res/img/*");
+            foreach ($files as $file) {
+                if (!is_dir($file)) {
+                    $link = str_replace("res/img", "res/img/$uid", $file);
+                    $source = str_replace("res/img", "..", $file);
+                    symlink($source, $link);
+                }
+            }
+        }
+
+        $files = glob("res/img/$uid/*");
         // sort images by upload date
         usort($files, function($a, $b) {
             return filemtime($a) < filemtime($b);
         });
+
         // strip leading directory name
         $imgs = array();
         foreach ($files as $file) {
             $imgs[] = basename($file);
         }
-        $VIEW_DATA['imgs'] = $imgs;
 
-        return "wr.php";
+        return $imgs;
     }
 
     // GET /project/recent

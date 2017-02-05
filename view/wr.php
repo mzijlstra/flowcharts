@@ -38,7 +38,7 @@ global $MY_BASE;
             </div>
         </div>
 
-        <div id="user">
+        <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
@@ -136,7 +136,7 @@ global $MY_BASE;
             <?php foreach ($imgs as $img) : ?>
                 <?php if ($img[0] !== "."): ?>
                     <h3><?= $img ?></h3>
-                    <img id="<?= $img ?>" src="res/img/<?= $img ?>" />
+                    <img id="<?= $img ?>" src="res/img/<?=$_SESSION['user']['id']?>/<?= $img ?>" />
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
