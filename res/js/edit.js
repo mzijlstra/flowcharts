@@ -34,8 +34,9 @@ $(function () {
 
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
-        // almost all cases that errors occured were due to session timeout
-        window.location.assign("../login");
+        wr.alert("Network Error\n\n" +
+                "Or Session Timeout" +
+                "Please check your connection or try logging in again.");
     });
 
     $("#flowcharts_btn").click(function () {
