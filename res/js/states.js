@@ -29,6 +29,14 @@ $(function () {
         }
     }());
 
+
+    // setup the editor for the JavaScript page
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/clouds");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+
+
     /*****************************************************
      * The 3 different states that the program can be in
      * The code below uses the state pattern for the states
@@ -219,7 +227,7 @@ $(function () {
     });
 
     $("#play_js_btn").click(function () {
-        var program = $("#js_code > pre > code").data("code");
+        var program = editor.getValue();
         $("#out").empty();
         $("#output_disp").show();
         var sandbox = $('#sandbox')[0].contentWindow;
@@ -309,4 +317,162 @@ $(function () {
             return wr.verifyType($(this).find(".exp")[0], "boolean", "silent");
         };
     });
+
+
+
+    /********************************************************
+     * Generate JavaScript from flowchart
+     ********************************************************/
+    $("#javascript_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
+        if (!wr.ready()) {
+            wr.alert("Cannot generate JavaScript,\n there are errors in this " +
+                    "project\n\n" +
+                    "The problems have been highligted, \n" +
+                    " please check all functions");
+            return;
+        }
+
+        // generates JS code for function based on flowchart
+        var genFunc = function (name) {
+            // generate function signature
+            var code = "function " + name + "(";
+            $("#vars_" + name + " .parameter").each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                if (!t.hasClass("bottom") && n !== "") {
+                    code += n + ", ";
+                }
+            });
+            var len = code.length;
+            if (code[len - 1] === " " && code[len - 2] === ",") {
+                code = code.substr(0, len - 2);
+            }
+            var returnType = $("#ins_" + name + " .start .type").text();
+            code += ") { // " + returnType + "\n";
+
+            // add variable declarations into the function
+            var vars = "";
+            $("#vars_" + name + " .variable").filter(function () {
+                var t = $(this);
+                if (t.hasClass("parameter") || t.hasClass("bottom")) {
+                    return false;
+                }
+                return true;
+            }).each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                var type = t.find(".type").text();
+                vars += "    var " + n + "; // " + type + "\n";
+            });
+            code += vars;
+            // extra newline to separate vars from instructions
+            if (vars) {
+                code += "\n";
+            }
+            
+            // add instructions
+            var makeIndent = function (amount) {
+                var result = "";
+                for (var i = 0; i < amount; i++) {
+                    result += "    ";
+                }
+                return result;
+            };
+            var addInstruction = function (elem, indent) {
+                var t = $(elem);
+                var c = makeIndent(indent);
+                if (t.children(".start").length) {
+                    return "";
+                } else if (t.children(".input").length) {
+                    c += t.find(".var").text();
+                    c += " = prompt('Enter Input: ');\n";
+                } else if (t.children(".output").length) {
+                    c += "console.log(";
+                    c += t.find(".exp").text() + ");\n";
+                } else if (t.children(".assignment").length) {
+                    c += t.find(".var").text();
+                    c += " = ";
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".call").length) {
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".if").length) {
+                    c += "if (" + t.find(".exp").first().text() + ") {\n";
+                    t.children(".if").children("table").children("tbody ")
+                            .children("tr").children("td.right")
+                            .children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "} else {\n";
+                    t.find(".left").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".while").length) {
+                    c += "while (" + t.find(".exp").first().text() + ") { \n";
+                    t.find(".loop_body").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".stop").length) {
+                    c += "\n" + makeIndent(indent);
+                    c += "return ";
+                    c += t.find(".exp").text() + ";\n";
+                }
+                return c;
+            };
+            $("#ins_" + name + " > .statement").each(function () {
+                var ins = addInstruction(this, 1);
+                code += ins;
+            });
+            // close function
+            code += "}\n\n";
+            return code;
+        };
+        var program = "";
+        for (var key in wr.functions) {
+            if (key !== "main") {
+                program += genFunc(key);
+            }
+        }
+        program += genFunc("main");
+        program += "main(); // start executing main\n";
+
+        // insert and show generated code
+        editor.setValue(program);
+        editor.selection.clearSelection();
+        editor.focus();
+
+        $(".activeView").removeClass("activeView");
+        $("#javascript_btn").addClass("activeView");
+        $("#images").hide();
+        $("#js_code").show();
+        window.location.assign("#javascript");
+    });
+
+    /********************************************************
+     * Show the Images page
+     ********************************************************/
+    $("#images_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
+        $("#js_code").hide();
+        $("#output_disp").hide();
+        $("#images").show();
+        $(".activeView").removeClass("activeView");
+        $("#images_btn").addClass("activeView");
+        window.location.assign("#images");
+    });
+
 });

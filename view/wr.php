@@ -13,11 +13,11 @@ global $MY_BASE;
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
+        <script src="res/js/lib/ace/ace.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/edit.js"></script>
         <script src="res/js/exec.js"></script>
         <script src="res/js/states.js"></script>
-        <script src="res/js/lib/highlight.pack.js"></script>
         <script src="res/js/utils.js"></script>
     </head>
     <body>
@@ -117,7 +117,7 @@ global $MY_BASE;
 
         <!-- Different types of popup / overlay windows below -->
         <div id="js_code">
-            <pre><code></code></pre>
+            <div id="editor"></div>
             <div class="controls">
                 <div id="play_js_btn" class="circle_btn">
                     <div class="play"></div>
@@ -136,7 +136,7 @@ global $MY_BASE;
             <?php foreach ($imgs as $img) : ?>
                 <?php if ($img[0] !== "."): ?>
                     <h3><?= $img ?></h3>
-                    <img id="<?= $img ?>" src="res/img/<?=$_SESSION['user']['id']?>/<?= $img ?>" />
+                    <img id="<?= $img ?>" src="res/img/<?= $_SESSION['user']['id'] ?>/<?= $img ?>" />
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
