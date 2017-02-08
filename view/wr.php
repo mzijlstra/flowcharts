@@ -15,9 +15,9 @@ global $MY_BASE;
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
         <script src="res/js/lib/ace/ace.js" ></script>
         <script src="res/js/wr.js"></script>
+        <script src="res/js/states.js"></script>
         <script src="res/js/edit.js"></script>
         <script src="res/js/exec.js"></script>
-        <script src="res/js/states.js"></script>
         <script src="res/js/utils.js"></script>
     </head>
     <body>

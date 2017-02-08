@@ -8,9 +8,7 @@
  * effort into creating clearly delinated sections with block comment headers 
  */
 
-var wr; // global object declared in wr.js
-
-$(function () {
+var wr = $(function (wr) {
     "use strict";
 
     /********************************************************
@@ -28,7 +26,7 @@ $(function () {
                 }
             });
         });
-        wr.curvars = wr.functions.main;
+        wr.state.curvars = wr.functions.main;
     }());
 
     // Setup AJAX Error Handling
@@ -36,16 +34,6 @@ $(function () {
         wr.alert("Network Error\n\n" +
                 "Or Session Timeout" +
                 "Please check your connection or try logging in again.");
-    });
-
-    // connect the flowcharts button
-    $("#flowcharts_btn").click(function () {
-        $("#js_code").hide();
-        $("#images").hide();
-        $("#output_disp").hide();
-        $(".activeView").removeClass("activeView");
-        $("#flowcharts_btn").addClass("activeView");
-        window.location.assign("#");
     });
 
 
@@ -238,7 +226,7 @@ $(function () {
 
         // if we were indeed updated
         if (t.attr("cur") !== t.val()) {
-            if (wr.curvars[t.val()]) {
+            if (wr.state.curvars[t.val()]) {
                 wr.alert("Duplicate variable Name: " + t.val() + "\n\n" +
                         "Please change one to keep them unique.");
                 t.val(t.attr("cur"));
@@ -262,12 +250,12 @@ $(function () {
             t.attr("value", t.val());
 
             // remove old name from our vars 
-            if (oldn !== "" && wr.curvars[oldn] === elem) {
-                delete wr.curvars[oldn];
+            if (oldn !== "" && wr.state.curvars[oldn] === elem) {
+                delete wr.state.curvars[oldn];
             }
 
             // add new name to our vars 
-            wr.curvars[newn] = elem;
+            wr.state.curvars[newn] = elem;
 
             // update instructions with old name to new name
             $('.active span.var:contains(' + oldn + ')').text(
@@ -374,7 +362,7 @@ $(function () {
         var name = p.children("input").val();
         if (!p.hasClass("inuse")) {
             p.remove();
-            delete wr.curvars[name];
+            delete wr.state.curvars[name];
 
             // if param also update signature
             if (p.hasClass("parameter")) {
@@ -484,7 +472,7 @@ $(function () {
         var cur = t.find(".var").text();
 
         menu.empty();
-        for (var k in wr.curvars) {
+        for (var k in wr.state.curvars) {
             menu.append("<div class='menu_item'>" + k + "</div>");
         }
         // highlight current
@@ -500,7 +488,7 @@ $(function () {
         var t = $(this);
         var gp = t.parent().parent();
         var name = $(event.target).text();
-        var type = $(wr.curvars[name]).siblings(".type_container")
+        var type = $(wr.state.curvars[name]).siblings(".type_container")
                 .find(".type").text();
 
         if (gp.hasClass("input") && type !== "string" ||
@@ -579,7 +567,7 @@ $(function () {
             wr.alert("Please select a variable first.");
             return false;
         }
-        var type = $(wr.curvars[name]).prev().find(".type").text();
+        var type = $(wr.state.curvars[name]).prev().find(".type").text();
         inputHere(this, function (t) {
             wr.verifyType(t, type);
             return true;
@@ -636,7 +624,7 @@ $(function () {
             } else if (wr.functions[n]) {
                 wr.alert("Duplicate Function Name\n\n" +
                         "Please change the function name to keep it unique.");
-            } else if (wr.functions[wr.curfun][n]) {
+            } else if (wr.functions[wr.state.curfun][n]) {
                 // should we check for conflicts with variable names
                 // in all current functions?
                 wr.alert("Conflict found with variable name: " + n + "\n\n" +
@@ -728,8 +716,8 @@ $(function () {
         $("#ins_" + n).addClass("active");
 
         // also switch over global vars
-        wr.curvars = wr.functions[n];
-        wr.curfun = n;
+        wr.state.curvars = wr.functions[n];
+        wr.state.curfun = n;
 
         window.location.assign("#fun_" + n);
     });
@@ -785,7 +773,7 @@ $(function () {
                 $("#vars_" + cur).attr("id", "vars_" + upd);
                 $("#ins_" + cur).attr("id", "ins_" + upd);
                 $("#fun-names .active .name").text(upd);
-                wr.curfun = upd;
+                wr.state.curfun = upd;
 
                 // AJAX rename function
                 var fid = $(".fun.active").attr("fid");
@@ -994,4 +982,6 @@ $(function () {
             return true;
         });
     });
-});
+
+    return wr;
+}(wr));

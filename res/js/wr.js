@@ -5,23 +5,20 @@
 
 /*
  * This is the top level JS file for the application, it contains the 
- * wr global object, and the public function definitions
+ * global wr module, and its public function definitions
+ * 
+ * I chose to use the module patter with tight augmentation as found at:
+ * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  */
 
-var wr = {};
-
-$(function () {
+var wr = $(function (wr) {
     "use strict";
 
     /*
      * Global variables in the wr namespace
      */
     wr.functions = {'main': {}};// the flowcharts the user has made
-    wr.state;                   // set by code in states.js [edit,play,pause]
-
-    // TODO move these two edit state related variables into EDIT state
-    wr.curfun = 'main';         // the chart currently being edited
-    wr.curvars = wr.functions.main; // the variables for that chart
+    wr.state;                   // set by states.js [edit,play,pause] object
 
     // QUESTION Put these into the EXEC state?
     wr.curfrm = -1;             // index of currently executing stack frame
@@ -198,7 +195,7 @@ $(function () {
      */
     wr.stringify = function (val) {
         if (typeof val === "object" && !$.isArray(val) &&
-                typeof val.toString === "function" && 
+                typeof val.toString === "function" &&
                 val.toString() !== "[object Object]") {
             return val.toString();
         } else {
@@ -232,8 +229,8 @@ $(function () {
             "string": "",
             "number": 1,
             "boolean": true,
-            "array": [], 
-            "object": {} 
+            "array": [],
+            "object": {}
         };
         var ctx = {};
         var sys = {};
@@ -324,4 +321,6 @@ $(function () {
         }
         return ready;
     };
-});
+
+    return wr;
+}(wr));

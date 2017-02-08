@@ -3,16 +3,15 @@
  Author     : mzijlstra
  */
 
-var wr; // global object declared in wr.js
-
-$(function () {
+var wr = $(function (wr) {
     "use strict";
 
-    // switch to the correct page (images or javascript) on page load
+    // switch to the correct view on page load
     (function () {
         var hash = window.location.hash;
         if (hash) {
             var goto;
+            // show the flowchart for given function
             if (hash.substr(0, 5) === "#fun_") {
                 var fun = hash.substring(5, hash.length);
                 $("#fun-names .name").each(function (i, e) {
@@ -21,6 +20,7 @@ $(function () {
                     }
                 });
             } else {
+                // show javascript or images
                 goto = $(window.location.hash + "_btn");
             }
             setTimeout(function () {
@@ -30,7 +30,7 @@ $(function () {
     }());
 
 
-    // setup the editor for the JavaScript page
+    // setup the editor for the JavaScript view
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/clouds");
     editor.getSession().setMode("ace/mode/javascript");
@@ -38,9 +38,22 @@ $(function () {
 
 
     /*****************************************************
-     * The 3 different states that the program can be in
+     *          --- The Flowcharts view ---
+     * Can be in 3 different states: edit, play, pause 
      * The code below uses the state pattern for the states
      *****************************************************/
+
+    // when clicking the flowcharts btn, switch to the flowcharts view
+    $("#flowcharts_btn").click(function () {
+        $("#js_code").hide();
+        $("#images").hide();
+        $("#output_disp").hide();
+        $(".activeView").removeClass("activeView");
+        $("#flowcharts_btn").addClass("activeView");
+        window.location.assign("#");
+    });
+
+    // private variables for different HTML elements used in this view
     var play_btn = $("#play_btn");
     var pause_btn = $("#pause_btn");
     var workspace = $("#workspace");
@@ -145,7 +158,10 @@ $(function () {
             },
             "reset": function () {
                 // does nothing in this state
-            }
+            },
+            // variables specific to the edit state
+            "curfun": 'main', // the chart currently being edited
+            "curvars": wr.functions.main // the variables for that chart            
         },
         "play": {
             "name": "play",
@@ -168,7 +184,7 @@ $(function () {
     // we start in the edit state
     wr.state = states.edit;
 
-    // Hook up button clicks that move us between the states
+    // When the user clicks in the instructions area while in play or pause
     $("#functions").click(function (evt) {
         var t = $(evt.target);
         if (wr.state.name === "play") {
@@ -195,11 +211,13 @@ $(function () {
         }
     });
 
+    // clicking the play / pause button on the flowcharts view
     $("#play_pause").click(function (evt) {
         wr.state.playpause();
         evt.stopPropagation();
     });
-    // and the control to change the delay between steps
+
+    // the delay control to change the delay between steps
     $("#delay_disp").click(function (evt) {
         var t = $(this);
         var delay = $("#delay");
@@ -225,21 +243,6 @@ $(function () {
         input.focus();
         evt.stopPropagation();
     });
-
-    $("#play_js_btn").click(function () {
-        var program = editor.getValue();
-        $("#out").empty();
-        $("#output_disp").show();
-        var sandbox = $('#sandbox')[0].contentWindow;
-        sandbox.eval("$__closePopups()");
-        try {
-            sandbox.eval(program);
-        } catch (e) {
-            wr.iolog(e, "err");
-        }
-    });
-
-
 
     /*****************************************************
      * The 'compile' check for the different statements
@@ -321,6 +324,7 @@ $(function () {
 
 
     /********************************************************
+     *          --- The JavaScript View ---
      * Generate JavaScript from flowchart
      ********************************************************/
     $("#javascript_btn").click(function () {
@@ -373,7 +377,7 @@ $(function () {
             if (vars) {
                 code += "\n";
             }
-            
+
             // add instructions
             var makeIndent = function (amount) {
                 var result = "";
@@ -459,8 +463,23 @@ $(function () {
         window.location.assign("#javascript");
     });
 
+    // the play button on the javascript view
+    $("#play_js_btn").click(function () {
+        var program = editor.getValue();
+        $("#out").empty();
+        $("#output_disp").show();
+        var sandbox = $('#sandbox')[0].contentWindow;
+        sandbox.eval("$__closePopups()");
+        try {
+            sandbox.eval(program);
+        } catch (e) {
+            wr.iolog(e, "err");
+        }
+    });
+
+
     /********************************************************
-     * Show the Images page
+     *          --- The Images View ---
      ********************************************************/
     $("#images_btn").click(function () {
         if (wr.state.name !== "edit") {
@@ -475,4 +494,5 @@ $(function () {
         window.location.assign("#images");
     });
 
-});
+    return wr;
+}(wr));

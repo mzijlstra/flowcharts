@@ -3,9 +3,7 @@
  Author     : mzijlstra
  */
 
-var wr; // wr namespace declared in wr.js
-
-$(function () {
+var wr = $(function (wr) {
     "use strict";
 
     /**
@@ -847,4 +845,6 @@ $(function () {
             'steps': steps
         });
     };
-});
+
+    return wr;
+}(wr));
