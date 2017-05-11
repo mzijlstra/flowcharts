@@ -1,4 +1,6 @@
-<?php
+<?php 
+/** @ViewControl(uri="/user/add", sec="admin") */
+
 if (!isset($user)) {
     $user = false;
 }

@@ -4,15 +4,36 @@
  * User Controller Class
  *
  * @author mzijlstra 11/14/2014
+ * 
+ * @Controller
  */
 class UserCtrl {
 
-    // set by context on creation
+    /**
+     *
+     * @var type 
+     * @Inject("UserDao")
+     */
     public $userDao;
+    /**
+     *
+     * @var type 
+     * @Inject("ProjectDao")
+     */
     public $projectDao;
+    /**
+     *
+     * @var type 
+     * @Inject("FunctionDao")
+     */
     public $functionDao;
 
-    // POST /login
+    /**
+     * Attempts to login to the application
+     * @global type $MY_BASE base URI of our application
+     * @return string appropriate redirect for success or failure
+     * @Request(method="POST", uri="/login$", sec="none")
+     */
     public function login() {
         global $MY_BASE;
         // start session, and clean any login errors 
@@ -56,7 +77,12 @@ class UserCtrl {
         }
     }
 
-    // GET /
+    /**
+     * Redirects a successful login to their most recent project
+     * @global string $MY_BASE base URI of the application
+     * @return string redirect to URI of most recent project
+     * @Request(method="GET", uri="/$", sec="user")
+     */
     public function loggedIn() {
         // redirect to the most recent project
         global $MY_BASE;
@@ -65,21 +91,36 @@ class UserCtrl {
         return "Location: $MY_BASE/project/$pid";
     }
 
-    // GET /logout
+    /**
+     * Logs someone out of the application
+     * @return string redirect back to login page
+     * @Request(method="GET", uri="/logout", sec="none")
+     */
     public function logout() {
         session_destroy();
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
 
-    // GET /user
+    /**
+     * Shows all the users
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * @Request(method="GET", uri="/user", sec="admin")
+     */
     public function all() {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
         return "users.php";
     }
 
-    // GET /user/(\d+)$
+    /**
+     * Shows details for a user
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * @Request(method="GET", uri="/user/(\d+)$", sec="admin")
+     */
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -93,7 +134,12 @@ class UserCtrl {
         return "userDetails.php";
     }
 
-    // POST /user
+    /**
+     * Creates a user
+     * @return strng redirect URI
+     * @throws PDOException
+     * @Request(method="POST", uri="/user", sec="admin")
+     */
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
@@ -140,7 +186,12 @@ class UserCtrl {
         return "Location: user/$uid";
     }
 
-    // POST /user/(\d+)
+    /**
+     * Updates a user 
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string redirect URI
+     * @Request(method="POST", uri="/user/(\d+)$", sec="admin")
+     */
     public function update() {
         global $URI_PARAMS;
         $uid = $URI_PARAMS[1];

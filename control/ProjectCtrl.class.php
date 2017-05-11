@@ -4,15 +4,31 @@
  * Description of ProjectController
  *
  * @author mzijlstra 11/15/2014
+ * 
+ * @Controller
  */
 class ProjectCtrl {
 
-    // set by context on creation
+    /**
+     * @var ProjectDao Project Data Access Object
+     * @Inject("ProjectDao") 
+     */
     public $projectDao;
+    /**
+     * @var FunctionDao Function Data Access Object
+     * @Inject("FunctionDao")
+     */
     public $functionDao;
 
-    // GET /project/(\d+)$
-    // GET /user/(\d+)/project/(\d+)$
+    /**
+     * Show project based on id
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file to be rendered
+     * 
+     * @Request(method="GET", uri="/project/(\d+)$", sec="user")
+     * @Request(method="GET", uri="/user/(\d+)/project/(\d+)$", sec="admin")
+     */
     public function getProject() {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -47,6 +63,11 @@ class ProjectCtrl {
         return "wr.php";
     }
 
+    /**
+     * Helper function to load images for the given user id
+     * @param int $uid user id
+     * @return array of image file names
+     */
     private function getImages($uid) {
         if (!file_exists("res/img/$uid")) {
             mkdir("res/img/$uid");
@@ -77,7 +98,13 @@ class ProjectCtrl {
         return $imgs;
     }
 
-    // GET /project/recent
+    /**
+     * Redirects to the most recently opened project
+     * @global string $MY_BASE the base URI of our application
+     * @return string redirect URI to send browser to most recent project
+     * 
+     * @Request(method="GET", uri="", sec="user")
+     */
     public function getRecent() {
         global $MY_BASE;
         $uid = $_SESSION['user']['id'];
@@ -85,8 +112,18 @@ class ProjectCtrl {
         return "Location: $MY_BASE/project/$pid";
     }
 
-    // AJAX GET /project/other_recent
-    // AJAX GET /user/(\d+)/project/other_recent
+    /**
+     * Gets list of 6 other most recent projects (excluding current/most recent)
+     * and returns data in JSON format (expects to be called through AJAX)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * 
+     * AJAX
+     * @Request(method="GET", uri="/project/other_recent", sec="user")
+     * AJAX
+     * @Request(method="GET", uri="/user/(\d+)/project/other_recent", sec="admin")
+     */
     public function getOtherRecent() {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -106,7 +143,14 @@ class ProjectCtrl {
         return "json.php";
     }
 
-    // AJAX GET /project$
+    /**
+     * Gets list of all projects and returns them as JSON (expects AJAX call)
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * 
+     * AJAX
+     * @Request(method="GET", uri="/project$", sec="user")
+     */
     public function getProjects() {
         global $VIEW_DATA;
 
@@ -131,7 +175,15 @@ class ProjectCtrl {
         return "json.php";
     }
 
-    // AJAX GET /user/(\d+)/project$
+    /**
+     * Retrieves all projects for current user and returns as JSON(expects AJAX)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * 
+     * AJAX
+     * @Request(method="GET", uri="/user/(\d+)/project$", sec="user")
+     */
     public function getUserProjects() {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -145,7 +197,17 @@ class ProjectCtrl {
         return "json.php";
     }
 
-    // AJAX POST /project/add/(\D[^/]+)$
+    /**
+     * Creates a new project, and a main function for the newly created project
+     * then returns the project id as JSON (expects AJAX)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * @throws PDOException on insertion error
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/project/add/(\D[^/]+)$", sec="user")
+     */
     public function create() {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -162,13 +224,19 @@ class ProjectCtrl {
             $this->projectDao->db->commit();
         } catch (PDOException $e) {
             $this->projectDao->db->rollBack();
-            throw $e;
+            return "error/500.php";
         }
         $VIEW_DATA['json'] = $pid;
         return "json.php";
     }
 
-    // AJAX POST /project/(\d+)/rename$
+    /**
+     * Renames a project (expects to be called from AJAX)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/project/(\d+)/rename$", sec="user")
+     */
     public function rename() {
         global $URI_PARAMS;
         $pid = $URI_PARAMS[1];
@@ -177,7 +245,13 @@ class ProjectCtrl {
         $this->projectDao->rename($pid, $uid, $name);
     }
 
-    // AJAX POST /project/(\d+)/delete
+    /**
+     * Deletes a project (expects to be called from AJAX)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/project/(\d+)/delete", sec="user")
+     */
     public function delete() {
         global $URI_PARAMS;
         $pid = $URI_PARAMS[1];
@@ -185,7 +259,15 @@ class ProjectCtrl {
         $this->projectDao->delete($pid, $uid);
     }
 
-    // AJAX POST /project/(\d+)/(\w+)
+    /**
+     * Adds a function to the current project (expects AJAX call)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return name of view to be rendered
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/project/(\d+)/(\w+)", sec="user")
+     */
     public function addFunction() {
         global $URI_PARAMS;
         global $VIEW_DATA;
@@ -205,7 +287,14 @@ class ProjectCtrl {
         }
     }
 
-    // AJAX POST /function/(\d+)/vars
+    /**
+     * Update the variables for the given function (expects AJAX call)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string view name
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/function/(\d+)/vars", sec="user")
+     */
     public function updVars() {
         global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
@@ -219,7 +308,14 @@ class ProjectCtrl {
         }
     }
 
-    // AJAX POST /function/(\d+)/ins
+    /**
+     * Update the instructions for the given function (expects AJAX call)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string view name
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/function/(\d+)/ins", sec="user")
+     */
     public function updIns() {
         global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
@@ -233,7 +329,14 @@ class ProjectCtrl {
         }
     }
 
-    // AJAX POST /function/(\d+)/rename
+    /**
+     * Renames the given function (expects AJAX call)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string view name
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/function/(\d+)/rename", sec="user")
+     */
     public function renameFunction() {
         global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
@@ -247,7 +350,14 @@ class ProjectCtrl {
         }
     }
 
-    // AJAX POST /function/(\d+)/delete
+    /**
+     * Deletes the given function (expects AJAX call)
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string view name
+     * 
+     * AJAX
+     * @Request(method="POST", uri="/function/(\d+)/delete", sec="user")
+     */
     public function deleteFunction() {
         global $URI_PARAMS;
         $uid = $_SESSION['user']['id'];
@@ -260,6 +370,12 @@ class ProjectCtrl {
         }
     }
 
+    /**
+     * Processes an image upload request
+     * @return string redirect to current images for this project
+     * 
+     * @Request(method="POST", uri="/images", sec="user")
+     */
     public function uploadImages() {
         $pid = filter_input(INPUT_POST, "pid");
         if (is_uploaded_file($_FILES["image"]["tmp_name"])) {

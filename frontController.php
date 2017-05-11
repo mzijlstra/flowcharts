@@ -2,6 +2,14 @@
 /*
  * Michael Zijlstra 11/14/2014
  */
+/* ******************************
+ * Configuration variables
+ * **************************** */
+define("DEVELOPMENT", true);
+define("DSN", "mysql:dbname=web_raptor;host=localhost");
+define("DB_USER", "root");
+define("DB_PASS", "root");
+$SEC_LVLS = array("none", "user", "admin");
 
 /* ******************************
  * Initialize Globals
@@ -19,15 +27,36 @@ $MY_METHOD = filter_input(INPUT_SERVER, "REQUEST_METHOD", FILTER_SANITIZE_STRING
 $URI_PARAMS = array(); // populated with URI parameters on URI match in routing
 $VIEW_DATA = array(); // populated by controller, and used by view
 
-// always start the session
+/* *****************************
+ * Include the (generated) application context
+ * **************************** */
+// Setup autoloading for control and model classes
+spl_autoload_register(function ($class) {
+    include 'control/' . $class . '.class.php';
+});
+spl_autoload_register(function ($class) {
+    include 'model/' . $class . '.class.php';
+});
+
+if (DEVELOPMENT) {
+    require 'AnnotationContext.class.php';
+    $ac = new AnnotationContext();
+    $ac->scan()->create_context();
+    // $ac->write("context.php");  # uncomment to generate file
+    eval($ac->context);
+} else {
+    require 'context.php';
+}
+
+// always start the session context
 session_start();
 
 /* ****************************** 
- * Check Security based on URI
+ * Check Security based on context security array
  * **************************** */
 require 'security.php';
 
 /* ****************************** 
- * Do Routing based on URI
+ * Do Routing based on context routing arrays
  * **************************** */
 require 'routing.php';
