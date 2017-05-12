@@ -73,10 +73,6 @@ function invokeCtrlMethod($class, $method) {
     try {
         $context = new Context();
         $controler = $context->get($class);
-#        $getControler = new \ReflectionMethod("Context", "get" . $class);
-#        $controler = $getControler->invoke($context);
-#        $doMethod = new \ReflectionMethod($class, $method);
-#        return $doMethod->invoke($controler, $method);
         return $controler->{$method}();
     } catch (Exception $e) {
         // Perhaps have some user setting for debug mode
