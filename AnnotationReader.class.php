@@ -2,9 +2,11 @@
 
 /*
  * Michael Zijlstra 03 May 2017
+ * 
+ * TODO: create proper documentation for this class
  */
 
-class AnnotationContext {
+class AnnotationReader {
 
     public $sec = array();
     public $view_ctrl = array();
@@ -14,7 +16,7 @@ class AnnotationContext {
     public $controllers = array();
     public $context = "";
 
-    public function AnnotationContext() {
+    public function AnnotationReader() {
         global $SEC_LVLS;
         foreach ($SEC_LVLS as $lvl) {
             $this->sec[$lvl] = array();

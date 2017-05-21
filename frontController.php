@@ -31,6 +31,8 @@ $VIEW_DATA = array(); // populated by controller, and used by view
  * Include the (generated) application context
  * **************************** */
 // Setup autoloading for control and model classes
+// TODO move these into the AnnotationContext, so that it automatically adds
+// an additional spl_autoload function for each directory it searches
 spl_autoload_register(function ($class) {
     include 'control/' . $class . '.class.php';
 });
@@ -39,7 +41,7 @@ spl_autoload_register(function ($class) {
 });
 
 if (DEVELOPMENT) {
-    require 'AnnotationContext.class.php';
+    require 'AnnotationReader.class.php';
     $ac = new AnnotationContext();
     $ac->scan()->create_context();
     // $ac->write("context.php");  # uncomment to generate file
