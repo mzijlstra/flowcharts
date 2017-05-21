@@ -4,18 +4,21 @@
  */
 
 /*
- * This file contains the code for the edit state, because it is so big I've put
- * effort into creating clearly delinated sections with block comment headers 
+ * This file contains the code (event handlers and helper functions for them)
+ * for the edit state, because it is so big I've creating clearly delinated 
+ * sections with block comment headers 
  */
 
-var wr = $(function (wr) {
+var wr; // global variable created in the wr module
+
+$(function () {
     "use strict";
 
     /********************************************************
      * Application State Setup Code (after flow chart loaded from DB)
      ********************************************************/
     // build local variables in wr.functions for each chart
-    (function () {
+    $(function () {
         $("#workspace .fun .name").each(function () {
             var name = $(this).text();
             wr.functions[name] = {};
@@ -27,7 +30,7 @@ var wr = $(function (wr) {
             });
         });
         wr.state.curvars = wr.functions.main;
-    }());
+    });
 
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
@@ -60,7 +63,7 @@ var wr = $(function (wr) {
      */
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
-        var fid = $(".fun.active").attr("fid");
+        var fid = $(".fun.active").data("fid");
         $.post("../function/" + fid + "/vars", {
             "vdata": vdata
         }, shouldNotHaveData);
@@ -72,7 +75,7 @@ var wr = $(function (wr) {
      */
     var postInsUpd = function () {
         var idata = $(".instructions.active").html();
-        var fid = $(".fun.active").attr("fid");
+        var fid = $(".fun.active").data("fid");
         $.post("../function/" + fid + "/ins", {
             "idata": idata
         }, shouldNotHaveData);
@@ -185,7 +188,7 @@ var wr = $(function (wr) {
     // store current var name on focus
     $(".variable .var").focus(function () {
         var t = $(this);
-        t.attr("cur", t.val());
+        t.data("cur", t.val());
     });
 
     // no spaces in variable names, blur on enter
@@ -203,7 +206,7 @@ var wr = $(function (wr) {
         var t = $(this);
 
         // cleanly exit fields that are not defined yet
-        if (t.val() === "" && t.attr("cur") === "") {
+        if (t.val() === "" && t.data("cur") === "") {
             return true;
         }
 
@@ -225,23 +228,23 @@ var wr = $(function (wr) {
         }
 
         // if we were indeed updated
-        if (t.attr("cur") !== t.val()) {
+        if (t.data("cur") !== t.val()) {
             if (wr.state.curvars[t.val()]) {
                 wr.alert("Duplicate variable Name: " + t.val() + "\n\n" +
                         "Please change one to keep them unique.");
-                t.val(t.attr("cur"));
+                t.val(t.data("cur"));
                 t.focus();
                 return false;
             }
             if (wr.functions[t.val()]) {
                 wr.alert("Conflict with function name: " + t.val() + "\n\n" +
                         "Please change your variable name to keep it unique");
-                t.val(t.attr("cur"));
+                t.val(t.data("cur"));
                 t.focus();
                 return false;
             }
 
-            var oldn = t.attr('cur');
+            var oldn = t.data('cur');
             var newn = t.val();
             var elem = this;
 
@@ -657,7 +660,7 @@ var wr = $(function (wr) {
             vdata.append(cloneBlock("#declaration"));
 
             // AJAX call to create function on server
-            var pid = $("h1").attr("pid");
+            var pid = $("h1").data("pid");
             $.ajax({
                 "type": "POST",
                 "url": pid + "/add/" + n,
@@ -671,7 +674,7 @@ var wr = $(function (wr) {
                         // append a new function name tab
                         var fname = cloneBlock("#fun-name");
                         fname.find(".name").text(n);
-                        fname.attr("fid", fid);
+                        fname.data("fid", fid);
                         $("#fun-names").append(fname);
 
                         // append a new instructions area
@@ -736,9 +739,9 @@ var wr = $(function (wr) {
             return false;
 
         }
-        n.attr("cur", n.text());
+        n.data("cur", n.text());
         inputHere(n.get(0), function (t) {
-            var cur = n.attr("cur");
+            var cur = n.data("cur");
             if (cur !== t.val()) {
                 var upd = t.val();
 
@@ -776,7 +779,7 @@ var wr = $(function (wr) {
                 wr.state.curfun = upd;
 
                 // AJAX rename function
-                var fid = $(".fun.active").attr("fid");
+                var fid = $(".fun.active").data("fid");
                 $.post("../function/" + fid + "/rename", {
                     "name": upd
                 }, shouldNotHaveData);
@@ -802,7 +805,7 @@ var wr = $(function (wr) {
             $("#fun-names .fun")[0].click();
 
             // AJAX delete function
-            var fid = t.parent().attr("fid");
+            var fid = t.parent().data("fid");
             $.post("../function/" + fid + "/delete", shouldNotHaveData);
         });
     });
@@ -816,7 +819,7 @@ var wr = $(function (wr) {
      ********************************************************/
     // show recent projects
     $("#projects").mouseenter(function () {
-        var pid = $("h1").first().attr("pid");
+        var pid = $("h1").first().data("pid");
         $.ajax({
             "dataType": "json",
             "url": "other_recent",
@@ -828,14 +831,14 @@ var wr = $(function (wr) {
                     row = data[i];
                     item = items.eq(i);
                     item.text(row['name']);
-                    item.attr("pid", row['id']);
+                    item.data("pid", row['id']);
                 }
                 // clean up any deleted recents
                 if (i < 5) {
                     for (; i < 5; i++) {
                         item = items.eq(i);
                         item.text("-----");
-                        item.removeAttr("pid");
+                        item.removeData("pid");
                     }
                 }
             }
@@ -845,8 +848,8 @@ var wr = $(function (wr) {
     // if one of the 'recent' menu items is clicked
     $("#recent_proj .menu_item").click(function () {
         var t = $(this);
-        if (t.attr("pid")) { // may be a placeholder 
-            var pid = t.attr("pid");
+        if (t.data("pid")) { // may be a placeholder 
+            var pid = t.data("pid");
             window.location.assign(pid);
         }
     });
@@ -882,7 +885,7 @@ var wr = $(function (wr) {
 
         var goto_proj = function () {
             var tr = $(this);
-            window.location.assign("../project/" + tr.attr("pid"));
+            window.location.assign("../project/" + tr.data("pid"));
         };
 
         var del_proj = function (event) {
@@ -891,10 +894,10 @@ var wr = $(function (wr) {
             // Make sure we have at least one project left
             if (pd.find(".proj").length > 1) {
                 wr.confirm("Are you sure you wish to delete this project?", function () {
-                    var pid = tr.attr("pid");
+                    var pid = tr.data("pid");
                     $.post(pid + "/delete", shouldNotHaveData);
                     // redirect to most recent if current project deleted
-                    if (pid === $("h1").first().attr("pid")) {
+                    if (pid === $("h1").first().data("pid")) {
                         window.location.assign("recent");
                     }
                 });
@@ -968,20 +971,18 @@ var wr = $(function (wr) {
     // rename a project
     $("h1").click(function () {
         var t = $(this);
-        t.attr("cur", t.text());
+        t.data("cur", t.text());
         inputHere(this, function (input) {
             var upd = input.val().trim();
             if (!upd.match(/^\D/)) {
                 wr.alert("Project name cannot start with a number");
                 return false;
-            } else if (upd !== t.attr("cur")) {
-                $.post(t.attr("pid") + "/rename", {
+            } else if (upd !== t.data("cur")) {
+                $.post(t.data("pid") + "/rename", {
                     "name": upd
                 }, shouldNotHaveData);
             }
             return true;
         });
     });
-
-    return wr;
-}(wr));
+}());

@@ -3,7 +3,7 @@
  Author     : mzijlstra
  */
 
-var wr = $(function (wr) {
+var wr = (function (wr) {
     "use strict";
 
     /**
@@ -298,8 +298,8 @@ var wr = $(function (wr) {
 
                 // eval expression 
                 var exp = t.find(".exp");
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
@@ -321,7 +321,7 @@ var wr = $(function (wr) {
                 frame.steps.push({"exec": function () {
                         t.find(".io").addClass("executing");
                         var result = exp.text();
-                        exp.text(exp.attr("exp"));
+                        exp.text(exp.data("exp"));
                         exp.removeClass("eval");
                         wr.iolog(result, "out");
 
@@ -341,8 +341,8 @@ var wr = $(function (wr) {
 
                 // eval expression 
                 var exp = t.find(".exp");
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
 
                 var result;
@@ -381,7 +381,7 @@ var wr = $(function (wr) {
                         disp = intoVariable(name, exp[0].result);
 
                         nelem.addClass("executing");
-                        exp.text(exp.attr("exp"));
+                        exp.text(exp.data("exp"));
                         exp.removeClass("eval");
 
                         // place value in the needed locations
@@ -410,8 +410,8 @@ var wr = $(function (wr) {
 
                 // eval expression 
                 var exp = t.find(".exp");
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
 
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
@@ -425,7 +425,7 @@ var wr = $(function (wr) {
 
                 setTimeout(function () {
                     exp.removeClass("eval");
-                    exp.text(exp.attr("exp"));
+                    exp.text(exp.data("exp"));
                 }, parseFloat($("#delay").text()) * 1000);
             };
         });
@@ -438,8 +438,8 @@ var wr = $(function (wr) {
 
                 // eval expression
                 var exp = t.find(".exp").first();
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
@@ -453,7 +453,7 @@ var wr = $(function (wr) {
                 exp.addClass("eval");
 
                 var resetExp = function () {
-                    exp.text(exp.attr("exp"));
+                    exp.text(exp.data("exp"));
                     exp.removeClass("eval");
                 };
 
@@ -541,8 +541,8 @@ var wr = $(function (wr) {
 
                 // eval expression
                 var exp = t.find(".exp").first();
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
 
@@ -556,7 +556,7 @@ var wr = $(function (wr) {
                 exp.addClass("eval");
 
                 var resetExp = function () {
-                    exp.text(exp.attr("exp"));
+                    exp.text(exp.data("exp"));
                     exp.removeClass("eval");
                 };
 
@@ -665,8 +665,8 @@ var wr = $(function (wr) {
 
                 // eval expression and show in exp span
                 var exp = t.find(".exp");
-                if (!exp.attr("exp")) {
-                    exp.attr("exp", exp.text());
+                if (!exp.data("exp")) {
+                    exp.data("exp", exp.text());
                 }
                 var result = wr.eval(exp.text(), frame.ctx, frame.sys);
                 var disp = wr.stringify(result);

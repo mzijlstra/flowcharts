@@ -11,7 +11,7 @@
  * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
  */
 
-var wr = $(function (wr) {
+var wr = (function (wr) {
     "use strict";
 
     /*
@@ -323,4 +323,4 @@ var wr = $(function (wr) {
     };
 
     return wr;
-}(wr));
+}({}));

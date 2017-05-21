@@ -21,7 +21,7 @@ global $MY_BASE;
         <script src="res/js/utils.js"></script>
     </head>
     <body>
-        <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
+        <h1 data-pid="<?= $pid ?>"><?= $pname ?></h1>
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
@@ -73,7 +73,7 @@ global $MY_BASE;
                 <div id="fun-names">
                     <span id="add_fun">+</span>
                     <?php foreach ($funcs as $name => $fdata): ?>
-                        <span fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
+                        <span data-fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
                             <span class="cornerb">
                                 <span class="cornerw"></span>
                             </span>

@@ -3,55 +3,14 @@
  Author     : mzijlstra
  */
 
-var wr = $(function (wr) {
+var wr = (function (wr) {
     "use strict";
 
-    // switch to the correct view on page load
-    (function () {
-        var hash = window.location.hash;
-        if (hash) {
-            var goto;
-            // show the flowchart for given function
-            if (hash.substr(0, 5) === "#fun_") {
-                var fun = hash.substring(5, hash.length);
-                $("#fun-names .name").each(function (i, e) {
-                    if ($(e).text() === fun) {
-                        goto = $(e);
-                    }
-                });
-            } else {
-                // show javascript or images
-                goto = $(window.location.hash + "_btn");
-            }
-            setTimeout(function () {
-                goto.click();
-            }, 100);
-        }
-    }());
-
-
-    // setup the editor for the JavaScript view
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/clouds");
-    editor.getSession().setMode("ace/mode/javascript");
-    editor.getSession().setUseSoftTabs(true);
-
-
     /*****************************************************
-     *          --- The Flowcharts view ---
+     *          --- Flowcharts States ---
      * Can be in 3 different states: edit, play, pause 
      * The code below uses the state pattern for the states
      *****************************************************/
-
-    // when clicking the flowcharts btn, switch to the flowcharts view
-    $("#flowcharts_btn").click(function () {
-        $("#js_code").hide();
-        $("#images").hide();
-        $("#output_disp").hide();
-        $(".activeView").removeClass("activeView");
-        $("#flowcharts_btn").addClass("activeView");
-        window.location.assign("#");
-    });
 
     // private variables for different HTML elements used in this view
     var play_btn = $("#play_btn");
@@ -184,6 +143,46 @@ var wr = $(function (wr) {
     // we start in the edit state
     wr.state = states.edit;
 
+    return wr;
+}(wr));
+
+// on page load, execute setup and hook up event handlers
+$(function () {
+    // switch to the correct view on page load
+    (function () {
+        var hash = window.location.hash;
+        if (hash) {
+            var goto;
+            // show the flowchart for given function
+            if (hash.substr(0, 5) === "#fun_") {
+                var fun = hash.substring(5, hash.length);
+                $("#fun-names .name").each(function (i, e) {
+                    if ($(e).text() === fun) {
+                        goto = $(e);
+                    }
+                });
+            } else {
+                // show javascript or images
+                goto = $(window.location.hash + "_btn");
+            }
+            goto.click();
+        }
+    }());
+
+
+    /************************************************
+     *          --- The Flowcharts View --- 
+     ************************************************/
+    // when clicking the flowcharts btn, switch to the flowcharts view
+    $("#flowcharts_btn").click(function () {
+        $("#js_code").hide();
+        $("#images").hide();
+        $("#output_disp").hide();
+        $(".activeView").removeClass("activeView");
+        $("#flowcharts_btn").addClass("activeView");
+        window.location.assign("#");
+    });
+
     // When the user clicks in the instructions area while in play or pause
     $("#functions").click(function (evt) {
         var t = $(evt.target);
@@ -245,8 +244,8 @@ var wr = $(function (wr) {
     });
 
     /*****************************************************
-     * The 'compile' check for the different statements
-     * This is used before switching to the play state
+     * The 'compile' check for the different statements;
+     * used before switching to the flowcharts play state
      *****************************************************/
     $(".statement > .start").each(function () {
         $(this).parent()[0].ready = function () {
@@ -327,6 +326,17 @@ var wr = $(function (wr) {
      *          --- The JavaScript View ---
      * Generate JavaScript from flowchart
      ********************************************************/
+    // setup the editor for the JavaScript view on page load
+    var editor;
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/clouds");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+    if (wr) {
+        wr.editor = editor;
+    }
+
+
     $("#javascript_btn").click(function () {
         if (wr.state.name !== "edit") {
             wr.state.reset();
@@ -493,6 +503,4 @@ var wr = $(function (wr) {
         $("#images_btn").addClass("activeView");
         window.location.assign("#images");
     });
-
-    return wr;
-}(wr));
+});
