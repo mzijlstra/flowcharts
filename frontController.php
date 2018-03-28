@@ -42,9 +42,9 @@ spl_autoload_register(function ($class) {
 
 if (DEVELOPMENT) {
     require 'AnnotationReader.class.php';
-    $ac = new AnnotationContext();
+    $ac = new AnnotationReader();
     $ac->scan()->create_context();
-    // $ac->write("context.php");  # uncomment to generate file
+    $ac->write("context.php");  # uncomment to generate file
     eval($ac->context);
 } else {
     require 'context.php';

@@ -1,11 +1,11 @@
 <?php
 $security = array(
 	'|GET@/login$|' => 'none',
-	'|POST@/login$|' => 'none',
 	'|GET@/logout|' => 'none',
+	'|POST@/login$|' => 'none',
 	'|GET@/sandbox$|' => 'user',
 	'|GET@/project/(\d+)$|' => 'user',
-	'|GET@|' => 'user',
+	'|POST@/images|' => 'user',
 	'|GET@/project/other_recent|' => 'user',
 	'|GET@/project$|' => 'user',
 	'|GET@/user/(\d+)/project$|' => 'user',
@@ -17,9 +17,10 @@ $security = array(
 	'|POST@/function/(\d+)/ins|' => 'user',
 	'|POST@/function/(\d+)/rename|' => 'user',
 	'|POST@/function/(\d+)/delete|' => 'user',
-	'|POST@/images|' => 'user',
 	'|GET@/$|' => 'user',
 	'|GET@/user/add|' => 'admin',
+	'|GET@/user/(\d+)/project/(\d+)$|' => 'admin',
+	'|GET@/user/(\d+)/project/other_recent|' => 'admin',
 	'|GET@/user|' => 'admin',
 	'|GET@/user/(\d+)$|' => 'admin',
 	'|POST@/user|' => 'admin',
@@ -32,28 +33,33 @@ $view_ctrl = array(
 );
 $get_ctrl = array(
 	'|/project/(\d+)$|' => 'ProjectCtrl@getProject',
-	'||' => 'ProjectCtrl@getRecent',
-	'|/project/other_recent|' => 'ProjectCtrl@getOtherRecent',
-	'|/project$|' => 'ProjectCtrl@getProjects',
-	'|/user/(\d+)/project$|' => 'ProjectCtrl@getUserProjects',
+	'|/user/(\d+)/project/(\d+)$|' => 'ProjectCtrl@getProject',
 	'|/$|' => 'UserCtrl@loggedIn',
 	'|/logout|' => 'UserCtrl@logout',
 	'|/user|' => 'UserCtrl@all',
 	'|/user/(\d+)$|' => 'UserCtrl@details',
 );
 $post_ctrl = array(
-	'|/project/add/(\D[^/]+)$|' => 'ProjectCtrl@create',
-	'|/project/(\d+)/rename$|' => 'ProjectCtrl@rename',
-	'|/project/(\d+)/delete|' => 'ProjectCtrl@delete',
-	'|/project/(\d+)/(\w+)|' => 'ProjectCtrl@addFunction',
-	'|/function/(\d+)/vars|' => 'ProjectCtrl@updVars',
-	'|/function/(\d+)/ins|' => 'ProjectCtrl@updIns',
-	'|/function/(\d+)/rename|' => 'ProjectCtrl@renameFunction',
-	'|/function/(\d+)/delete|' => 'ProjectCtrl@deleteFunction',
 	'|/images|' => 'ProjectCtrl@uploadImages',
 	'|/login$|' => 'UserCtrl@login',
 	'|/user|' => 'UserCtrl@create',
 	'|/user/(\d+)$|' => 'UserCtrl@update',
+);
+$get_ws = array(
+	'|/project/other_recent|' => 'ProjectWS@getOtherRecent',
+	'|/user/(\d+)/project/other_recent|' => 'ProjectWS@getOtherRecent',
+	'|/project$|' => 'ProjectWS@getProjects',
+	'|/user/(\d+)/project$|' => 'ProjectWS@getUserProjects',
+);
+$post_ws = array(
+	'|/project/add/(\D[^/]+)$|' => 'ProjectWS@create',
+	'|/project/(\d+)/rename$|' => 'ProjectWS@rename',
+	'|/project/(\d+)/delete|' => 'ProjectWS@delete',
+	'|/project/(\d+)/(\w+)|' => 'ProjectWS@addFunction',
+	'|/function/(\d+)/vars|' => 'ProjectWS@updVars',
+	'|/function/(\d+)/ins|' => 'ProjectWS@updIns',
+	'|/function/(\d+)/rename|' => 'ProjectWS@renameFunction',
+	'|/function/(\d+)/delete|' => 'ProjectWS@deleteFunction',
 );
 class Context {
     private $objects = array();
@@ -81,6 +87,11 @@ class Context {
             $this->objects["ProjectCtrl"] = new ProjectCtrl();
             $this->objects["ProjectCtrl"]->projectDao = $this->get("ProjectDao");
             $this->objects["ProjectCtrl"]->functionDao = $this->get("FunctionDao");
+        }
+        if ($id === "ProjectWS" && !isset($this->objects["ProjectWS"])) {
+            $this->objects["ProjectWS"] = new ProjectWS();
+            $this->objects["ProjectWS"]->projectDao = $this->get("ProjectDao");
+            $this->objects["ProjectWS"]->functionDao = $this->get("FunctionDao");
         }
         if ($id === "UserCtrl" && !isset($this->objects["UserCtrl"])) {
             $this->objects["UserCtrl"] = new UserCtrl();

@@ -12,10 +12,17 @@ class AnnotationReader {
     public $view_ctrl = array();
     public $get_ctrl = array();
     public $post_ctrl = array();
+    public $get_ws = array();
+    public $post_ws = array();
     public $repositories = array();
     public $controllers = array();
     public $context = "";
 
+    /**
+     * Constructor, initiallizes internal sec array based on global
+     * 
+     * @global type $SEC_LVLS
+     */
     public function AnnotationReader() {
         global $SEC_LVLS;
         foreach ($SEC_LVLS as $lvl) {
@@ -23,6 +30,14 @@ class AnnotationReader {
         }
     }
 
+    /**
+     * Helper function to extract annotation attributes (key / value pairs)
+     * 
+     * @param type $annotation
+     * @param type $text
+     * @return array
+     * @throws Exception
+     */
     private function annotation_attributes($annotation, $text) {
         $matches = array();
         preg_match("#" . $annotation . "\((.*)\)#", $text, $matches);
@@ -46,6 +61,12 @@ class AnnotationReader {
         return $result;
     }
 
+    /**
+     * Checks the properties of a class for @Inject annotations
+     * 
+     * @param type $reflect_class
+     * @return type
+     */
     private function to_inject($reflect_class) {
         $result = array();
         foreach ($reflect_class->getProperties() as $prop) {
@@ -58,6 +79,13 @@ class AnnotationReader {
         return $result;
     }
 
+    /**
+     * Validate the content of a @ViewControl annotation
+     * 
+     * @param type $attrs
+     * @param type $doc_com
+     * @throws Exception
+     */
     private function validate_viewcontrol_annotation(&$attrs, $doc_com) {
         if (!isset($attrs['uri']) && !isset($attrs['value'])) {
             throw new Exception("@ViewControl missing uri "
@@ -75,17 +103,16 @@ class AnnotationReader {
         }
     }
 
+    /**
+     * Validate the content of @GET and @POST annotations
+     * 
+     * @param type $attrs
+     * @param type $com
+     * @throws Exception
+     */
     private function validate_request_annotation(&$attrs, $com) {
-        if (!isset($attrs['method'])) {
-            $attrs['method'] = "GET";
-        }
-        if ($attrs['method'] !== "GET" && $attrs["method"] !== "POST") {
-            throw new Exception("@Request has incorrect value for method "
-            . "attribute in: " . $com);
-        }
         if (!isset($attrs['uri']) && !isset($attrs['value'])) {
-            throw new Exception("@Request missing uri "
-            . "attribute in: " . $com);
+            throw new Exception("@GET or @POST missing uri attribute in: $com");
         }
         if (!isset($attrs['uri']) && isset($attrs['value'])) {
             $attrs['uri'] = $attrs['value'];
@@ -94,32 +121,39 @@ class AnnotationReader {
             $attrs['sec'] = "none";
         }
         if (!isset($this->sec[$attrs["sec"]])) {
-            throw new Exception("Bad sec value in @Request found in: " . $com);
+            throw new Exception("Bad sec value in @GET or @POST found in: $com");
         }
     }
 
-    private function map_requests($reflect_class) {
+    /**
+     * 
+     * @param Reflection_Class $reflect_class
+     * @param string $req GET or POST
+     * @param string $type ctrl or ws
+     */
+    private function map_requests($reflect_class, $req, $type) {
         foreach ($reflect_class->getMethods() as $m) {
             $com = $m->getDocComment();
-            if (!preg_match("#@Request#", $com)) {
-                continue;
-            }
+            $match = array();
+            $store = strtolower($req) . "_" . $type;
 
-            // map the uri to a method & add security specifications
-            $attrs = $this->annotation_attributes("@Request", $com);
-            $this->validate_request_annotation($attrs, $com);
-
-            $method_loc = $reflect_class->getName() . "@" . $m->getName();
-            if ($attrs['method'] === "GET") {
-                $this->get_ctrl[$attrs["uri"]] = $method_loc;
-                $this->sec[$attrs["sec"]][] = "GET@" . $attrs["uri"];
-            } else if ($attrs['method'] === "POST") {
-                $this->post_ctrl[$attrs["uri"]] = $method_loc;
-                $this->sec[$attrs["sec"]][] = "POST@" . $attrs["uri"];
+            preg_match_all("#@{$req}\(.*\)#", $com, $match);
+            foreach ($match[0] as $a) {
+                $attrs = $this->annotation_attributes("@{$req}", $a);
+                $this->validate_request_annotation($attrs, $a);
+                $method_loc = $reflect_class->getName() . "@" . $m->getName();
+                $this->{$store}[$attrs["uri"]] = $method_loc;
+                $this->sec[$attrs["sec"]][] = "{$req}@" . $attrs["uri"];
             }
         }
     }
 
+    /**
+     * Checks if a class has an @Repository annotation, if it does adds it to
+     * the array of repositories
+     * 
+     * @param type $class
+     */
     private function check_repository($class) {
         $r = new ReflectionClass($class);
         $doc = $r->getDocComment();
@@ -129,6 +163,12 @@ class AnnotationReader {
         }
     }
 
+    /**
+     * Processes files which were found to have a @ViewControl annotation
+     * 
+     * @param type $doc_com
+     * @param type $file
+     */
     private function check_viewcontrol($doc_com, $file) {
         $attrs = $this->annotation_attributes("@ViewControl", $doc_com);
         $this->validate_viewcontrol_annotation($attrs, $doc_com);
@@ -137,13 +177,25 @@ class AnnotationReader {
         $this->sec[$attrs["sec"]][] = "GET@" . $attrs["uri"];
     }
 
+    /**
+     * Checks if classes have a @Controller or a @WebService annotation, and
+     * the processes them as needed
+     * 
+     * @param type $class
+     */
     private function check_controller($class) {
         $r = new ReflectionClass($class);
         $doc = $r->getDocComment();
         if (preg_match("#@Controller#", $doc)) {
             $to_inject = $this->to_inject($r);
             $this->controllers[$class] = $to_inject;
-            $this->map_requests($r);
+            $this->map_requests($r, "GET", "ctrl");
+            $this->map_requests($r, "POST", "ctrl");
+        } else if (preg_match("#@WebService#", $doc)) {
+            $to_inject = $this->to_inject($r);
+            $this->controllers[$class] = $to_inject;
+            $this->map_requests($r, "GET", "ws");
+            $this->map_requests($r, "POST", "ws");
         }
     }
 
@@ -178,6 +230,12 @@ class AnnotationReader {
         }
     }
 
+    /**
+     * Scan for PHP classes in a directory, calling the passed function on them
+     * 
+     * @param type $directory
+     * @param type $function
+     */
     private function scan_classes($directory, $function) {
         $files = scandir($directory);
         foreach ($files as $file) {
@@ -191,6 +249,9 @@ class AnnotationReader {
         }
     }
 
+    /**
+     * Generate the code (text) to output the security array
+     */
     private function generate_security_array() {
         $this->context .= "\$security = array(\n";
         foreach ($this->sec as $lvl => $items) {
@@ -201,6 +262,14 @@ class AnnotationReader {
         $this->context .= ");\n";
     }
 
+    /**
+     * Generate the code (text) to output the routing arrays:
+     *  - $view_ctrl
+     *  - $get_ctrl
+     *  - $post_ctrl
+     *  - $get_ws
+     *  - $post_ws
+     */
     private function generate_routing_arrays() {
         $this->context .= "\$view_ctrl = array(\n";
         foreach ($this->view_ctrl as $uri => $file) {
@@ -217,8 +286,23 @@ class AnnotationReader {
             $this->context .= "\t'|$uri|' => '$method_loc',\n";
         }
         $this->context .= ");\n";
+        $this->context .= "\$get_ws = array(\n";
+        foreach ($this->get_ws as $uri => $method_loc) {
+            $this->context .= "\t'|$uri|' => '$method_loc',\n";
+        }
+        $this->context .= ");\n";
+        $this->context .= "\$post_ws = array(\n";
+        foreach ($this->post_ws as $uri => $method_loc) {
+            $this->context .= "\t'|$uri|' => '$method_loc',\n";
+        }
+        $this->context .= ");\n";
     }
 
+    /**
+     * Generate code for the retrievable classes to the context class
+     * 
+     * @param type $classes
+     */
     private function add_classes_to_context($classes) {
         foreach ($classes as $class => $injects) {
             $this->context .= <<< IF_START
@@ -237,6 +321,7 @@ IF_START;
 
     /**
      * Scans the standard directories, reading .php files for annotations
+     * 
      * @return AnnotationContext self for call chaining
      */
     public function scan() {
@@ -248,6 +333,7 @@ IF_START;
 
     /**
      * Creates the context in memory
+     * 
      * @return AnnotationContext self for call chaining
      */
     public function create_context() {
@@ -287,6 +373,7 @@ FOOTER;
 
     /**
      * Writes the context (as found by scan) to a file
+     * 
      * @param string $filename
      * @return AnnotationContext self for call chaining
      */

@@ -13,12 +13,12 @@ global $MY_BASE;
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
-        <script src="res/js/lib/ace/ace.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/states.js"></script>
         <script src="res/js/edit.js"></script>
         <script src="res/js/exec.js"></script>
         <script src="res/js/utils.js"></script>
+        <script src="res/js/lib/ace/ace.js" ></script>
     </head>
     <body>
         <h1 data-pid="<?= $pid ?>"><?= $pname ?></h1>
@@ -180,7 +180,7 @@ global $MY_BASE;
             <div class="center"><button>OK</button></div>
         </div>
 
-        <footer>Web-Raptor</footer>
+        <footer>Flowcharts</footer>
 
         <div id="ins_menu" class="menu">
             <div class="menu_item" id="add_input">Input</div>

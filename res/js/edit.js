@@ -985,4 +985,4 @@ $(function () {
             return true;
         });
     });
-}());
+});

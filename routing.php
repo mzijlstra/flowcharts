@@ -13,7 +13,6 @@
  */
 function applyView($view) {
     global $VIEW_DATA;
-
     if (preg_match("/^Location: /", $view)) {
         if ($VIEW_DATA) {
             $_SESSION['redirect'] = $view;
@@ -23,11 +22,26 @@ function applyView($view) {
     } else {
         // make keys in VIEW_DATA available as regular variables
         foreach ($VIEW_DATA as $key => $value) {
+            // TODO htmlspecialchars! (breaks with web raptor)
             $$key = $value;
         }
         require "view/$view";
     }
-    // always exit after displaying the view, do we want hook?
+    // always exit after displaying the view, do we want a hook?
+    exit();
+}
+
+/**
+ * Outputs JSON data
+ * 
+ * @param type $data, object (structure) that should be JSONified
+ */
+function outputJSON($data) {
+    if (is_string($data)) {
+        applyView($data);
+    } else if ($data) {
+        print json_encode($data);
+    }
     exit();
 }
 
@@ -42,23 +56,20 @@ function applyView($view) {
  * controller @ method mappings
  * @return string the view string returned by the matched controller
  */
-function matchUriToCtrl($ctrls) {
+function matchUriToMethod($ctrls) {
     global $MY_URI;
     global $URI_PARAMS;
 
     // check controler mappings
     foreach ($ctrls as $pattern => $dispatch) {
         if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
+            // finding match completes method
             list($class, $method) = explode("@", $dispatch);
-            $view = invokeCtrlMethod($class, $method);
-            if ($view) {
-                applyView($view);
-            }
-            return; // finding match completes method
+            return invokeMethod($class, $method);
         }
     }
-    // page not found (security mapping exists, but not ctrl mapping)
-    applyView("error/404.php");
+    // was not able to find a match here
+    return null;
 }
 
 /**
@@ -68,8 +79,7 @@ function matchUriToCtrl($ctrls) {
  * @param string $method method name that should be invoked
  * @return string the view string returned by the controller method
  */
-function invokeCtrlMethod($class, $method) {
-
+function invokeMethod($class, $method) {
     try {
         $context = new Context();
         $controler = $context->get($class);
@@ -77,7 +87,7 @@ function invokeCtrlMethod($class, $method) {
     } catch (Exception $e) {
         // Perhaps have some user setting for debug mode
         error_log($e->getMessage());
-        applyView("error/500.php");
+        return "error/500.php";
     }
 }
 
@@ -101,15 +111,32 @@ switch ($MY_METHOD) {
             }
         }
         // check get controllers
-        matchUriToCtrl($get_ctrl);
+        $view = matchUriToMethod($get_ctrl);
+        if ($view) {
+            applyView($view);
+        }
+        $data = matchUriToMethod($get_ws);
+        if ($data) {
+            outputJSON($data);
+        }
+
+        // page not found (security mapping exists, but not ctrl mapping)
+        applyView("error/404.php");
         break;
     case "POST":
         // check post controlers
-        matchUriToCtrl($post_ctrl);
+        $view = matchUriToMethod($post_ctrl);
+        if ($view) {
+            applyView($view);
+        }
+        $data = matchUriToMethod($post_ws);
+        if ($data) {
+            outputJSON($data);
+        }
+
+        // page not found (security mapping exists, but not ctrl mapping)
+        applyView("error/404.php");
         break;
-    case "PUT":
-    case "DELETE":
     default:
         applyView("error/403.php");
 }
-

@@ -32,7 +32,8 @@ class UserCtrl {
      * Attempts to login to the application
      * @global type $MY_BASE base URI of our application
      * @return string appropriate redirect for success or failure
-     * @Request(method="POST", uri="/login$", sec="none")
+     * 
+     * @POST(uri="/login$", sec="none")
      */
     public function login() {
         global $MY_BASE;
@@ -81,7 +82,8 @@ class UserCtrl {
      * Redirects a successful login to their most recent project
      * @global string $MY_BASE base URI of the application
      * @return string redirect to URI of most recent project
-     * @Request(method="GET", uri="/$", sec="user")
+     * 
+     * @GET(uri="/$", sec="user")
      */
     public function loggedIn() {
         // redirect to the most recent project
@@ -94,7 +96,8 @@ class UserCtrl {
     /**
      * Logs someone out of the application
      * @return string redirect back to login page
-     * @Request(method="GET", uri="/logout", sec="none")
+     * 
+     * @GET(uri="/logout", sec="none")
      */
     public function logout() {
         session_destroy();
@@ -106,7 +109,8 @@ class UserCtrl {
      * Shows all the users
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
-     * @Request(method="GET", uri="/user", sec="admin")
+     * 
+     * @GET(uri="/user", sec="admin")
      */
     public function all() {
         global $VIEW_DATA;
@@ -119,7 +123,8 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
-     * @Request(method="GET", uri="/user/(\d+)$", sec="admin")
+     * 
+     * @GET(uri="/user/(\d+)$", sec="admin")
      */
     public function details() {
         global $VIEW_DATA;
@@ -138,7 +143,8 @@ class UserCtrl {
      * Creates a user
      * @return strng redirect URI
      * @throws PDOException
-     * @Request(method="POST", uri="/user", sec="admin")
+     * 
+     * @POST(uri="/user", sec="admin")
      */
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
@@ -190,7 +196,8 @@ class UserCtrl {
      * Updates a user 
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
-     * @Request(method="POST", uri="/user/(\d+)$", sec="admin")
+     * 
+     * @POST(uri="/user/(\d+)$", sec="admin")
      */
     public function update() {
         global $URI_PARAMS;
