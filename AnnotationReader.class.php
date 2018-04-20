@@ -12,8 +12,6 @@ class AnnotationReader {
     public $view_ctrl = array();
     public $get_ctrl = array();
     public $post_ctrl = array();
-    public $get_ws = array();
-    public $post_ws = array();
     public $repositories = array();
     public $controllers = array();
     public $context = "";
@@ -186,16 +184,12 @@ class AnnotationReader {
     private function check_controller($class) {
         $r = new ReflectionClass($class);
         $doc = $r->getDocComment();
-        if (preg_match("#@Controller#", $doc)) {
+        if (preg_match("#@Controller#", $doc) ||
+                preg_match("#@WebService#", $doc)) {
             $to_inject = $this->to_inject($r);
             $this->controllers[$class] = $to_inject;
             $this->map_requests($r, "GET", "ctrl");
             $this->map_requests($r, "POST", "ctrl");
-        } else if (preg_match("#@WebService#", $doc)) {
-            $to_inject = $this->to_inject($r);
-            $this->controllers[$class] = $to_inject;
-            $this->map_requests($r, "GET", "ws");
-            $this->map_requests($r, "POST", "ws");
         }
     }
 
@@ -267,8 +261,6 @@ class AnnotationReader {
      *  - $view_ctrl
      *  - $get_ctrl
      *  - $post_ctrl
-     *  - $get_ws
-     *  - $post_ws
      */
     private function generate_routing_arrays() {
         $this->context .= "\$view_ctrl = array(\n";
@@ -283,16 +275,6 @@ class AnnotationReader {
         $this->context .= ");\n";
         $this->context .= "\$post_ctrl = array(\n";
         foreach ($this->post_ctrl as $uri => $method_loc) {
-            $this->context .= "\t'|$uri|' => '$method_loc',\n";
-        }
-        $this->context .= ");\n";
-        $this->context .= "\$get_ws = array(\n";
-        foreach ($this->get_ws as $uri => $method_loc) {
-            $this->context .= "\t'|$uri|' => '$method_loc',\n";
-        }
-        $this->context .= ");\n";
-        $this->context .= "\$post_ws = array(\n";
-        foreach ($this->post_ws as $uri => $method_loc) {
             $this->context .= "\t'|$uri|' => '$method_loc',\n";
         }
         $this->context .= ");\n";

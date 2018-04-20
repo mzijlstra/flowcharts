@@ -5,13 +5,31 @@
  */
 
 /**
- * Helper function to switch to the provided view and then exit the application
+ * Helper function to check what kind of view should be displayed
+ * 
+ * @param type $data either string for HTML view or data for JSON
+ */
+
+function view($data) {
+    if (is_string($data)) {
+        htmlView($data);
+    } else if ($data) {
+        print json_encode($data);
+    } else {
+        htmlView("error/500.php");
+    }
+    // always exit after displaying the view, do we want a hook?
+    exit();
+}
+
+/**
+ * Helper function to redirect to a GET or display an HTML page
  * 
  * @global array $VIEW_DATA any data that the view may need in order to render
  * @param string $view the name of the view file to include before exiting, 
  * or alternately for redirects a location header string
  */
-function applyView($view) {
+function htmlView($view) {
     global $VIEW_DATA;
     if (preg_match("/^Location: /", $view)) {
         if ($VIEW_DATA) {
@@ -22,27 +40,11 @@ function applyView($view) {
     } else {
         // make keys in VIEW_DATA available as regular variables
         foreach ($VIEW_DATA as $key => $value) {
-            // TODO htmlspecialchars! (breaks with web raptor)
+            // TODO htmlspecialchars! (breaks web raptor)
             $$key = $value;
         }
         require "view/$view";
     }
-    // always exit after displaying the view, do we want a hook?
-    exit();
-}
-
-/**
- * Outputs JSON data
- * 
- * @param type $data, object (structure) that should be JSONified
- */
-function outputJSON($data) {
-    if (is_string($data)) {
-        applyView($data);
-    } else if ($data) {
-        print json_encode($data);
-    }
-    exit();
 }
 
 /**
@@ -107,36 +109,28 @@ switch ($MY_METHOD) {
         // check view controlers
         foreach ($view_ctrl as $pattern => $file) {
             if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
-                applyView($file);
+                view($file);
             }
         }
         // check get controllers
         $view = matchUriToMethod($get_ctrl);
         if ($view) {
-            applyView($view);
-        }
-        $data = matchUriToMethod($get_ws);
-        if ($data) {
-            outputJSON($data);
+            view($view);
         }
 
         // page not found (security mapping exists, but not ctrl mapping)
-        applyView("error/404.php");
+        view("error/404.php");
         break;
     case "POST":
         // check post controlers
         $view = matchUriToMethod($post_ctrl);
         if ($view) {
-            applyView($view);
-        }
-        $data = matchUriToMethod($post_ws);
-        if ($data) {
-            outputJSON($data);
+            view($view);
         }
 
         // page not found (security mapping exists, but not ctrl mapping)
-        applyView("error/404.php");
+        view("error/404.php");
         break;
     default:
-        applyView("error/403.php");
+        view("error/500.php");
 }

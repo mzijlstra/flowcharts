@@ -34,6 +34,10 @@ $view_ctrl = array(
 $get_ctrl = array(
 	'|/project/(\d+)$|' => 'ProjectCtrl@getProject',
 	'|/user/(\d+)/project/(\d+)$|' => 'ProjectCtrl@getProject',
+	'|/project/other_recent|' => 'ProjectWS@getOtherRecent',
+	'|/user/(\d+)/project/other_recent|' => 'ProjectWS@getOtherRecent',
+	'|/project$|' => 'ProjectWS@getProjects',
+	'|/user/(\d+)/project$|' => 'ProjectWS@getUserProjects',
 	'|/$|' => 'UserCtrl@loggedIn',
 	'|/logout|' => 'UserCtrl@logout',
 	'|/user|' => 'UserCtrl@all',
@@ -41,17 +45,6 @@ $get_ctrl = array(
 );
 $post_ctrl = array(
 	'|/images|' => 'ProjectCtrl@uploadImages',
-	'|/login$|' => 'UserCtrl@login',
-	'|/user|' => 'UserCtrl@create',
-	'|/user/(\d+)$|' => 'UserCtrl@update',
-);
-$get_ws = array(
-	'|/project/other_recent|' => 'ProjectWS@getOtherRecent',
-	'|/user/(\d+)/project/other_recent|' => 'ProjectWS@getOtherRecent',
-	'|/project$|' => 'ProjectWS@getProjects',
-	'|/user/(\d+)/project$|' => 'ProjectWS@getUserProjects',
-);
-$post_ws = array(
 	'|/project/add/(\D[^/]+)$|' => 'ProjectWS@create',
 	'|/project/(\d+)/rename$|' => 'ProjectWS@rename',
 	'|/project/(\d+)/delete|' => 'ProjectWS@delete',
@@ -60,6 +53,9 @@ $post_ws = array(
 	'|/function/(\d+)/ins|' => 'ProjectWS@updIns',
 	'|/function/(\d+)/rename|' => 'ProjectWS@renameFunction',
 	'|/function/(\d+)/delete|' => 'ProjectWS@deleteFunction',
+	'|/login$|' => 'UserCtrl@login',
+	'|/user|' => 'UserCtrl@create',
+	'|/user/(\d+)$|' => 'UserCtrl@update',
 );
 class Context {
     private $objects = array();
