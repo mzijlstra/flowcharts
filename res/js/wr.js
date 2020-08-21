@@ -150,6 +150,8 @@ $(function () {
         if (!type) {
             return true;
         }
+        // make sure we don't have extra spaces
+        type = type.trim();
 
         var e = $(elem);
         var exp = e.val() || e.text();
