@@ -1,4 +1,4 @@
-web-raptor
+flowcharts
 ==========
 
-Aims to become a web based implementation of the Raptor programming learning tool
+A tool for teaching programming, inspired by the Raptor programming language

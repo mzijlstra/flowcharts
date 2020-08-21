@@ -3,20 +3,26 @@
  Author     : mzijlstra
  */
 
-var wr = {};
+/*
+ * This is the top level JS file for the application, it contains the 
+ * global wr module, and its public function definitions
+ * 
+ * I chose to use the module patter with tight augmentation as found at:
+ * http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html
+ */
 
-$(function () {
+var wr = (function (wr) {
     "use strict";
 
     /*
      * Global variables in the wr namespace
      */
     wr.functions = {'main': {}};// the flowcharts the user has made
-    wr.curfun = 'main';         // the chart currently being edited
-    wr.curvars = wr.functions.main; // the variables for that chart
+    wr.state;                   // set by states.js [edit,play,pause] object
+
+    // QUESTION Put these into the EXEC state?
     wr.curfrm = -1;             // index of currently executing stack frame
     wr.stack = [];              // will hold call stack when executing (play)
-    wr.state;                   // set by code in states.js [edit,play,pause]
     wr.playing;                 // will hold the timeout variable when playing
     wr.maxrec = 250;            // maximum recursion depth
 
@@ -32,6 +38,9 @@ $(function () {
      */
     wr.alert;
     wr.prompt;
+    wr.confirm;
+    wr.iolog;
+    wr.stringify;
     wr.verifyType;
     wr.ready;
 
@@ -45,15 +54,17 @@ $(function () {
         var a = $("#alert");
         var o = $("#overlay");
         a.find(".msg").text(text);
-        var doClick = function () {
+        var doClick = function (evt) {
             if (click) {
                 click();
+
             }
             a.hide();
             if ($("#prompt").css("display") !== "block") {
                 o.hide();
             }
             a.off("click", doClick);
+            evt.stopPropagation();
         };
         a.on("click", doClick);
         o.show();
@@ -65,26 +76,45 @@ $(function () {
      * disabled, and also has a cancel button, both of which are no good)
      * 
      * @param {string} text To be displayed in popup window
-     * @param {function} click callback when OK button is pressed, is given 
+     * @param {function} ok callback when OK button is pressed, is given 
      * the value of the input element inside (the text the user entered)
+     * @param {function} cancel callback for when Cancel button is pressed
      */
-    wr.prompt = function (text, click) {
+    wr.prompt = function (text, ok, cancel) {
         var p = $("#prompt");
         var o = $("#overlay");
         var i = p.find("input");
-        var b = p.find("button");
-        p.find(".msg").text(text);
+        var bK = $("#prompt_ok");
+        var bC = $("#prompt_cancel");
 
-        var doClick = function () {
-            if (!click || !click(i.val())) {
-                p.hide();
-                o.hide();
-                i.val(""); // clear input
-                b.off("click", doClick);
-            }
+        var hide = function () {
+            bK.off("click", doOk);
+            bC.off("click", doCancel);
+            i.val("");
+            p.hide();
+            o.hide();
         };
-        b.on("click", doClick);
 
+        var doOk = function (evt) {
+            if (ok && ok(i.val())) {
+                // don't hide if handler returns true
+            } else {
+                hide(evt);
+            }
+            evt.stopPropagation();
+        };
+
+        var doCancel = function (evt) {
+            if (cancel) {
+                cancel();
+            }
+            hide(evt);
+            evt.stopPropagation();
+        };
+
+        bK.on("click", doOk);
+        bC.on("click", doCancel);
+        p.find(".msg").text(text);
         o.show();
         p.show();
         i.focus();
@@ -114,18 +144,20 @@ $(function () {
             o.hide();
         };
 
-        var doOk = function () {
+        var doOk = function (evt) {
             if (ok) {
                 ok();
             }
-            hide();
+            hide(evt);
+            evt.stopPropagation();
         };
 
-        var doCancel = function () {
+        var doCancel = function (evt) {
             if (cancel) {
                 cancel();
             }
-            hide();
+            hide(evt);
+            evt.stopPropagation();
         };
 
         bK.on("click", doOk);
@@ -134,6 +166,43 @@ $(function () {
         o.show();
         c.show();
     };
+
+    /**
+     * Helper that puts given text into the output box shown during execution
+     * 
+     * @param {type} text to be displayed in I/O window
+     * @param {type} cname CSS class name to be used for the text
+     */
+    wr.iolog = function (text, cname) {
+        var o = $("#out");
+        var add = $("<span>");
+        if (typeof text === "string") {
+            text = text.replace("\n", "<br />");
+        }
+        add.html(text);
+        if (cname) {
+            add.addClass(cname);
+        }
+        o.append(add);
+        o[0].scrollTop = o[0].scrollHeight; // always scroll to bottom
+    };
+
+    /**
+     * Helper function to turn things into strings
+     * 
+     * @param {type} val The thing that needs to become a string
+     * @returns {String}
+     */
+    wr.stringify = function (val) {
+        if (typeof val === "object" && !$.isArray(val) &&
+                typeof val.toString === "function" &&
+                val.toString() !== "[object Object]") {
+            return val.toString();
+        } else {
+            return JSON.stringify(val);
+        }
+    };
+
 
 
     /**
@@ -159,18 +228,20 @@ $(function () {
 
         // create an evaluation context with defaults for current variables
         var defaults = {
-            "string": "''",
-            "number": "1",
-            "boolean": "true",
-            "array": "[]",
-            "object": "{}"
+            "string": "",
+            "number": 1,
+            "boolean": true,
+            "array": [],
+            "object": {}
         };
         var ctx = {};
+        var sys = {};
         var key, vtype;
         // add in functions that return default values based on their type
         for (key in wr.functions) {
             vtype = $('#ins_' + key).find('.start .type').text();
-            ctx[key] = "function () { return " + defaults[vtype] + "}";
+            sys[key] = "function () { return " +
+                    wr.stringify(defaults[vtype]) + "}";
         }
         // add variables for the function that the elem is inside of
         var fun = $(elem).closest(".instructions").attr("id").substring(4);
@@ -187,16 +258,15 @@ $(function () {
                 exp = "{}";
             }
         }
-        // no nice way to determine the types of properties
-        // TODO fix this by actually executing the statements?
-        if (exp.match(/.+(\.|\[).+/)) { // anything containing a dot or [
+        // no nice way to determine the types of properties or calls
+        if (exp.match(/.+(\.|\[|\().+/)) { // anything containing a dot,[, or (
             stmt.removeClass("type_error exp_error");
             return true;
         }
 
         // do the actual evaluation
         try {
-            var data = wr.eval(exp, ctx);
+            var data = wr.eval(exp, ctx, sys);
         } catch (exception) {
             stmt.addClass("exp_error");
             if (!silent) {
@@ -207,6 +277,10 @@ $(function () {
         }
 
         // check the resulting type
+        if (type === "any") {
+            stmt.removeClass("type_error exp_error");
+            return true;
+        }
         var result = typeof data;
         var match = false;
         if (result === 'object') {
@@ -249,4 +323,6 @@ $(function () {
         }
         return ready;
     };
-});
+
+    return wr;
+}({}));

@@ -4,12 +4,12 @@
  */
 
 /*
- * This file contains the code for the edit state, because it is so big I've put
- * effort into creating clearly delinated sections with block comment headers 
+ * This file contains the code (event handlers and helper functions for them)
+ * for the edit state, because it is so big I've creating clearly delinated 
+ * sections with block comment headers 
  */
 
-var wr; // global object declared in wr.js
-var hljs; // provided by the highlight.js library
+var wr; // global variable created in the wr module
 
 $(function () {
     "use strict";
@@ -18,7 +18,7 @@ $(function () {
      * Application State Setup Code (after flow chart loaded from DB)
      ********************************************************/
     // build local variables in wr.functions for each chart
-    (function () {
+    $(function () {
         $("#workspace .fun .name").each(function () {
             var name = $(this).text();
             wr.functions[name] = {};
@@ -29,15 +29,15 @@ $(function () {
                 }
             });
         });
-        wr.curvars = wr.functions.main;
-    }());
+        wr.state.curvars = wr.functions.main;
+    });
 
     // Setup AJAX Error Handling
     $(document).ajaxError(function () {
         wr.alert("Network Error\n\n" +
-                "Please check your connection and try again.");
+                "Or Session Timeout" +
+                "Please check your connection or try logging in again.");
     });
-
 
 
 
@@ -63,7 +63,7 @@ $(function () {
      */
     var postVarUpd = function () {
         var vdata = $(".variables.active").html();
-        var fid = $(".fun.active").attr("fid");
+        var fid = $(".fun.active").data("fid");
         $.post("../function/" + fid + "/vars", {
             "vdata": vdata
         }, shouldNotHaveData);
@@ -75,7 +75,7 @@ $(function () {
      */
     var postInsUpd = function () {
         var idata = $(".instructions.active").html();
-        var fid = $(".fun.active").attr("fid");
+        var fid = $(".fun.active").data("fid");
         $.post("../function/" + fid + "/ins", {
             "idata": idata
         }, shouldNotHaveData);
@@ -114,7 +114,7 @@ $(function () {
         }
 
         // create input element and set text
-        i = $($("<input type='text' />"));
+        i = $("<input type='text' />");
         var old = t.text().trim();
         i.val(old);
         t.text("_"); // so that block doesn't show (weird)
@@ -131,11 +131,14 @@ $(function () {
 
         // onkeydown resize and also blur when enter is pressed
         i.keydown(function (event) {
-            resize();
             if (event.which === 13) {
                 this.blur();
             }
+
         });
+        i[0].oninput = function (event) {
+            resize();
+        };
 
         // on call optional fun (that can block blur), and assign new val
         i.blur(function () {
@@ -185,7 +188,7 @@ $(function () {
     // store current var name on focus
     $(".variable .var").focus(function () {
         var t = $(this);
-        t.attr("cur", t.val());
+        t.data("cur", t.val());
     });
 
     // no spaces in variable names, blur on enter
@@ -203,7 +206,7 @@ $(function () {
         var t = $(this);
 
         // cleanly exit fields that are not defined yet
-        if (t.val() === "" && t.attr("cur") === "") {
+        if (t.val() === "" && t.data("cur") === "") {
             return true;
         }
 
@@ -225,23 +228,23 @@ $(function () {
         }
 
         // if we were indeed updated
-        if (t.attr("cur") !== t.val()) {
-            if (wr.curvars[t.val()]) {
+        if (t.data("cur") !== t.val()) {
+            if (wr.state.curvars[t.val()]) {
                 wr.alert("Duplicate variable Name: " + t.val() + "\n\n" +
                         "Please change one to keep them unique.");
-                t.val(t.attr("cur"));
+                t.val(t.data("cur"));
                 t.focus();
                 return false;
             }
             if (wr.functions[t.val()]) {
                 wr.alert("Conflict with function name: " + t.val() + "\n\n" +
                         "Please change your variable name to keep it unique");
-                t.val(t.attr("cur"));
+                t.val(t.data("cur"));
                 t.focus();
                 return false;
             }
 
-            var oldn = t.attr('cur');
+            var oldn = t.data('cur');
             var newn = t.val();
             var elem = this;
 
@@ -250,12 +253,12 @@ $(function () {
             t.attr("value", t.val());
 
             // remove old name from our vars 
-            if (oldn !== "" && wr.curvars[oldn] === elem) {
-                delete wr.curvars[oldn];
+            if (oldn !== "" && wr.state.curvars[oldn] === elem) {
+                delete wr.state.curvars[oldn];
             }
 
             // add new name to our vars 
-            wr.curvars[newn] = elem;
+            wr.state.curvars[newn] = elem;
 
             // update instructions with old name to new name
             $('.active span.var:contains(' + oldn + ')').text(
@@ -362,7 +365,7 @@ $(function () {
         var name = p.children("input").val();
         if (!p.hasClass("inuse")) {
             p.remove();
-            delete wr.curvars[name];
+            delete wr.state.curvars[name];
 
             // if param also update signature
             if (p.hasClass("parameter")) {
@@ -416,21 +419,9 @@ $(function () {
 
     // display insertion menu when clicking on a connection block
     $(".connection").click(function (event) {
-        // get the amount of variables declared, compatible with old brwsrs
-        var size = 0;
-        if (Object.keys) {
-            size = Object.keys(wr.curvars).length;
-        } else {
-            for (var k in wr.curvars)
-                size++;
-        }
-
         // check if we should insert
         if ($('#workspace').hasClass("exec")) {
             // silently inore request to show menu
-        } else if (size === 0) {
-            wr.alert("Please declare a variable first.");
-            $('.variable .var').focus();
         } else if (ins_menu.css("display") === "none") {
             ins_menu.css("top", event.pageY);
             ins_menu.css("left", event.pageX);
@@ -463,14 +454,11 @@ $(function () {
 
     // handle click on variable in statement to edit it
     $("div.var_container > span.var").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // not if we're executing
-        }
         var t = $(this);
         t.siblings(".menu").hide();
         inputHere(this, function () {
             // in case it has it
-            t.closest(".statement").removeClass("type_error exp_error"); 
+            t.closest(".statement").removeClass("type_error exp_error");
             return true;
         });
     });
@@ -487,7 +475,7 @@ $(function () {
         var cur = t.find(".var").text();
 
         menu.empty();
-        for (var k in wr.curvars) {
+        for (var k in wr.state.curvars) {
             menu.append("<div class='menu_item'>" + k + "</div>");
         }
         // highlight current
@@ -503,7 +491,7 @@ $(function () {
         var t = $(this);
         var gp = t.parent().parent();
         var name = $(event.target).text();
-        var type = $(wr.curvars[name]).siblings(".type_container")
+        var type = $(wr.state.curvars[name]).siblings(".type_container")
                 .find(".type").text();
 
         if (gp.hasClass("input") && type !== "string" ||
@@ -569,26 +557,20 @@ $(function () {
      ********************************************************/
     // output expressions
     $(".output .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         inputHere(this, function (t) {
-            wr.verifyType(t, "string");
+            wr.verifyType(t, "any");
             return true;
         });
     });
     // assignment expressions
     $(".assignment .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         var name = $(this).siblings(".var_container").children(".var")
                 .text().trim();
         if (name === "") {
             wr.alert("Please select a variable first.");
             return false;
         }
-        var type = $(wr.curvars[name]).prev().find(".type").text();
+        var type = $(wr.state.curvars[name]).prev().find(".type").text();
         inputHere(this, function (t) {
             wr.verifyType(t, type);
             return true;
@@ -596,16 +578,13 @@ $(function () {
     });
     // call expressions
     $(".call .exp").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
-        inputHere(this);
+        inputHere(this, function (t) {
+            wr.verifyType(t, "any");
+            return true;
+        });
     });
     // if and while condition expressions
     $(".diamond").click(function (event) {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         event.stopPropagation(); // in case we clicked .exp inside diamond
         var exp = this;
         if ($(this).hasClass("diamond")) {
@@ -618,9 +597,6 @@ $(function () {
     });
     // return expressions
     $(".stop").click(function () {
-        if ($('#workspace').hasClass('exec')) {
-            return false; // don't show if we're executing
-        }
         var exp = $(this).find(".exp")[0];
         var type = $('.active .start .type').text();
         inputHere(exp, function (t) {
@@ -651,7 +627,7 @@ $(function () {
             } else if (wr.functions[n]) {
                 wr.alert("Duplicate Function Name\n\n" +
                         "Please change the function name to keep it unique.");
-            } else if (wr.functions[wr.curfun][n]) {
+            } else if (wr.functions[wr.state.curfun][n]) {
                 // should we check for conflicts with variable names
                 // in all current functions?
                 wr.alert("Conflict found with variable name: " + n + "\n\n" +
@@ -684,7 +660,7 @@ $(function () {
             vdata.append(cloneBlock("#declaration"));
 
             // AJAX call to create function on server
-            var pid = $("h1").attr("pid");
+            var pid = $("h1").data("pid");
             $.ajax({
                 "type": "POST",
                 "url": pid + "/add/" + n,
@@ -698,7 +674,7 @@ $(function () {
                         // append a new function name tab
                         var fname = cloneBlock("#fun-name");
                         fname.find(".name").text(n);
-                        fname.attr("fid", fid);
+                        fname.data("fid", fid);
                         $("#fun-names").append(fname);
 
                         // append a new instructions area
@@ -743,8 +719,10 @@ $(function () {
         $("#ins_" + n).addClass("active");
 
         // also switch over global vars
-        wr.curvars = wr.functions[n];
-        wr.curfun = n;
+        wr.state.curvars = wr.functions[n];
+        wr.state.curfun = n;
+
+        window.location.assign("#fun_" + n);
     });
 
     // renaming a function
@@ -754,16 +732,16 @@ $(function () {
         }
 
         var n = $(this).find(".name");
-        n.attr("cur", n.text());
-        inputHere(n.get(0), function (t) {
-            var cur = n.attr("cur");
-            if (cur === "main") {
-                wr.alert("Cannot rename function main. \n\n" +
-                        "It is needed as entry point for the program.");
-                n.text("main");
-                return false;
-            }
+        if (n.text() === "main") {
+            wr.alert("Cannot rename function main. \n\n" +
+                    "It is needed as entry point for the program.");
+            n.text("main");
+            return false;
 
+        }
+        n.data("cur", n.text());
+        inputHere(n.get(0), function (t) {
+            var cur = n.data("cur");
             if (cur !== t.val()) {
                 var upd = t.val();
 
@@ -798,10 +776,10 @@ $(function () {
                 $("#vars_" + cur).attr("id", "vars_" + upd);
                 $("#ins_" + cur).attr("id", "ins_" + upd);
                 $("#fun-names .active .name").text(upd);
-                wr.curfun = upd;
+                wr.state.curfun = upd;
 
                 // AJAX rename function
-                var fid = $(".fun.active").attr("fid");
+                var fid = $(".fun.active").data("fid");
                 $.post("../function/" + fid + "/rename", {
                     "name": upd
                 }, shouldNotHaveData);
@@ -827,7 +805,7 @@ $(function () {
             $("#fun-names .fun")[0].click();
 
             // AJAX delete function
-            var fid = t.parent().attr("fid");
+            var fid = t.parent().data("fid");
             $.post("../function/" + fid + "/delete", shouldNotHaveData);
         });
     });
@@ -841,7 +819,7 @@ $(function () {
      ********************************************************/
     // show recent projects
     $("#projects").mouseenter(function () {
-        var pid = $("h1").first().attr("pid");
+        var pid = $("h1").first().data("pid");
         $.ajax({
             "dataType": "json",
             "url": "other_recent",
@@ -853,14 +831,14 @@ $(function () {
                     row = data[i];
                     item = items.eq(i);
                     item.text(row['name']);
-                    item.attr("pid", row['id']);
+                    item.data("pid", row['id']);
                 }
                 // clean up any deleted recents
                 if (i < 5) {
                     for (; i < 5; i++) {
                         item = items.eq(i);
                         item.text("-----");
-                        item.removeAttr("pid");
+                        item.removeData("pid");
                     }
                 }
             }
@@ -870,8 +848,8 @@ $(function () {
     // if one of the 'recent' menu items is clicked
     $("#recent_proj .menu_item").click(function () {
         var t = $(this);
-        if (t.attr("pid")) { // may be a placeholder 
-            var pid = t.attr("pid");
+        if (t.data("pid")) { // may be a placeholder 
+            var pid = t.data("pid");
             window.location.assign(pid);
         }
     });
@@ -879,6 +857,10 @@ $(function () {
     // create a new project
     $("#new_proj").click(function () {
         wr.prompt("Project Name:", function (name) {
+            if (!name || !name.trim()) {
+                wr.alert("Project name appears to be empty.");
+                return true; // causes prompt to stay on screen
+            }
             name = name.trim();
             if (name.match(/^\d/)) {
                 wr.alert("Project name cannot start with a number.");
@@ -903,7 +885,7 @@ $(function () {
 
         var goto_proj = function () {
             var tr = $(this);
-            window.location.assign("../project/" + tr.attr("pid"));
+            window.location.assign("../project/" + tr.data("pid"));
         };
 
         var del_proj = function (event) {
@@ -912,10 +894,10 @@ $(function () {
             // Make sure we have at least one project left
             if (pd.find(".proj").length > 1) {
                 wr.confirm("Are you sure you wish to delete this project?", function () {
-                    var pid = tr.attr("pid");
+                    var pid = tr.data("pid");
                     $.post(pid + "/delete", shouldNotHaveData);
                     // redirect to most recent if current project deleted
-                    if (pid === $("h1").first().attr("pid")) {
+                    if (pid === $("h1").first().data("pid")) {
                         window.location.assign("recent");
                     }
                 });
@@ -989,146 +971,18 @@ $(function () {
     // rename a project
     $("h1").click(function () {
         var t = $(this);
-        t.attr("cur", t.text());
+        t.data("cur", t.text());
         inputHere(this, function (input) {
             var upd = input.val().trim();
             if (!upd.match(/^\D/)) {
                 wr.alert("Project name cannot start with a number");
                 return false;
-            } else if (upd !== t.attr("cur")) {
-                $.post(t.attr("pid") + "/rename", {
+            } else if (upd !== t.data("cur")) {
+                $.post(t.data("pid") + "/rename", {
                     "name": upd
                 }, shouldNotHaveData);
             }
             return true;
         });
-    });
-
-
-
-
-
-    /********************************************************
-     * Generate JavaScript from flowchart
-     ********************************************************/
-    $("#gen_js").click(function () {
-        if (!wr.ready()) {
-            wr.alert("Cannot generate JavaScript,\n there are errors in this " +
-                    "project\n\n" +
-                    "The problems have been highligted, \n" +
-                    " please check all functions");
-            return;
-        }
-
-        var genFunc = function (name) {
-            // function declaration
-            var code = "function " + name + "(";
-            $("#vars_" + name + " .parameter").each(function () {
-                var t = $(this);
-                var n = t.children("input").val();
-                if (!t.hasClass("bottom") && n !== "") {
-                    code += n + ", ";
-                }
-            });
-            var len = code.length;
-            if (code[len - 1] === " " && code[len - 2] === ",") {
-                code = code.substr(0, len - 2);
-            }
-            code += ") {\n";
-            // add variable declarations into the function
-            $("#vars_" + name + " .variable").filter(function () {
-                var t = $(this);
-                if (t.hasClass("parameter") || t.hasClass("bottom")) {
-                    return false;
-                }
-                return true;
-            }).each(function () {
-                var t = $(this);
-                var n = t.children("input").val();
-                var type = t.find(".type").text();
-                code += "    var " + n + "; // " + type + "\n";
-            });
-            // add instructions
-            var makeIndent = function (amount) {
-                var result = "";
-                for (var i = 0; i < amount; i++) {
-                    result += "    ";
-                }
-                return result;
-            };
-            var addInstruction = function (elem, indent) {
-                var t = $(elem);
-                var c = makeIndent(indent);
-                if (t.children(".start").length) {
-                    return "";
-                } else if (t.children(".input").length) {
-                    c += t.find(".var").text();
-                    c += " = prompt('Enter Input: ');\n";
-                } else if (t.children(".output").length) {
-                    c += "console.log(";
-                    c += t.find(".exp").text() + ");\n";
-                } else if (t.children(".assignment").length) {
-                    c += t.find(".var").text();
-                    c += " = ";
-                    c += t.find(".exp").text() + ";\n";
-                } else if (t.children(".call").length) {
-                    c += t.find(".exp").text() + ";\n";
-                } else if (t.children(".if").length) {
-                    c += "if (" + t.find(".exp").first().text() + ") {\n";
-                    t.children(".if").children("table").children("tbody ")
-                            .children("tr").children("td.right")
-                            .children(".statement").each(
-                            function () {
-                                c += addInstruction(this, indent + 1);
-                            });
-                    c += makeIndent(indent);
-                    c += "} else {\n";
-                    t.find(".left").first().children(".statement").each(
-                            function () {
-                                c += addInstruction(this, indent + 1);
-                            });
-                    c += makeIndent(indent);
-                    c += "}\n";
-                } else if (t.children(".while").length) {
-                    c += "while (" + t.find(".exp").first().text() + ") { \n";
-                    t.find(".loop_body").first().children(".statement").each(
-                            function () {
-                                c += addInstruction(this, indent + 1);
-                            });
-                    c += makeIndent(indent);
-                    c += "}\n";
-                } else if (t.children(".stop").length) {
-                    c += "return ";
-                    c += t.find(".exp").text() + ";\n";
-                }
-                return c;
-            };
-            $("#ins_" + name + " > .statement").each(function () {
-                code += addInstruction(this, 1);
-            });
-            // close function
-            code += "}\n\n";
-            return code;
-        };
-        var program = "";
-        for (var key in wr.functions) {
-            if (key !== "main") {
-                program += genFunc(key);
-            }
-        }
-        program += genFunc("main");
-        program += "main(); // start executing main\n";
-
-        // insert and show generated code
-        var here = $("#js_code > pre > code");
-        here.empty().text(program);
-        hljs.highlightBlock(here[0]);
-        $("#js_code").show();
-        $("#hide_js").show();
-    });
-
-    $("#hide_js").click(function () {
-        $("#js_code").hide();
-        $("#hide_js").hide();
     });
 });

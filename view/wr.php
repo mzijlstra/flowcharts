@@ -1,4 +1,4 @@
-<?php 
+<?php
 global $MY_BASE;
 ?>
 <!DOCTYPE html>
@@ -14,14 +14,14 @@ global $MY_BASE;
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
         <script src="res/js/wr.js"></script>
+        <script src="res/js/states.js"></script>
         <script src="res/js/edit.js"></script>
         <script src="res/js/exec.js"></script>
-        <script src="res/js/states.js"></script>
-        <script src="res/js/lib/highlight.pack.js"></script>
         <script src="res/js/utils.js"></script>
+        <script src="res/js/lib/ace/ace.js" ></script>
     </head>
     <body>
-        <h1 pid="<?= $pid ?>"><?= $pname ?></h1>
+        <h1 data-pid="<?= $pid ?>"><?= $pname ?></h1>
         <div id="projects">
             <div class="arrow_down"></div>
             <div id="project_menu" class="menu">
@@ -38,13 +38,22 @@ global $MY_BASE;
             </div>
         </div>
 
-        <div id="user">
+        <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
             <?php endif; ?>
         </div>
 
+        <div class="view activeView" id="flowcharts_btn">
+            Flowcharts
+        </div>
+        <div class="view" id="javascript_btn">
+            JavaScript
+        </div>
+        <div class="view" id="images_btn">
+            Images
+        </div>
         <div id="workspace" class="edit">            
             <div id="var_area">
                 <div class="separator"></div>
@@ -64,7 +73,7 @@ global $MY_BASE;
                 <div id="fun-names">
                     <span id="add_fun">+</span>
                     <?php foreach ($funcs as $name => $fdata): ?>
-                        <span fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
+                        <span data-fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
                             <span class="cornerb">
                                 <span class="cornerw"></span>
                             </span>
@@ -73,26 +82,17 @@ global $MY_BASE;
                         </span>
                     <?php endforeach; ?>
 
-                    <div id="controls">
-                        <div id="play_pause">
-                            <div id="play_btn">
+                    <div class="controls">
+                        <div class="circle_btn" id="play_pause">
+                            <div id="play_btn" class="play">
                             </div>
                             <div id="pause_btn">
                                 <div class="pause_bar"></div>
                                 <div class="pause_bar"></div>
                             </div>
                         </div>
-                        <div id="reset" class="control">
-                            EDIT
-                        </div>
-                        <div id="delay_disp" class="control">
-                            DELAY <span id="delay">0.5</span>
-                        </div>
-                        <div id="step_btn" class="control">
-                            STEP
-                        </div>
-                        <div id="corner_ctrl">
-                            <div id="corner_menu"></div>
+                        <div id="delay_disp">
+                            <span id="delay">0.5</span>
                         </div>
                     </div>
 
@@ -106,18 +106,41 @@ global $MY_BASE;
                     <?php endforeach; ?>
                 </div> <!-- end instructions -->
 
-                <div id="gen_js" title="Generate JavaScript">JS</div>
-                <div id="output_disp">
-                    <div class="label">INPUT/OUTPUT</div>
-                    <div id="out"> 
-                    </div>
-                </div>
             </div> <!-- end functions -->
         </div> <!-- end workspace -->
 
+        <div id="output_disp">
+            <div class="label">INPUT/OUTPUT</div>
+            <div id="out"> 
+            </div>
+        </div>
+
         <!-- Different types of popup / overlay windows below -->
-        <div id="js_code"><pre><code></code></pre></div>
-        <div id="hide_js"><div id="close_js">&times;</div></div>
+        <div id="js_code">
+            <div id="editor"></div>
+            <div class="controls">
+                <div id="play_js_btn" class="circle_btn">
+                    <div class="play"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="images">
+            <h2>Upload new:</h2>
+            <form action="../images" method="post" enctype="multipart/form-data">
+                <input type="file" name="image" />
+                <input type="hidden" name="pid" value="<?= $pid ?>" />
+                <input type="submit" value="upload" />
+            </form>
+            <h2>Already Uploaded:</h2>
+            <?php foreach ($imgs as $img) : ?>
+                <?php if ($img[0] !== "."): ?>
+                    <h3><?= $img ?></h3>
+                    <img id="<?= $img ?>" src="res/img/<?= $_SESSION['user']['id'] ?>/<?= $img ?>" />
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+
         <div id="projects_disp">
             <table id="project_data">
                 <caption>Projects:</caption>
@@ -127,8 +150,8 @@ global $MY_BASE;
                     <th>Del</th>
                 </tr>
             </table>
+            <div id="hide_proj"><div id="close_proj">&times;</div></div>
         </div>
-        <div id="hide_proj"><div id="close_proj">&times;</div></div>
 
         <div id="overlay"></div>        
         <div id="prompt" class="popup">
@@ -136,7 +159,10 @@ global $MY_BASE;
                 <div class="msg">Please enter input:</div>
                 <div><input type="text" /></div>
             </div>
-            <div class="center"><button>OK</button></div>
+            <div class="center">
+                <button id="prompt_ok">OK</button>
+                <button id="prompt_cancel">Cancel</button>
+            </div>
         </div>
         <div id="confirm" class="popup">
             <div class="popup_content">
@@ -154,7 +180,7 @@ global $MY_BASE;
             <div class="center"><button>OK</button></div>
         </div>
 
-        <footer>Web-Raptor</footer>
+        <footer>Flowcharts</footer>
 
         <div id="ins_menu" class="menu">
             <div class="menu_item" id="add_input">Input</div>

@@ -4,21 +4,43 @@
  * User Controller Class
  *
  * @author mzijlstra 11/14/2014
+ * 
+ * @Controller
  */
 class UserCtrl {
 
-    // set by context on creation
+    /**
+     *
+     * @var type 
+     * @Inject("UserDao")
+     */
     public $userDao;
+    /**
+     *
+     * @var type 
+     * @Inject("ProjectDao")
+     */
     public $projectDao;
+    /**
+     *
+     * @var type 
+     * @Inject("FunctionDao")
+     */
     public $functionDao;
 
-    // POST /login
+    /**
+     * Attempts to login to the application
+     * @global type $MY_BASE base URI of our application
+     * @return string appropriate redirect for success or failure
+     * 
+     * @POST(uri="/login$", sec="none")
+     */
     public function login() {
         global $MY_BASE;
         // start session, and clean any login errors 
         unset($_SESSION['error']);
 
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $email = filter_input(INPUT_POST, "email");
         $pass = filter_input(INPUT_POST, "pass");
 
         // check if this is a valid login
@@ -56,7 +78,13 @@ class UserCtrl {
         }
     }
 
-    // GET /
+    /**
+     * Redirects a successful login to their most recent project
+     * @global string $MY_BASE base URI of the application
+     * @return string redirect to URI of most recent project
+     * 
+     * @GET(uri="/$", sec="user")
+     */
     public function loggedIn() {
         // redirect to the most recent project
         global $MY_BASE;
@@ -65,21 +93,39 @@ class UserCtrl {
         return "Location: $MY_BASE/project/$pid";
     }
 
-    // GET /logout
+    /**
+     * Logs someone out of the application
+     * @return string redirect back to login page
+     * 
+     * @GET(uri="/logout", sec="none")
+     */
     public function logout() {
         session_destroy();
         $_SESSION['error'] = "Logged Out";
         return "Location: login";
     }
 
-    // GET /user
+    /**
+     * Shows all the users
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * 
+     * @GET(uri="/user", sec="admin")
+     */
     public function all() {
         global $VIEW_DATA;
         $VIEW_DATA['users'] = $this->userDao->all();
         return "users.php";
     }
 
-    // GET /user/(\d+)$
+    /**
+     * Shows details for a user
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @global array $VIEW_DATA empty array that we populate with view data
+     * @return string name of view file
+     * 
+     * @GET(uri="/user/(\d+)$", sec="admin")
+     */
     public function details() {
         global $VIEW_DATA;
         global $URI_PARAMS;
@@ -93,17 +139,36 @@ class UserCtrl {
         return "userDetails.php";
     }
 
-    // POST /user
+    /**
+     * Creates a user
+     * @return strng redirect URI
+     * @throws PDOException
+     * 
+     * @POST(uri="/user", sec="admin")
+     */
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
 
-        if (!$first || !$last || !$email || !$pass) {
-            return "userDetails.php";
+        $error = "";
+        if (!$first) {
+            $error .= "first ";
+        }
+        if (!last) {
+            $error .= "last ";
+        }
+        if (!$email) {
+            $error .= "email ";
+        }
+        if (!$pass) {
+            $error .= "pass ";
+        }
+        if ($error) {
+            return "Location: user/add?error=" . urlencode("Incorrect $error");
         }
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
@@ -127,19 +192,35 @@ class UserCtrl {
         return "Location: user/$uid";
     }
 
-    // POST /user/(\d+)
+    /**
+     * Updates a user 
+     * @global array $URI_PARAMS as provided by framework based on request URI
+     * @return string redirect URI
+     * 
+     * @POST(uri="/user/(\d+)$", sec="admin")
+     */
     public function update() {
         global $URI_PARAMS;
         $uid = $URI_PARAMS[1];
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
         $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
         $pass = filter_input(INPUT_POST, "pass");
 
-        if (!$first || !$last || !$email) {
-            // FIXME set $VIEW_DATA and redirect back
+        $error = "";
+        if (!$first) {
+            $error .= "first ";
+        }
+        if (!last) {
+            $error .= "last ";
+        }
+        if (!$email) {
+            $error .= "email ";
+        }
+        if ($error) {
+            return "Location: $uid?error=" . urlencode("Incorrect $error");
         }
 
         $actv = 1;

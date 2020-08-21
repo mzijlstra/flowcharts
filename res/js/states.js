@@ -3,19 +3,18 @@
  Author     : mzijlstra
  */
 
-var wr; // global object declared in wr.js
-
-$(function () {
+var wr = (function (wr) {
     "use strict";
 
     /*****************************************************
-     * The 3 different states that the program can be in
+     *          --- Flowcharts States ---
+     * Can be in 3 different states: edit, play, pause 
      * The code below uses the state pattern for the states
      *****************************************************/
+
+    // private variables for different HTML elements used in this view
     var play_btn = $("#play_btn");
     var pause_btn = $("#pause_btn");
-    var delay_disp = $('#delay_disp');
-    var step_btn = $('#step_btn');
     var workspace = $("#workspace");
     var variables = $("#variables");
     var stack = $("#stack");
@@ -25,14 +24,17 @@ $(function () {
     var toPlayState = function () {
         pause_btn.css("display", "block");
         play_btn.css("display", "none");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
         wr.state = states.play;
 
         // if we're not executing, start executing main
         if (wr.curfrm === -1) {
             $("#out").empty();
             $(".frame").detach();
+
+            // close all previously opened GfxWindow popups 
+            wr.eval("$__closePopups()");
+
+            // start the execution
             wr.doCall("main");
         }
         wr.play();
@@ -40,8 +42,6 @@ $(function () {
     var toEditState = function () {
         pause_btn.css("display", "none");
         play_btn.css("display", "block");
-        step_btn.css("display", "none");
-        delay_disp.css("display", "block");
         workspace.removeClass("exec");
         workspace.addClass("edit");
         stack.hide();
@@ -53,6 +53,17 @@ $(function () {
         clearTimeout(wr.playing);
         wr.state = states.edit;
 
+        // find which function we're executing
+        var goto = $(".fun").first();
+        if (wr.stack.length) {
+            var fun = wr.stack[wr.curfrm].name;
+            $("#fun-names .name").each(function (i, e) {
+                if ($(e).text() === fun) {
+                    goto = $(e);
+                }
+            });
+        }
+
         // clear the stack, and the HTML frames (both data and instruction)
         wr.stack = [];
         wr.curfrm = -1;
@@ -61,14 +72,12 @@ $(function () {
         stack.hide();
         output.hide();
 
-        // show main function
-        $(".fun").first().click();
+        // show function we were running now available for edit
+        goto.click();
     };
     var toPauseState = function () {
         pause_btn.css("display", "none");
         play_btn.css("display", "block");
-        step_btn.css("display", "block");
-        delay_disp.css("display", "none");
         clearTimeout(wr.playing);
         wr.state = states.pause;
     };
@@ -108,7 +117,10 @@ $(function () {
             },
             "reset": function () {
                 // does nothing in this state
-            }
+            },
+            // variables specific to the edit state
+            "curfun": 'main', // the chart currently being edited
+            "curvars": wr.functions.main // the variables for that chart            
         },
         "play": {
             "name": "play",
@@ -131,16 +143,81 @@ $(function () {
     // we start in the edit state
     wr.state = states.edit;
 
-    // Hook up button clicks that move us between the states
-    $("#play_pause").click(function () {
+    return wr;
+}(wr));
+
+// on page load, execute setup and hook up event handlers
+$(function () {
+    // switch to the correct view on page load
+    (function () {
+        var hash = window.location.hash;
+        if (hash) {
+            var goto;
+            // show the flowchart for given function
+            if (hash.substr(0, 5) === "#fun_") {
+                var fun = hash.substring(5, hash.length);
+                $("#fun-names .name").each(function (i, e) {
+                    if ($(e).text() === fun) {
+                        goto = $(e);
+                    }
+                });
+            } else {
+                // show javascript or images
+                goto = $(window.location.hash + "_btn");
+            }
+            goto.click();
+        }
+    }());
+
+
+    /************************************************
+     *          --- The Flowcharts View --- 
+     ************************************************/
+    // when clicking the flowcharts btn, switch to the flowcharts view
+    $("#flowcharts_btn").click(function () {
+        $("#js_code").hide();
+        $("#images").hide();
+        $("#output_disp").hide();
+        $(".activeView").removeClass("activeView");
+        $("#flowcharts_btn").addClass("activeView");
+        window.location.assign("#");
+    });
+
+    // When the user clicks in the instructions area while in play or pause
+    $("#functions").click(function (evt) {
+        var t = $(evt.target);
+        if (wr.state.name === "play") {
+            wr.state.playpause();
+        } else if (wr.state.name === "pause") {
+            if (wr.stack[wr.curfrm] === undefined) {
+                // if there is nothing left to execute, go back to edit
+                wr.state.reset();
+                return;
+            }
+            // if they click in the general white space 
+            // while there is something to execute
+            if (t.hasClass("input")
+                    || t.hasClass("output")
+                    || t.hasClass("assignment")
+                    || t.hasClass("diamond")
+                    || t.hasClass("call")
+                    || t.hasClass("statement")
+                    || t.hasClass("connection")) {
+                wr.step();
+            } else { // otherwise they clicked on something to edit
+                wr.state.reset();
+            }
+        }
+    });
+
+    // clicking the play / pause button on the flowcharts view
+    $("#play_pause").click(function (evt) {
         wr.state.playpause();
+        evt.stopPropagation();
     });
-    $("#reset").click(function () {
-        wr.state.reset();
-    });
-    $("#step_btn").click(wr.step);
-    // and the control to change the delay between steps
-    $("#delay_disp").click(function () {
+
+    // the delay control to change the delay between steps
+    $("#delay_disp").click(function (evt) {
         var t = $(this);
         var delay = $("#delay");
         var input = $("<input>");
@@ -163,15 +240,12 @@ $(function () {
         });
         t.append(input);
         input.focus();
+        evt.stopPropagation();
     });
 
-
-
-
-
     /*****************************************************
-     * The 'compile' check for the different statements
-     * This is used before switching to the play state
+     * The 'compile' check for the different statements;
+     * used before switching to the flowcharts play state
      *****************************************************/
     $(".statement > .start").each(function () {
         $(this).parent()[0].ready = function () {
@@ -196,7 +270,7 @@ $(function () {
             if (name === "") {
                 t.addClass("name_error");
                 return false;
-            } 
+            }
             var type = $(wr.functions[func][name]).prev().find(".type").text();
             // type will be empty for arary and object index
             if (type && type !== "string") {
@@ -206,10 +280,10 @@ $(function () {
             return true;
         };
     });
-    // outputs are ready if their expression evaluates to a string
+    // outputs are always ready (no longer require expression to be string)
     $(".statement > .output").each(function () {
         $(this).parent()[0].ready = function () {
-            return wr.verifyType($(this).find(".exp")[0], "string", "silent");
+            return true;
         };
     });
     // assignments are ready if their variable and expression have same type
@@ -244,5 +318,189 @@ $(function () {
         $(this).parent()[0].ready = function () {
             return wr.verifyType($(this).find(".exp")[0], "boolean", "silent");
         };
+    });
+
+
+
+    /********************************************************
+     *          --- The JavaScript View ---
+     * Generate JavaScript from flowchart
+     ********************************************************/
+    // setup the editor for the JavaScript view on page load
+    var editor;
+    editor = ace.edit("editor");
+    editor.setTheme("ace/theme/clouds");
+    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setUseSoftTabs(true);
+    if (wr) {
+        wr.editor = editor;
+    }
+
+
+    $("#javascript_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
+        if (!wr.ready()) {
+            wr.alert("Cannot generate JavaScript,\n there are errors in this " +
+                    "project\n\n" +
+                    "The problems have been highligted, \n" +
+                    " please check all functions");
+            return;
+        }
+
+        // generates JS code for function based on flowchart
+        var genFunc = function (name) {
+            // generate function signature
+            var code = "function " + name + "(";
+            $("#vars_" + name + " .parameter").each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                if (!t.hasClass("bottom") && n !== "") {
+                    code += n + ", ";
+                }
+            });
+            var len = code.length;
+            if (code[len - 1] === " " && code[len - 2] === ",") {
+                code = code.substr(0, len - 2);
+            }
+            var returnType = $("#ins_" + name + " .start .type").text();
+            code += ") { // " + returnType + "\n";
+
+            // add variable declarations into the function
+            var vars = "";
+            $("#vars_" + name + " .variable").filter(function () {
+                var t = $(this);
+                if (t.hasClass("parameter") || t.hasClass("bottom")) {
+                    return false;
+                }
+                return true;
+            }).each(function () {
+                var t = $(this);
+                var n = t.children("input").val();
+                var type = t.find(".type").text();
+                vars += "    var " + n + "; // " + type + "\n";
+            });
+            code += vars;
+            // extra newline to separate vars from instructions
+            if (vars) {
+                code += "\n";
+            }
+
+            // add instructions
+            var makeIndent = function (amount) {
+                var result = "";
+                for (var i = 0; i < amount; i++) {
+                    result += "    ";
+                }
+                return result;
+            };
+            var addInstruction = function (elem, indent) {
+                var t = $(elem);
+                var c = makeIndent(indent);
+                if (t.children(".start").length) {
+                    return "";
+                } else if (t.children(".input").length) {
+                    c += t.find(".var").text();
+                    c += " = prompt('Enter Input: ');\n";
+                } else if (t.children(".output").length) {
+                    c += "console.log(";
+                    c += t.find(".exp").text() + ");\n";
+                } else if (t.children(".assignment").length) {
+                    c += t.find(".var").text();
+                    c += " = ";
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".call").length) {
+                    c += t.find(".exp").text() + ";\n";
+                } else if (t.children(".if").length) {
+                    c += "if (" + t.find(".exp").first().text() + ") {\n";
+                    t.children(".if").children("table").children("tbody ")
+                            .children("tr").children("td.right")
+                            .children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "} else {\n";
+                    t.find(".left").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".while").length) {
+                    c += "while (" + t.find(".exp").first().text() + ") { \n";
+                    t.find(".loop_body").first().children(".statement").each(
+                            function () {
+                                c += addInstruction(this, indent + 1);
+                            });
+                    c += makeIndent(indent);
+                    c += "}\n";
+                } else if (t.children(".stop").length) {
+                    c += "\n" + makeIndent(indent);
+                    c += "return ";
+                    c += t.find(".exp").text() + ";\n";
+                }
+                return c;
+            };
+            $("#ins_" + name + " > .statement").each(function () {
+                var ins = addInstruction(this, 1);
+                code += ins;
+            });
+            // close function
+            code += "}\n\n";
+            return code;
+        };
+        var program = "";
+        for (var key in wr.functions) {
+            if (key !== "main") {
+                program += genFunc(key);
+            }
+        }
+        program += genFunc("main");
+        program += "main(); // start executing main\n";
+
+        // insert and show generated code
+        editor.setValue(program);
+        editor.selection.clearSelection();
+        editor.focus();
+
+        $(".activeView").removeClass("activeView");
+        $("#javascript_btn").addClass("activeView");
+        $("#images").hide();
+        $("#js_code").show();
+        window.location.assign("#javascript");
+    });
+
+    // the play button on the javascript view
+    $("#play_js_btn").click(function () {
+        var program = editor.getValue();
+        $("#out").empty();
+        $("#output_disp").show();
+        var sandbox = $('#sandbox')[0].contentWindow;
+        sandbox.eval("$__closePopups()");
+        try {
+            sandbox.eval(program);
+        } catch (e) {
+            wr.iolog(e, "err");
+        }
+    });
+
+
+    /********************************************************
+     *          --- The Images View ---
+     ********************************************************/
+    $("#images_btn").click(function () {
+        if (wr.state.name !== "edit") {
+            wr.state.reset();
+        }
+
+        $("#js_code").hide();
+        $("#output_disp").hide();
+        $("#images").show();
+        $(".activeView").removeClass("activeView");
+        $("#images_btn").addClass("activeView");
+        window.location.assign("#images");
     });
 });
