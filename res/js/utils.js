@@ -462,6 +462,9 @@ var $__gfxWindows = [];
         win.toString = function () {
             return "[object CanvasWindow]";
         };
+        // public data
+        win.width = width;
+        win.height = height;
         return win;
     };
     window.$__closePopups = function () {
