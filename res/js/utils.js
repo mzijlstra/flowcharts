@@ -250,11 +250,11 @@ var $__gfxWindows = [];
     };
 
     // draws image without repositioning or scaling
-    var loadImage = function (file) {
+    var loadImage = function (file, x = 0, y = 0) {
         var canvas = $(this.document).find("#canvas")[0];
         var ctx = canvas.getContext('2d');
         var img = window.parent.document.getElementById(file);
-        ctx.drawImage(img, 0, 0);
+        ctx.drawImage(img, x, y);
     };
 
     // draws image with repositioning and scaling
@@ -430,7 +430,7 @@ var $__gfxWindows = [];
         // create the window object
         var parent_x = $(document).width();
         var features = "top=250,left=" + (parent_x - width) + ",width=" +
-                (width + 1) + ",height=" + (height + 4) + ",menubar=0";
+            (width + 1) + ",height=" + (height + 4) + ",menubar=0";
 
         var win = window.open(undefined, "popup" + $__popupCount, features);
         if (!win) {
@@ -443,9 +443,9 @@ var $__gfxWindows = [];
 
         // create the window content
         var body = $(win.document.body);
-        body.css({"margin": "0"});
+        body.css({ "margin": "0" });
         var canvas = $("<canvas id='canvas' width='" + width + "' height='" +
-                height + "'>");
+            height + "'>");
         body.append(canvas);
         var ctx = $(body).find("#canvas")[0].getContext("2d");
         ctx.fillStyle = color;
@@ -484,4 +484,3 @@ var $__gfxWindows = [];
 }());
 
 
- 
