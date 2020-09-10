@@ -170,7 +170,7 @@ var $__gfxWindows = [];
     var show = function () {
         this.display.show();
         return this;
-    };
+    };var
     var hide = function () {
         this.display.hide();
         return this;
@@ -462,6 +462,9 @@ var $__gfxWindows = [];
         win.toString = function () {
             return "[object CanvasWindow]";
         };
+        // public data
+        win.width = width;
+        win.height = height;
         return win;
     };
     window.$__closePopups = function () {
@@ -482,5 +485,3 @@ var $__gfxWindows = [];
     }());
 
 }());
-
-
