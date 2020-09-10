@@ -380,7 +380,7 @@ $(function () {
                 var t = $(this);
                 var n = t.children("input").val();
                 var type = t.find(".type").text();
-                vars += "    var " + n + "; // " + type + "\n";
+                vars += "    var " + n + "; /* " + type + " */\n";
             });
             code += vars;
             // extra newline to separate vars from instructions
