@@ -57,7 +57,7 @@ class ProjectWS {
         $uid = $_SESSION['user']['id'];
         $order = filter_input(INPUT_GET, "order");
         $direction = filter_input(INPUT_GET, "direction");
-        if ($order === "") {
+        if ($order == "") {
             $order = "created";
         }
         if ($direction == "") {
