@@ -24,7 +24,8 @@ preg_match("|$MY_BASE(/.*)|", $the_uri, $matches);
 $MY_URI = $matches[1];
 
 $MY_METHOD = filter_input(INPUT_SERVER, "REQUEST_METHOD", FILTER_SANITIZE_STRING);
-$URI_PARAMS = array(); // populated with URI parameters on URI match in routing
+$MY_MAPPING = array(); // populated by the code below
+$URI_PARAMS = array(); // populated with URI parameters on URI match in security
 $VIEW_DATA = array(); // populated by controller, and used by view
 
 /* *****************************
@@ -34,10 +35,16 @@ $VIEW_DATA = array(); // populated by controller, and used by view
 // TODO move these into the AnnotationContext, so that it automatically adds
 // an additional spl_autoload function for each directory it searches
 spl_autoload_register(function ($class) {
-    include 'control/' . $class . '.class.php';
+    $file = 'control/' . $class . '.class.php';
+    if (file_exists($file)) {
+        include $file;
+    }
 });
 spl_autoload_register(function ($class) {
-    include 'model/' . $class . '.class.php';
+    $file =  'model/' . $class . '.class.php';
+    if (file_exists($file)) {
+        include $file;
+    }
 });
 
 if (DEVELOPMENT) {
@@ -48,6 +55,21 @@ if (DEVELOPMENT) {
     eval($ac->context);
 } else {
     require 'context.php';
+}
+
+// find our mapping (first step for security and routing)
+$uris = $mappings[$MY_METHOD];
+foreach ($uris as $pattern => $mapping) {
+    if (preg_match($pattern, $MY_URI, $URI_PARAMS)) {
+        $MY_MAPPING = $mapping;
+        break;
+    }
+}
+
+// If there was no mapping send out a 404
+if ($MY_MAPPING === []) {
+    require "view/error/404.php";
+    exit();
 }
 
 // always start the session context

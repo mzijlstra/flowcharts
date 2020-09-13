@@ -1,66 +1,38 @@
 <?php
-$security = array(
-	'|GET@/login$|' => 'none',
-	'|GET@/logout|' => 'none',
-	'|POST@/login$|' => 'none',
-	'|GET@/sandbox$|' => 'user',
-	'|GET@/project/(\d+)$|' => 'user',
-	'|POST@/images|' => 'user',
-	'|GET@/project/other_recent|' => 'user',
-	'|GET@/project$|' => 'user',
-	'|GET@/user/(\d+)/project$|' => 'user',
-	'|POST@/project/add/(\D[^/]+)$|' => 'user',
-	'|POST@/project/(\d+)/rename$|' => 'user',
-	'|POST@/project/(\d+)/delete|' => 'user',
-	'|POST@/project/(\d+)/(\w+)|' => 'user',
-	'|POST@/function/(\d+)/vars|' => 'user',
-	'|POST@/function/(\d+)/ins|' => 'user',
-	'|POST@/function/(\d+)/rename|' => 'user',
-	'|POST@/function/(\d+)/delete|' => 'user',
-	'|GET@/$|' => 'user',
-	'|GET@/user/add|' => 'admin',
-	'|GET@/user/(\d+)/project/(\d+)$|' => 'admin',
-	'|GET@/user/(\d+)/project/other_recent|' => 'admin',
-	'|GET@/user|' => 'admin',
-	'|GET@/user/(\d+)$|' => 'admin',
-	'|POST@/user|' => 'admin',
-	'|POST@/user/(\d+)$|' => 'admin',
-);
-$view_ctrl = array(
-	'|/login$|' => 'login.php',
-	'|/sandbox$|' => 'sandbox.php',
-	'|/user/add|' => 'userDetails.php',
-);
-$get_ctrl = array(
-	'|/project/(\d+)$|' => 'ProjectCtrl@getProject',
-	'|/user/(\d+)/project/(\d+)$|' => 'ProjectCtrl@getProject',
-	'|/project/other_recent|' => 'ProjectWS@getOtherRecent',
-	'|/user/(\d+)/project/other_recent|' => 'ProjectWS@getOtherRecent',
-	'|/project$|' => 'ProjectWS@getProjects',
-	'|/user/(\d+)/project$|' => 'ProjectWS@getUserProjects',
-	'|/$|' => 'UserCtrl@loggedIn',
-	'|/logout|' => 'UserCtrl@logout',
-	'|/user|' => 'UserCtrl@all',
-	'|/user/(\d+)$|' => 'UserCtrl@details',
-);
-$post_ctrl = array(
-	'|/images|' => 'ProjectCtrl@uploadImages',
-	'|/project/add/(\D[^/]+)$|' => 'ProjectWS@create',
-	'|/project/(\d+)/rename$|' => 'ProjectWS@rename',
-	'|/project/(\d+)/delete|' => 'ProjectWS@delete',
-	'|/project/(\d+)/(\w+)|' => 'ProjectWS@addFunction',
-	'|/function/(\d+)/vars|' => 'ProjectWS@updVars',
-	'|/function/(\d+)/ins|' => 'ProjectWS@updIns',
-	'|/function/(\d+)/rename|' => 'ProjectWS@renameFunction',
-	'|/function/(\d+)/delete|' => 'ProjectWS@deleteFunction',
-	'|/login$|' => 'UserCtrl@login',
-	'|/user|' => 'UserCtrl@create',
-	'|/user/(\d+)$|' => 'UserCtrl@update',
+$mappings = array(
+	"GET" => array(
+		'|/sandbox$|' => ['sec' => 'user', 'route' => 'ProjectCtrl@getSandbox'],
+		'|^/project/(\d+)$|' => ['sec' => 'user', 'route' => 'ProjectCtrl@getProject'],
+		'|^/user/(\d+)/project/(\d+)$|' => ['sec' => 'admin', 'route' => 'ProjectCtrl@getProject'],
+		'|^/project/other_recent$|' => ['sec' => 'user', 'route' => 'ProjectWS@getOtherRecent'],
+		'|^/user/(\d+)/project/other_recent$|' => ['sec' => 'admin', 'route' => 'ProjectWS@getOtherRecent'],
+		'|^/project$|' => ['sec' => 'user', 'route' => 'ProjectWS@getProjects'],
+		'|^/user/(\d+)/project$|' => ['sec' => 'user', 'route' => 'ProjectWS@getUserProjects'],
+		'|^/login$|' => ['sec' => 'none', 'route' => 'UserCtrl@getLogin'],
+		'|^/$|' => ['sec' => 'user', 'route' => 'UserCtrl@loggedIn'],
+		'|^/logout$|' => ['sec' => 'none', 'route' => 'UserCtrl@logout'],
+		'|^/user$|' => ['sec' => 'admin', 'route' => 'UserCtrl@all'],
+		'|^/user/(\d+)$|' => ['sec' => 'admin', 'route' => 'UserCtrl@details'],
+	),
+	"POST" => array(
+		'|^/images|' => ['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
+		'|^/project/add/(\D[^/]+)$|' => ['sec' => 'user', 'route' => 'ProjectWS@create'],
+		'|^/project/(\d+)/rename$|' => ['sec' => 'user', 'route' => 'ProjectWS@rename'],
+		'|^/project/(\d+)/delete|' => ['sec' => 'user', 'route' => 'ProjectWS@delete'],
+		'|^/project/(\d+)/(\w+)|' => ['sec' => 'user', 'route' => 'ProjectWS@addFunction'],
+		'|^/function/(\d+)/vars|' => ['sec' => 'user', 'route' => 'ProjectWS@updVars'],
+		'|^/function/(\d+)/ins|' => ['sec' => 'user', 'route' => 'ProjectWS@updIns'],
+		'|^/function/(\d+)/rename|' => ['sec' => 'user', 'route' => 'ProjectWS@renameFunction'],
+		'|^/function/(\d+)/delete|' => ['sec' => 'user', 'route' => 'ProjectWS@deleteFunction'],
+		'|^/login$|' => ['sec' => 'none', 'route' => 'UserCtrl@login'],
+		'|^/user$|' => ['sec' => 'admin', 'route' => 'UserCtrl@create'],
+		'|^/user/(\d+)$|' => ['sec' => 'admin', 'route' => 'UserCtrl@update'],
+	),
 );
 class Context {
     private $objects = array();
     
-    public function Context() {
+    public function __construct() {
         $db = new PDO("mysql:dbname=web_raptor;host=localhost", "root", "root");
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->objects["DB"] = $db;

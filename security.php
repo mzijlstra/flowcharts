@@ -23,18 +23,8 @@ function isLoggedIn() {
     }
 }
 
-// find the security policy for the current URI using $security from context
-$my_policy = "admin"; // default policy if no URI found
-$sec_test = "$MY_METHOD@$MY_URI";
-foreach ($security as $pattern => $policy) {
-    if (preg_match($pattern, $sec_test)) {
-        $my_policy = $policy;
-        break;
-    }
-}
-
-// apply the (found) security policy
-switch ($my_policy) {
+// apply the security policy
+switch ($MY_MAPPING['sec']) {
     case "none":
         break;
     case "user":

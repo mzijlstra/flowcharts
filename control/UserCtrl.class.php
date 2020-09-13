@@ -29,11 +29,27 @@ class UserCtrl {
     public $functionDao;
 
     /**
+     * Simple mapping to the login page
+     * @GET(uri="|^/login$|", sec="none")
+     */
+    public function getLogin() {
+        return "login.php";
+    }
+
+    /**
+     * Simple mapping to get the add user page
+     * @Get(uri="|^/user/add$|", sec="admin")
+     */
+    public function getAddUser() {
+        return "userDetails.php";
+    }
+
+    /**
      * Attempts to login to the application
      * @global type $MY_BASE base URI of our application
      * @return string appropriate redirect for success or failure
      * 
-     * @POST(uri="/login$", sec="none")
+     * @POST(uri="|^/login$|", sec="none")
      */
     public function login() {
         global $MY_BASE;
@@ -83,7 +99,7 @@ class UserCtrl {
      * @global string $MY_BASE base URI of the application
      * @return string redirect to URI of most recent project
      * 
-     * @GET(uri="/$", sec="user")
+     * @GET(uri="|^/$|", sec="user")
      */
     public function loggedIn() {
         // redirect to the most recent project
@@ -97,7 +113,7 @@ class UserCtrl {
      * Logs someone out of the application
      * @return string redirect back to login page
      * 
-     * @GET(uri="/logout", sec="none")
+     * @GET(uri="|^/logout$|", sec="none")
      */
     public function logout() {
         session_destroy();
@@ -110,7 +126,7 @@ class UserCtrl {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      * 
-     * @GET(uri="/user", sec="admin")
+     * @GET(uri="|^/user$|", sec="admin")
      */
     public function all() {
         global $VIEW_DATA;
@@ -124,7 +140,7 @@ class UserCtrl {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file
      * 
-     * @GET(uri="/user/(\d+)$", sec="admin")
+     * @GET(uri="|^/user/(\d+)$|", sec="admin")
      */
     public function details() {
         global $VIEW_DATA;
@@ -144,7 +160,7 @@ class UserCtrl {
      * @return strng redirect URI
      * @throws PDOException
      * 
-     * @POST(uri="/user", sec="admin")
+     * @POST(uri="|^/user$|", sec="admin")
      */
     public function create() {
         $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
@@ -197,7 +213,7 @@ class UserCtrl {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string redirect URI
      * 
-     * @POST(uri="/user/(\d+)$", sec="admin")
+     * @POST(uri="|^/user/(\d+)$|", sec="admin")
      */
     public function update() {
         global $URI_PARAMS;

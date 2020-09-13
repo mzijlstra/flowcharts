@@ -1,4 +1,3 @@
-<?php /** @ViewControl(uri="/sandbox$", sec="user") */?>
 <!DOCTYPE html>
 <html>
     <head>

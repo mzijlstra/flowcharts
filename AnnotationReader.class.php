@@ -8,24 +8,19 @@
 
 class AnnotationReader {
 
-    public $sec = array();
-    public $view_ctrl = array();
-    public $get_ctrl = array();
-    public $post_ctrl = array();
+    // public $security = array();
+    // public $routing = array();
+    public $mappings = array();
     public $repositories = array();
     public $controllers = array();
     public $context = "";
 
     /**
-     * Constructor, initiallizes internal sec array based on global
-     * 
-     * @global type $SEC_LVLS
+     * Constructor, initiallizes internal mappings arrays
      */
-    public function AnnotationReader() {
-        global $SEC_LVLS;
-        foreach ($SEC_LVLS as $lvl) {
-            $this->sec[$lvl] = array();
-        }
+    public function __construct() {
+        $this->mappings["GET"] = array();
+        $this->mappings["POST"] = array();
     }
 
     /**
@@ -78,37 +73,15 @@ class AnnotationReader {
     }
 
     /**
-     * Validate the content of a @ViewControl annotation
-     * 
-     * @param type $attrs
-     * @param type $doc_com
-     * @throws Exception
-     */
-    private function validate_viewcontrol_annotation(&$attrs, $doc_com) {
-        if (!isset($attrs['uri']) && !isset($attrs['value'])) {
-            throw new Exception("@ViewControl missing uri "
-            . "attribute in: " . $doc_com);
-        }
-        if (!isset($attrs['uri']) && isset($attrs['value'])) {
-            $attrs['uri'] = $attrs['value'];
-        }
-        if (!isset($attrs['sec'])) {
-            $attrs['sec'] = "none";
-        }
-        if (!isset($this->sec[$attrs["sec"]])) {
-            throw new Exception("Bad sec value in "
-            . "@ViewControl found in: " . $doc_com);
-        }
-    }
-
-    /**
      * Validate the content of @GET and @POST annotations
      * 
      * @param type $attrs
      * @param type $com
+     * @global type $SEC_LVLS
      * @throws Exception
      */
     private function validate_request_annotation(&$attrs, $com) {
+        global $SEC_LVLS;
         if (!isset($attrs['uri']) && !isset($attrs['value'])) {
             throw new Exception("@GET or @POST missing uri attribute in: $com");
         }
@@ -118,7 +91,7 @@ class AnnotationReader {
         if (!isset($attrs['sec'])) {
             $attrs['sec'] = "none";
         }
-        if (!isset($this->sec[$attrs["sec"]])) {
+        if (!in_array($attrs["sec"], $SEC_LVLS)) {
             throw new Exception("Bad sec value in @GET or @POST found in: $com");
         }
     }
@@ -129,19 +102,18 @@ class AnnotationReader {
      * @param string $req GET or POST
      * @param string $type ctrl or ws
      */
-    private function map_requests($reflect_class, $req, $type) {
+    private function map_requests($reflect_class, $req) {
         foreach ($reflect_class->getMethods() as $m) {
             $com = $m->getDocComment();
             $match = array();
-            $store = strtolower($req) . "_" . $type;
 
             preg_match_all("#@{$req}\(.*\)#", $com, $match);
             foreach ($match[0] as $a) {
                 $attrs = $this->annotation_attributes("@{$req}", $a);
                 $this->validate_request_annotation($attrs, $a);
                 $method_loc = $reflect_class->getName() . "@" . $m->getName();
-                $this->{$store}[$attrs["uri"]] = $method_loc;
-                $this->sec[$attrs["sec"]][] = "{$req}@" . $attrs["uri"];
+                $mapping = ["sec"=> $attrs["sec"], "route" => $method_loc];
+                $this->mappings[$req][$attrs["uri"]] = $mapping;
             }
         }
     }
@@ -162,20 +134,6 @@ class AnnotationReader {
     }
 
     /**
-     * Processes files which were found to have a @ViewControl annotation
-     * 
-     * @param type $doc_com
-     * @param type $file
-     */
-    private function check_viewcontrol($doc_com, $file) {
-        $attrs = $this->annotation_attributes("@ViewControl", $doc_com);
-        $this->validate_viewcontrol_annotation($attrs, $doc_com);
-        // remove 'view/' from file
-        $this->view_ctrl[$attrs["uri"]] = substr($file, 5);
-        $this->sec[$attrs["sec"]][] = "GET@" . $attrs["uri"];
-    }
-
-    /**
      * Checks if classes have a @Controller or a @WebService annotation, and
      * the processes them as needed
      * 
@@ -188,39 +146,8 @@ class AnnotationReader {
                 preg_match("#@WebService#", $doc)) {
             $to_inject = $this->to_inject($r);
             $this->controllers[$class] = $to_inject;
-            $this->map_requests($r, "GET", "ctrl");
-            $this->map_requests($r, "POST", "ctrl");
-        }
-    }
-
-    /**
-     * Helper to scan the view direcotry for @ViewControl annotations at the
-     * top of view files
-     */
-    private function scan_view($directory) {
-        $files = scandir($directory);
-        foreach ($files as $file) {
-            if ($file{0} === ".") {
-                continue;
-            }
-            // go into and process sub-directories
-            $file_loc = $directory . DIRECTORY_SEPARATOR . $file;
-            if (is_dir($file_loc)) {
-                $this->scan_view($file_loc);
-                continue;
-            }
-
-            $text = file_get_contents($file_loc);
-            $tokens = token_get_all($text);
-
-            // Only look at the first 10 tokens, 
-            // @ViewControl should be near the top of the file
-            for ($i = 0; $i < 10 && $i < count($tokens); $i++) {
-                if (is_array($tokens[$i]) && $tokens[$i][0] === T_DOC_COMMENT &&
-                        preg_match("#@ViewControl\(.*?\)#", $tokens[$i][1])) {
-                    $this->check_viewcontrol($tokens[$i][1], $file_loc);
-                }
-            }
+            $this->map_requests($r, "GET");
+            $this->map_requests($r, "POST");
         }
     }
 
@@ -235,49 +162,12 @@ class AnnotationReader {
         foreach ($files as $file) {
             $mats = array();
             // skip hidden files, directories, files that are not .class.php
-            if ($file{0} === "." || is_dir($file) ||
+            if ($file[0] === "." || is_dir($file) ||
                     !preg_match("#(.*)\.class\.php#i", $file, $mats)) {
                 continue;
             }
             $this->{$function}($mats[1]);
         }
-    }
-
-    /**
-     * Generate the code (text) to output the security array
-     */
-    private function generate_security_array() {
-        $this->context .= "\$security = array(\n";
-        foreach ($this->sec as $lvl => $items) {
-            foreach ($items as $item) {
-                $this->context .= "\t'|$item|' => '$lvl',\n";
-            }
-        }
-        $this->context .= ");\n";
-    }
-
-    /**
-     * Generate the code (text) to output the routing arrays:
-     *  - $view_ctrl
-     *  - $get_ctrl
-     *  - $post_ctrl
-     */
-    private function generate_routing_arrays() {
-        $this->context .= "\$view_ctrl = array(\n";
-        foreach ($this->view_ctrl as $uri => $file) {
-            $this->context .= "\t'|$uri|' => '$file',\n";
-        }
-        $this->context .= ");\n";
-        $this->context .= "\$get_ctrl = array(\n";
-        foreach ($this->get_ctrl as $uri => $method_loc) {
-            $this->context .= "\t'|$uri|' => '$method_loc',\n";
-        }
-        $this->context .= ");\n";
-        $this->context .= "\$post_ctrl = array(\n";
-        foreach ($this->post_ctrl as $uri => $method_loc) {
-            $this->context .= "\t'|$uri|' => '$method_loc',\n";
-        }
-        $this->context .= ");\n";
     }
 
     /**
@@ -308,7 +198,6 @@ IF_START;
      */
     public function scan() {
         $this->scan_classes("model", "check_repository");
-        $this->scan_view("view");
         $this->scan_classes("control", "check_controller");
         return $this;
     }
@@ -319,8 +208,19 @@ IF_START;
      * @return AnnotationContext self for call chaining
      */
     public function create_context() {
-        $this->generate_security_array();
-        $this->generate_routing_arrays();
+        // generate the mappings array
+        $this->context .= "\$mappings = array(\n";
+        foreach ($this->mappings as $method => $items) {
+            $this->context .= "\t\"$method\" => array(\n";
+            foreach ($items as $uri => $mapping) {
+                $sec = $mapping['sec'];
+                $route = $mapping['route'];
+                $this->context .= "\t\t'$uri' => ";
+                $this->context .= "['sec' => '$sec', 'route' => '$route'],\n";
+            }
+            $this->context .= "\t),\n";
+        }
+        $this->context .= ");\n";
 
         // these values are set in frontController.php
         $dsn = DSN;
@@ -331,7 +231,7 @@ IF_START;
 class Context {
     private \$objects = array();
     
-    public function Context() {
+    public function __construct() {
         \$db = new PDO("$dsn", "$user", "$pass");
         \$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         \$this->objects["DB"] = \$db;

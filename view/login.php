@@ -1,4 +1,3 @@
-<?php /** @ViewControl(uri="/login$", sec="none") */?>
 <!DOCTYPE html>
 <!--
     Created on : Aug 29, 2014, 13:00:01 PM

@@ -21,13 +21,22 @@ class ProjectCtrl {
     public $functionDao;
 
     /**
+     * Simple mapping to get the sandbox inside which user code will run
+     * 
+     * @GET(uri="|/sandbox$|", sec="user")
+     */
+    public function getSandbox() {
+        return "sandbox.php";
+    }
+
+    /**
      * Show project based on id
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file to be rendered
      * 
-     * @GET(uri="/project/(\d+)$", sec="user")
-     * @GET(uri="/user/(\d+)/project/(\d+)$", sec="admin")
+     * @GET(uri="|^/project/(\d+)$|", sec="user")
+     * @GET(uri="|^/user/(\d+)/project/(\d+)$|", sec="admin")
      */
     public function getProject() {
         global $URI_PARAMS;
@@ -102,7 +111,7 @@ class ProjectCtrl {
      * Processes an image upload request
      * @return string redirect to current images for this project
      * 
-     * @POST(uri="/images", sec="user")
+     * @POST(uri="|^/images|", sec="user")
      */
     public function uploadImages() {
         $pid = filter_input(INPUT_POST, "pid");
