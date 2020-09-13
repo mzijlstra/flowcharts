@@ -15,7 +15,7 @@ $mappings = array(
 		'|^/user/(\d+)$|' => ['sec' => 'admin', 'route' => 'UserCtrl@details'],
 	),
 	"POST" => array(
-		'|^/images|' => ['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
+		'|^/images/(\d+)|' => ['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
 		'|^/project/add/(\D[^/]+)$|' => ['sec' => 'user', 'route' => 'ProjectWS@create'],
 		'|^/project/(\d+)/rename$|' => ['sec' => 'user', 'route' => 'ProjectWS@rename'],
 		'|^/project/(\d+)/delete|' => ['sec' => 'user', 'route' => 'ProjectWS@delete'],

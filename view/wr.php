@@ -127,7 +127,7 @@ global $MY_BASE;
 
         <div id="images">
             <h2>Upload new:</h2>
-            <form action="../images" method="post" enctype="multipart/form-data">
+            <form action="../images/<?= $_SESSION['user']['id'] ?>" method="post" enctype="multipart/form-data">
                 <input type="file" name="image" />
                 <input type="hidden" name="pid" value="<?= $pid ?>" />
                 <input type="submit" value="upload" />

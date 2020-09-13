@@ -111,15 +111,19 @@ class ProjectCtrl {
      * Processes an image upload request
      * @return string redirect to current images for this project
      * 
-     * @POST(uri="|^/images|", sec="user")
+     * @POST(uri="|^/images/(\d+)|", sec="user")
      */
     public function uploadImages() {
+        global $URI_PARAMS;
+
+        $uid = $URI_PARAMS[1];
         $pid = filter_input(INPUT_POST, "pid");
         if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
             $name = $_FILES["image"]["name"];
-            move_uploaded_file($_FILES["image"]["tmp_name"], "res/img/$name");
+            move_uploaded_file($_FILES["image"]["tmp_name"], "res/img/$uid/$name");
         }
-        return "Location: project/$pid#images";
+        // TODO make it switch to the images tab!
+        return "Location: ../project/$pid#images";
     }
 
 }
