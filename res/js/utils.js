@@ -170,7 +170,7 @@ var $__gfxWindows = [];
     var show = function () {
         this.display.show();
         return this;
-    };var
+    };
     var hide = function () {
         this.display.hide();
         return this;
