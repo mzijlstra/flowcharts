@@ -40,9 +40,8 @@ function view($data) {
         htmlView($data);
     } else if ($data) {
         print json_encode($data);
-    } else {
-        throw new Exception("Incorrect view state");
     }
+    // some web service calls don't generate a view / data
 }
 
 // check for redirect flash attributes
