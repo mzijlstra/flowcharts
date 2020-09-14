@@ -65,7 +65,7 @@ class ProjectWS {
         }
         if (!preg_match("/(name|created|accessed)/", $order) ||
                 !preg_match("/(ASC|DESC)/", $direction)) {
-            return "error/500.php";
+            throw new Exception("Invalid SQL - Injection Happening?");
         }
 
         // show all projects for this user
@@ -113,7 +113,7 @@ class ProjectWS {
             $this->projectDao->db->commit();
         } catch (PDOException $e) {
             $this->projectDao->db->rollBack();
-            return "error/500.php";
+            throw $e;
         }
         return $pid;
     }

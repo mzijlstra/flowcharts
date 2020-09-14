@@ -67,6 +67,7 @@ class ProjectCtrl {
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
         $VIEW_DATA['pname'] = $proj['name'];
         $VIEW_DATA['pid'] = $pid;
+        $VIEW_DATA['uid'] = $uid;
         $VIEW_DATA['imgs'] = $this->getImages($uid);
 
         return "wr.php";
@@ -111,12 +112,13 @@ class ProjectCtrl {
      * Processes an image upload request
      * @return string redirect to current images for this project
      * 
-     * @POST(uri="|^/images/(\d+)|", sec="user")
+     * @POST(uri="|/images/(\d+)|", sec="user")
      */
     public function uploadImages() {
         global $URI_PARAMS;
 
         $uid = $URI_PARAMS[1];
+        // TODO check that the given uid is our user's uid, or is admin
         $pid = filter_input(INPUT_POST, "pid");
         if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
             $name = $_FILES["image"]["name"];
