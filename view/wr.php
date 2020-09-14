@@ -39,7 +39,7 @@ global $MY_BASE;
         </div>
 
         <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
-            Hi <?= $_SESSION['user']['first'] ?>! <a href="logout">logout</a>
+            Hi <?= $_SESSION['user']['first'] ?>! <a href="<?= $MY_BASE ?>/logout">logout</a>
             <?php if ($_SESSION['user']['type'] === 'admin') : ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
             <?php endif; ?>
@@ -127,7 +127,7 @@ global $MY_BASE;
 
         <div id="images">
             <h2>Upload new:</h2>
-            <form action="../images/<?= $_SESSION['user']['id'] ?>" method="post" enctype="multipart/form-data">
+            <form action="../images/<?= $uid ?>" method="post" enctype="multipart/form-data">
                 <input type="file" name="image" />
                 <input type="hidden" name="pid" value="<?= $pid ?>" />
                 <input type="submit" value="upload" />
@@ -136,7 +136,7 @@ global $MY_BASE;
             <?php foreach ($imgs as $img) : ?>
                 <?php if ($img[0] !== "."): ?>
                     <h3><?= $img ?></h3>
-                    <img id="<?= $img ?>" src="res/img/<?= $_SESSION['user']['id'] ?>/<?= $img ?>" />
+                    <img id="<?= $img ?>" src="res/img/<?= $uid ?>/<?= $img ?>" />
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
