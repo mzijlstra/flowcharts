@@ -1,32 +1,63 @@
 <?php
+/******************************************************************************* 
+ * DO NOT MODIFY THIS FILE, IT IS GENERATED 
+ * 
+ * When DEVELOPMENT=true this file is generated based on the settings in 
+ * frontController.php and the annotations found in the class files in the 
+ * control and model directories
+ ******************************************************************************/
 $mappings = array(
 	"GET" => array(
-		'|/sandbox$|' => ['sec' => 'user', 'route' => 'ProjectCtrl@getSandbox'],
-		'|^/project/(\d+)$|' => ['sec' => 'user', 'route' => 'ProjectCtrl@getProject'],
-		'|^/user/(\d+)/project/(\d+)$|' => ['sec' => 'admin', 'route' => 'ProjectCtrl@getProject'],
-		'|^/project/other_recent$|' => ['sec' => 'user', 'route' => 'ProjectWS@getOtherRecent'],
-		'|^/user/(\d+)/project/other_recent$|' => ['sec' => 'admin', 'route' => 'ProjectWS@getOtherRecent'],
-		'|^/project$|' => ['sec' => 'user', 'route' => 'ProjectWS@getProjects'],
-		'|^/user/(\d+)/project$|' => ['sec' => 'user', 'route' => 'ProjectWS@getUserProjects'],
-		'|^/login$|' => ['sec' => 'none', 'route' => 'UserCtrl@getLogin'],
-		'|^/$|' => ['sec' => 'user', 'route' => 'UserCtrl@loggedIn'],
-		'|^/logout$|' => ['sec' => 'none', 'route' => 'UserCtrl@logout'],
-		'|^/user$|' => ['sec' => 'admin', 'route' => 'UserCtrl@all'],
-		'|^/user/(\d+)$|' => ['sec' => 'admin', 'route' => 'UserCtrl@details'],
+		'|/sandbox$|' => 
+			['sec' => 'user', 'route' => 'ProjectCtrl@getSandbox'],
+		'|^/project/(\d+)$|' => 
+			['sec' => 'user', 'route' => 'ProjectCtrl@getProject'],
+		'|^/user/(\d+)/project/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'ProjectCtrl@getProject'],
+		'|^/project/other_recent$|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@getOtherRecent'],
+		'|^/user/(\d+)/project/other_recent$|' => 
+			['sec' => 'admin', 'route' => 'ProjectWS@getOtherRecent'],
+		'|^/project$|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@getProjects'],
+		'|^/user/(\d+)/project$|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@getUserProjects'],
+		'|^/login$|' => 
+			['sec' => 'none', 'route' => 'UserCtrl@getLogin'],
+		'|^/$|' => 
+			['sec' => 'user', 'route' => 'UserCtrl@loggedIn'],
+		'|^/logout$|' => 
+			['sec' => 'none', 'route' => 'UserCtrl@logout'],
+		'|^/user$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@all'],
+		'|^/user/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@details'],
 	),
 	"POST" => array(
-		'|^/images/(\d+)|' => ['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
-		'|^/project/add/(\D[^/]+)$|' => ['sec' => 'user', 'route' => 'ProjectWS@create'],
-		'|^/project/(\d+)/rename$|' => ['sec' => 'user', 'route' => 'ProjectWS@rename'],
-		'|^/project/(\d+)/delete|' => ['sec' => 'user', 'route' => 'ProjectWS@delete'],
-		'|^/project/(\d+)/(\w+)|' => ['sec' => 'user', 'route' => 'ProjectWS@addFunction'],
-		'|^/function/(\d+)/vars|' => ['sec' => 'user', 'route' => 'ProjectWS@updVars'],
-		'|^/function/(\d+)/ins|' => ['sec' => 'user', 'route' => 'ProjectWS@updIns'],
-		'|^/function/(\d+)/rename|' => ['sec' => 'user', 'route' => 'ProjectWS@renameFunction'],
-		'|^/function/(\d+)/delete|' => ['sec' => 'user', 'route' => 'ProjectWS@deleteFunction'],
-		'|^/login$|' => ['sec' => 'none', 'route' => 'UserCtrl@login'],
-		'|^/user$|' => ['sec' => 'admin', 'route' => 'UserCtrl@create'],
-		'|^/user/(\d+)$|' => ['sec' => 'admin', 'route' => 'UserCtrl@update'],
+		'|/images/(\d+)|' => 
+			['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
+		'|^/project/add/(\D[^/]+)$|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@create'],
+		'|^/project/(\d+)/rename$|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@rename'],
+		'|^/project/(\d+)/delete|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@delete'],
+		'|^/project/(\d+)/(\w+)|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@addFunction'],
+		'|^/function/(\d+)/vars|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@updVars'],
+		'|^/function/(\d+)/ins|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@updIns'],
+		'|^/function/(\d+)/rename|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@renameFunction'],
+		'|^/function/(\d+)/delete|' => 
+			['sec' => 'user', 'route' => 'ProjectWS@deleteFunction'],
+		'|^/login$|' => 
+			['sec' => 'none', 'route' => 'UserCtrl@login'],
+		'|^/user$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@create'],
+		'|^/user/(\d+)$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@update'],
 	),
 );
 class Context {

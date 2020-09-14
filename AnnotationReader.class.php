@@ -208,6 +208,16 @@ IF_START;
      * @return AnnotationContext self for call chaining
      */
     public function create_context() {
+        $this->context .= <<< WARNING
+/******************************************************************************* 
+ * DO NOT MODIFY THIS FILE, IT IS GENERATED 
+ * 
+ * When DEVELOPMENT=true this file is generated based on the settings in 
+ * frontController.php and the annotations found in the class files in the 
+ * control and model directories
+ ******************************************************************************/
+
+WARNING;
         // generate the mappings array
         $this->context .= "\$mappings = array(\n";
         foreach ($this->mappings as $method => $items) {
@@ -215,7 +225,7 @@ IF_START;
             foreach ($items as $uri => $mapping) {
                 $sec = $mapping['sec'];
                 $route = $mapping['route'];
-                $this->context .= "\t\t'$uri' => ";
+                $this->context .= "\t\t'$uri' => \n\t\t\t";
                 $this->context .= "['sec' => '$sec', 'route' => '$route'],\n";
             }
             $this->context .= "\t),\n";
