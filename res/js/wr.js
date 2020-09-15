@@ -119,10 +119,14 @@ var wr = (function (wr) {
         p.show();
         i.focus();
     };
-    $("#prompt input").on("keydown", function (event) {
-        if (event.which === 13) {
-            $("#prompt button").click();
-        }
+    
+    // Hook  up when document is ready
+    $(function() {
+        $("#prompt input").on("keydown", function (event) {
+            if (event.which === 13) {
+                $("#prompt button").click();
+            }
+        });    
     });
 
     /**
