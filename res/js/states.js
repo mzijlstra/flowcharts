@@ -13,12 +13,22 @@ var wr = (function (wr) {
      *****************************************************/
 
     // private variables for different HTML elements used in this view
-    var play_btn = $("#play_btn");
-    var pause_btn = $("#pause_btn");
-    var workspace = $("#workspace");
-    var variables = $("#variables");
-    var stack = $("#stack");
-    var output = $("#output_disp");
+    var play_btn;
+    var pause_btn;
+    var workspace;
+    var variables;
+    var stack;
+    var output;
+
+    // initailize them once document is ready
+    $(function() {
+        play_btn = $("#play_btn");
+        pause_btn = $("#pause_btn");
+        workspace = $("#workspace");
+        variables = $("#variables");
+        stack = $("#stack");
+        output = $("#output_disp");    
+    });
 
     // helper functions to switch between states
     var toPlayState = function () {
