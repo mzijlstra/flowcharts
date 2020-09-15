@@ -309,7 +309,12 @@ var wr = (function (wr) {
                 }
 
                 // otherwise show the result, and line up the next steps
-                exp.text(result);
+                if ($.isArray(result)) {
+                    exp.text(JSON.stringify(result));
+                } else {
+                    exp.text(result);
+                }
+                
                 exp.addClass("eval");
 
                 var asgn = t.find(".asgn");
