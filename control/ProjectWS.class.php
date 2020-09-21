@@ -96,7 +96,7 @@ class ProjectWS {
      * @return data(structure) to be JSONified or String indicating error view
      * @throws PDOException on insertion error
      * 
-     * @POST(uri="|^/project/add/(\D[^/]+)$|", sec="user")
+     * @POST(uri="|^/project/(\D[^/]+)$|", sec="user")
      */
     public function create() {
         global $URI_PARAMS;

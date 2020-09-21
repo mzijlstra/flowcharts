@@ -890,7 +890,7 @@ $(function () {
 
         var del_proj = function (event) {
             event.stopPropagation(); // don't execute tr.click()
-            var tr = $(this).closest("tr");
+            var tr = $(event.target).closest("tr");
             // Make sure we have at least one project left
             if (pd.find(".proj").length > 1) {
                 wr.confirm("Are you sure you wish to delete this project?", function () {
@@ -898,7 +898,8 @@ $(function () {
                     $.post(pid + "/delete", shouldNotHaveData);
                     // redirect to most recent if current project deleted
                     if (pid === $("h1").first().data("pid")) {
-                        window.location.assign("recent");
+                        var redirect = () => { window.location.assign("../") };
+                        setTimeout(redirect, 100);
                     }
                 });
             } else {
@@ -917,7 +918,7 @@ $(function () {
                     pd.find(".holder").detach();
                     for (var i = 0; i < data.length; i++) {
                         var proj = data[i];
-                        var row = $("<tr pid='" + proj.id + "' class='proj'>");
+                        var row = $("<tr data-pid='" + proj.id + "' class='proj'>");
                         row.append("<td class='pname'>" + proj.name + "</td>");
                         row.append("<td>" + proj.created + "</td>");
                         row.append("<td>" + proj.accessed + "</td>");

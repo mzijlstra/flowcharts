@@ -36,7 +36,7 @@ $mappings = array(
 	"POST" => array(
 		'|/images/(\d+)|' => 
 			['sec' => 'user', 'route' => 'ProjectCtrl@uploadImages'],
-		'|^/project/add/(\D[^/]+)$|' => 
+		'|^/project/(\D[^/]+)$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@create'],
 		'|^/project/(\d+)/rename$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@rename'],
