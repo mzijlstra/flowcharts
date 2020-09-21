@@ -19,14 +19,6 @@ var $__gfxWindows = [];
         var ctx = this.display[0].getContext("2d");
         ctx.clearRect(0, 0, 32, 32);
 
-        // draw body
-        ctx.fillStyle = "#882";
-        var path = new Path2D();
-        path.moveTo(26, 17);
-        path.arc(16, 17, 10, 0, Math.PI * 2);
-        ctx.fill(path);
-        ctx.stroke(path);
-
         // draw limbs
         ctx.fillStyle = "#4A4";
         path = new Path2D();
@@ -42,70 +34,41 @@ var $__gfxWindows = [];
         path.arc(21, 25, 4, 0, Math.PI * 2);
         ctx.fill(path);
 
+        // draw body
+        ctx.fillStyle = "#882";
+        ctx.strokeStyle = "#661";
+        var path = new Path2D();
+        path.moveTo(26, 17);
+        path.arc(16, 17, 10, 0, Math.PI * 2);
+        ctx.fill(path);
+        ctx.stroke(path);
+
         // draw face
         ctx.strokeStyle = "#4A4";
         path = new Path2D();
         path.moveTo(14, 1);
         path.lineTo(18, 1);
         ctx.stroke(path);
-        ctx.strokeStyle = "purple";
-        ctx.lineWidth = 2;
-        path = new Path2D();
-        path.moveTo(12, 2);
-        path.lineTo(20, 2);
-        path.moveTo(20, 4);
-        path.lineTo(22, 4);
-        ctx.stroke(path);
-        ctx.lineWidth = 1;
         ctx.strokeStyle = "black";
         path = new Path2D();
         path.moveTo(13, 2.5);
-        path.lineTo(15, 2.5);
+        path.lineTo(15, 2.5); // left eye
         path.moveTo(17, 2.5);
-        path.lineTo(19, 2.5);
-        path.moveTo(13, 5.5);
-        path.lineTo(19, 5.5);
-        path.moveTo(16, 5.5);
-        path.lineTo(16, 6.5);
-        path.moveTo(13, 5.5);
-        path.lineTo(13, 4.5);
-        path.moveTo(19, 5.5);
-        path.lineTo(19, 4.5);
+        path.lineTo(19, 2.5); // right eye
         ctx.stroke(path);
     };
     var drawPenDown = function () {
         var ctx = this.display[0].getContext("2d");
         var path = new Path2D();
-        ctx.fillStyle = "black";
-        path.moveTo(30, 28);
-        path.lineTo(28, 30);
-        path.lineTo(9, 6);
-        path.lineTo(11, 4);
-        ctx.fill(path);
-        path = new Path2D();
-        path.moveTo(30, 30);
-        path.lineTo(28, 30);
-        path.lineTo(30, 28);
+        path.moveTo(14, 27);
+        path.lineTo(18, 27);
+        path.lineTo(18, 30);
+        path.lineTo(14, 30);        
         ctx.fillStyle = this.penIsColor;
         ctx.fill(path);
     };
     var drawPenUp = function () {
-        var ctx = this.display[0].getContext("2d");
-        ctx.strokeStyle = "rgb(0,0,0,0.5)";
-        ctx.lineWidth = 1;
-        var path = new Path2D();
-        path.moveTo(28, 30);
-        path.lineTo(32, 30);
-        path.moveTo(30, 28);
-        path.lineTo(30, 32);
-        ctx.stroke(path);
-        ctx.fillStyle = "black";
-        path = new Path2D();
-        path.moveTo(0, 12);
-        path.lineTo(32, 12);
-        path.lineTo(32, 15);
-        path.lineTo(0, 15);
-        ctx.fill(path);
+        // do nothing
     };
 
     var toString = function () {
@@ -116,7 +79,7 @@ var $__gfxWindows = [];
         var dy = Math.sin(toRad(this.deg)) * amount;
         this.display.css({
             "top": this.y + dy - 30,
-            "left": this.x + dx - 30
+            "left": this.x + dx - 16
         });
         if (this.penIsDown) {
             var path = new Path2D();
@@ -132,7 +95,7 @@ var $__gfxWindows = [];
         this.deg += degree;
         this.deg = this.deg % 360;
         this.display.css({
-            "transform": "rotate(" + this.deg + "deg)"
+            "transform": "rotate(" + (this.deg + 90) + "deg)"
         });
         return this;
     };
@@ -177,7 +140,7 @@ var $__gfxWindows = [];
     };
     var moveTo = function (nx, ny) {
         this.display.css({
-            "top": ny - 16,
+            "top": ny - 30,
             "left": nx - 16
         });
         if (this.penIsDown) {
@@ -205,8 +168,9 @@ var $__gfxWindows = [];
         display.css({
             "position": "absolute",
             "top": $(this.document).height() / 2 - 30,
-            "left": $(this.document).width() / 2 - 30,
-            "transform-origin": "30px 30px"
+            "left": $(this.document).width() / 2 - 16,
+            "transform-origin": "16px 30px",
+            "transform": "rotate(90deg)"
         });
         $(this.document.body).append(display);
 
