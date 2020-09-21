@@ -40,17 +40,17 @@ $mappings = array(
 			['sec' => 'user', 'route' => 'ProjectWS@create'],
 		'|^/project/(\d+)/rename$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@rename'],
-		'|^/project/(\d+)/delete|' => 
+		'|^/project/(\d+)/delete$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@delete'],
-		'|^/project/(\d+)/(\w+)|' => 
+		'|^/project/(\d+)/add/(\w+)$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@addFunction'],
 		'|^/function/(\d+)/vars|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@updVars'],
 		'|^/function/(\d+)/ins|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@updIns'],
-		'|^/function/(\d+)/rename|' => 
+		'|^/function/(\d+)/rename$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@renameFunction'],
-		'|^/function/(\d+)/delete|' => 
+		'|^/function/(\d+)/delete$|' => 
 			['sec' => 'user', 'route' => 'ProjectWS@deleteFunction'],
 		'|^/login$|' => 
 			['sec' => 'none', 'route' => 'UserCtrl@login'],

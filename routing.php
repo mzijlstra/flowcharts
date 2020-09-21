@@ -38,7 +38,7 @@ function htmlView($view) {
 function view($data) {
     if (is_string($data)) {
         htmlView($data);
-    } else if ($data) {
+    } else if ($data || is_array($data)) {
         print json_encode($data);
     }
     // some web service calls don't generate a view / data

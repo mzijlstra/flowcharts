@@ -115,7 +115,7 @@ class ProjectWS {
             $this->projectDao->db->rollBack();
             throw $e;
         }
-        return $pid;
+        return intval($pid);
     }
 
     /**
@@ -136,7 +136,7 @@ class ProjectWS {
      * Deletes a project (expects to be called from AJAX)
      * @global array $URI_PARAMS as provided by framework based on request URI
      * 
-     * @POST(uri="|^/project/(\d+)/delete|", sec="user")
+     * @POST(uri="|^/project/(\d+)/delete$|", sec="user")
      */
     public function delete() {
         global $URI_PARAMS;
@@ -151,7 +151,7 @@ class ProjectWS {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return data(structure) to be JSONified or String indicating error view
      * 
-     * @POST(uri="|^/project/(\d+)/(\w+)|", sec="user")
+     * @POST(uri="|^/project/(\d+)/add/(\w+)$|", sec="user")
      */
     public function addFunction() {
         global $URI_PARAMS;
@@ -163,7 +163,8 @@ class ProjectWS {
         $vdata = filter_input(INPUT_POST, "vdata");
 
         if ($this->projectDao->isOwner($pid, $uid)) {
-            return $this->functionDao->create($pid, $name, $idata, $vdata);
+            $fid = $this->functionDao->create($pid, $name, $idata, $vdata);
+            return intval($fid);
         } else {
             return "error/403.php";
         }
@@ -214,7 +215,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/rename|", sec="user")
+     * @POST(uri="|^/function/(\d+)/rename$|", sec="user")
      */
     public function renameFunction() {
         global $URI_PARAMS;
@@ -234,7 +235,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/delete|", sec="user")
+     * @POST(uri="|^/function/(\d+)/delete$|", sec="user")
      */
     public function deleteFunction() {
         global $URI_PARAMS;

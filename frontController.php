@@ -17,9 +17,12 @@ $SEC_LVLS = array("none", "user", "admin");
 $__self = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);          
 $matches = array();
 preg_match("|(.*)/frontController.php|", $__self, $matches);               
-$MY_BASE = $matches[1];   
+$MY_BASE = $matches[1];
 
 $the_uri = filter_input(INPUT_SERVER, "REQUEST_URI", FILTER_SANITIZE_URL);
+if (preg_match("|(.*)\?.*|", $the_uri, $matches)) {
+    $the_uri = $matches[1]; // remove GET input params from URI   
+}   
 preg_match("|$MY_BASE(/.*)|", $the_uri, $matches);
 $MY_URI = $matches[1];
 
