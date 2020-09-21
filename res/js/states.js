@@ -379,7 +379,7 @@ $(function () {
                 code = code.substr(0, len - 2);
             }
             var returnType = $("#ins_" + name + " .start .type").text();
-            code += ") { // " + returnType + "\n";
+            code += ") { /* " + returnType + " */\n";
 
             // add variable declarations into the function
             var vars = "";
@@ -472,7 +472,7 @@ $(function () {
             }
         }
         program += genFunc("main");
-        program += "main(); // start executing main\n";
+        program += "main(); /* start executing main */\n";
 
         // insert and show generated code
         editor.setValue(program);
