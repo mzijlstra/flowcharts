@@ -141,6 +141,15 @@ var wr = (function (wr) {
         $("#logout_now").click(() => {
             window.location = "../logout"; 
         });
+        $("#logout_stay").click(() => {
+            // make an AJAX GET call to keep session active
+            var pid = $("h1").first().data("pid");
+            $.ajax({
+                "dataType": "json",
+                "url": "other_recent", // GET recent projects is harmless URI
+                "data": {"pid": pid},
+            });    
+        });
         var timeLeft = 60;
         var display = $("#logout_timeout");
         setInterval(() => {
