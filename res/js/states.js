@@ -158,8 +158,8 @@ var wr = (function (wr) {
 
 // on page load, execute setup and hook up event handlers
 $(function () {
-    // switch to the correct view on page load
-    (function () {
+    // switch to the correct view right after page load
+    setTimeout(function () {
         var hash = window.location.hash;
         if (hash) {
             var goto;
@@ -175,9 +175,11 @@ $(function () {
                 // show javascript or images
                 goto = $(window.location.hash + "_btn");
             }
-            goto.click();
+            if (goto) {
+                goto.click();
+            }
         }
-    }());
+    }, 100);
 
 
     /************************************************
@@ -344,6 +346,7 @@ $(function () {
     editor.getSession().setUseSoftTabs(true);
     if (wr) {
         wr.editor = editor;
+        wr.editor.setReadOnly(true);
     }
 
 
