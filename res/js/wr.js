@@ -39,6 +39,7 @@ var wr = (function (wr) {
     wr.alert;
     wr.prompt;
     wr.confirm;
+    wr.showLogout;
     wr.iolog;
     wr.stringify;
     wr.verifyType;
@@ -128,6 +129,35 @@ var wr = (function (wr) {
             }
         });    
     });
+
+    /**
+     * Helper function that shows the session about to timeout dialog
+     */
+    wr.showLogout = function() {
+        $("#logout_stay").click(() => {
+            $("#overlay").hide();
+            $("#logoutMsg").hide();    
+        });
+        $("#logout_now").click(() => {
+            window.location = "../logout"; 
+        });
+        var timeLeft = 60;
+        var display = $("#logout_timeout");
+        setInterval(() => {
+            if (timeLeft == 0) {
+                window.location = "../logout"; 
+            } else {
+                display.text(timeLeft);
+                timeLeft--;    
+            }
+        }, 1000);
+
+        $("#overlay").show();
+        $("#logoutMsg").show();
+    }
+
+    // timeout reset to 15 mins by successful AJAX calls (see edit.js)
+    wr.logoutTimer = setTimeout(wr.showLogout, 15*60*1000);
 
     /**
      * Helper function that shows a confirmation popup with OK and Cancel 

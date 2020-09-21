@@ -179,6 +179,16 @@ global $MY_BASE;
             </div>
             <div class="center"><button>OK</button></div>
         </div>
+        <div id="logoutMsg" class="popup">
+            <div class="popup_content">
+                <div class="msg center">Your session is about to expire.</div>
+                <div class="msg center">Auto log out in: <span id="logout_timeout">60</span></div>
+            </div>
+            <div class="center">
+                <button id="logout_stay">Stay</button>
+                <button id="logout_now">Logout</button>
+            </div>
+        </div>
 
         <footer>Flowcharts</footer>
 

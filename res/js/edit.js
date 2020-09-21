@@ -39,6 +39,11 @@ $(function () {
                 "Please check your connection or try logging in again.");
     });
 
+    // AJAX Success will reset auto logout timer
+    $(document).ajaxSuccess(function() {
+        clearTimeout(wr.logoutTimer);
+        wr.logoutTimer = setTimeout(wr.showLogout, 15*60*1000);
+    });
 
 
     /********************************************************
