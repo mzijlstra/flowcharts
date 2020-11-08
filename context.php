@@ -32,6 +32,8 @@ $mappings = array(
 			['sec' => 'admin', 'route' => 'UserCtrl@all'],
 		'|^/user/(\d+)$|' => 
 			['sec' => 'admin', 'route' => 'UserCtrl@details'],
+		'|^/user/add$|' => 
+			['sec' => 'admin', 'route' => 'UserCtrl@addUser'],
 	),
 	"POST" => array(
 		'|/images/(\d+)|' => 

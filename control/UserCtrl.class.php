@@ -156,6 +156,15 @@ class UserCtrl {
     }
 
     /**
+     * Show the create user page
+     * 
+     * @GET(uri="|^/user/add$|", sec="admin")
+     */
+    public function addUser() {
+        return "userDetails.php";
+    }
+
+    /**
      * Creates a user
      * @return strng redirect URI
      * @throws PDOException
@@ -205,7 +214,7 @@ class UserCtrl {
             throw $e;
         }
 
-        return "Location: user/$uid";
+        return "Location: user";
     }
 
     /**
