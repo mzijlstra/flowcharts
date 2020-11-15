@@ -64,7 +64,7 @@ var $__gfxWindows = [];
         path.lineTo(18, 27);
         path.lineTo(18, 30);
         path.lineTo(14, 30);        
-        ctx.fillStyle = this.penIsColor;
+        ctx.fillStyle = this.penColor;
         ctx.fill(path);
     };
     var drawPenUp = function () {
@@ -81,7 +81,7 @@ var $__gfxWindows = [];
             "top": this.y + dy - 30,
             "left": this.x + dx - 16
         });
-        if (this.penIsDown) {
+        if (this.isPenDown) {
             var path = new Path2D();
             path.moveTo(this.x, this.y);
             path.lineTo(this.x + dx, this.y + dy);
@@ -103,21 +103,21 @@ var $__gfxWindows = [];
         rotate(-degree);
     };
     var penUp = function () {
-        this.penIsDown = false;
+        this.isPenDown = false;
         this.drawTurtle();
         this.drawPenUp();
         return this;
     };
     var penDown = function () {
-        this.penIsDown = true;
+        this.isPenDown = true;
         this.drawTurtle();
         this.drawPenDown();
         return this;
     };
-    var penColor = function (color) {
-        this.penIscolor = color;
+    var setPenColor = function (color) {
+        this.penColor = color;
         this.drawTurtle();
-        if (this.penIsDown) {
+        if (this.isPenDown) {
             this.drawPenDown();
         } else {
             this.drawPenUp();
@@ -125,8 +125,8 @@ var $__gfxWindows = [];
         this.parentCtx.strokeStyle = color;
         return this;
     };
-    var penWidth = function (width) {
-        this.lineWidth = width;
+    var setPenWidth = function (width) {
+        this.penWidth = width;
         this.parentCtx.lineWidth = width;
         return this;
     };
@@ -143,7 +143,7 @@ var $__gfxWindows = [];
             "top": ny - 30,
             "left": nx - 16
         });
-        if (this.penIsDown) {
+        if (this.isPenDown) {
             var path = new Path2D();
             path.moveTo(this.x, this.y);
             path.lineTo(nx, ny);
@@ -179,9 +179,9 @@ var $__gfxWindows = [];
             "display": display,
             "parentCtx": $(this.document).find("#canvas")[0].getContext('2d'),
             "deg": 0,
-            "penIsColor": "black",
-            "penIsDown": true,
-            "lineWidth": 2,
+            "penColor": "black",
+            "isPenDown": true,
+            "penWidth": 2,
             "x": $(this.document).width() / 2,
             "y": $(this.document).height() / 2,
             // system functions
@@ -196,16 +196,16 @@ var $__gfxWindows = [];
             "right": rotateRight,
             "penUp": penUp,
             "penDown": penDown,
-            "penColor": penColor,
-            "penWidth": penWidth,
+            "setPenColor": setPenColor,
+            "setPenWidth": setPenWidth,
             "show": show,
             "hide": hide,
             "moveTo": moveTo,
             "rotateTo": rotateTo
         };
 
-        turtle.parentCtx.lineWidth = turtle.lineWidth;
-        turtle.parentCtx.strokeStyle = turtle.penIsColor;
+        turtle.parentCtx.lineWidth = turtle.penWidth;
+        turtle.parentCtx.strokeStyle = turtle.penColor;
 
         turtle.drawTurtle();
         turtle.drawPenDown();
