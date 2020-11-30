@@ -134,12 +134,9 @@ var wr = (function (wr) {
      * Helper function that shows the session about to timeout dialog
      */
     wr.showLogout = function() {
-        $("#logout_stay").click(() => {
-            $("#overlay").hide();
-            $("#logoutMsg").hide();    
-        });
+        let stay = false;
         $("#logout_now").click(() => {
-            window.location = "../logout"; 
+            window.location = "/flowcharts/logout"; 
         });
         $("#logout_stay").click(() => {
             // make an AJAX GET call to keep session active
@@ -148,12 +145,16 @@ var wr = (function (wr) {
                 "dataType": "json",
                 "url": "other_recent", // GET recent projects is harmless URI
                 "data": {"pid": pid},
+            }).success(() => {
+                $("#overlay").hide();
+                $("#logoutMsg").hide(); 
+                stay = true;
             });    
         });
         var timeLeft = 60;
         var display = $("#logout_timeout");
         setInterval(() => {
-            if (timeLeft == 0) {
+            if (timeLeft == 0 && !stay) {
                 window.location = "../logout"; 
             } else {
                 display.text(timeLeft);
