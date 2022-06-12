@@ -5,28 +5,32 @@
 /* ******************************
  * Configuration variables
  * **************************** */
+require("settings.php");
 define("DEVELOPMENT", true);
-define("DSN", "mysql:dbname=web_raptor;host=localhost");
-define("DB_USER", "root");
-define("DB_PASS", "root");
 $SEC_LVLS = array("none", "user", "admin");
+date_default_timezone_set("America/Chicago");
+error_reporting(E_ALL ^ E_WARNING ^ E_NOTICE);
+// extend session to 12 hours, based on: 
+// https://stackoverflow.com/questions/8311320/how-to-change-the-session-timeout-in-php
+ini_set('session.gc_maxlifetime', 43200);
+session_set_cookie_params(43200);
 
 /* ******************************
  * Initialize Globals
  * **************************** */
-$__self = filter_input(INPUT_SERVER, "PHP_SELF", FILTER_SANITIZE_URL);          
+$__self = $_SERVER["PHP_SELF"];
 $matches = array();
 preg_match("|(.*)/frontController.php|", $__self, $matches);               
 $MY_BASE = $matches[1];
 
-$the_uri = filter_input(INPUT_SERVER, "REQUEST_URI", FILTER_SANITIZE_URL);
+$the_uri = $_SERVER["REQUEST_URI"];
 if (preg_match("|(.*)\?.*|", $the_uri, $matches)) {
     $the_uri = $matches[1]; // remove GET input params from URI   
 }   
 preg_match("|$MY_BASE(/.*)|", $the_uri, $matches);
 $MY_URI = $matches[1];
 
-$MY_METHOD = filter_input(INPUT_SERVER, "REQUEST_METHOD", FILTER_SANITIZE_STRING);
+$MY_METHOD = $_SERVER["REQUEST_METHOD"];
 $MY_MAPPING = array(); // populated by the code below
 $URI_PARAMS = array(); // populated with URI parameters on URI match in security
 $VIEW_DATA = array(); // populated by controller, and used by view
@@ -35,8 +39,9 @@ $VIEW_DATA = array(); // populated by controller, and used by view
  * Include the (generated) application context
  * **************************** */
 // Setup autoloading for control and model classes
-// TODO move these into the AnnotationContext, so that it automatically adds
-// an additional spl_autoload function for each directory it searches
+// may be good to move these into the AnnotationContext, so that it 
+// automatically adds an additional spl_autoload function for each directory 
+// that it searches
 spl_autoload_register(function ($class) {
     $file = 'control/' . $class . '.class.php';
     if (file_exists($file)) {
@@ -71,6 +76,9 @@ foreach ($uris as $pattern => $mapping) {
 
 // If there was no mapping send out a 404
 if ($MY_MAPPING === []) {
+	if (DEVELOPMENT) {
+		print("Mapping not found");
+	}
     require "view/error/404.php";
     exit();
 }

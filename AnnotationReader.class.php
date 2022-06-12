@@ -3,13 +3,10 @@
 /*
  * Michael Zijlstra 03 May 2017
  * 
- * TODO: create proper documentation for this class
+ * It would be good to create proper documentation for this class
  */
 
 class AnnotationReader {
-
-    // public $security = array();
-    // public $routing = array();
     public $mappings = array();
     public $repositories = array();
     public $controllers = array();
@@ -26,8 +23,8 @@ class AnnotationReader {
     /**
      * Helper function to extract annotation attributes (key / value pairs)
      * 
-     * @param type $annotation
-     * @param type $text
+     * @param string $annotation
+     * @param string $text
      * @return array
      * @throws Exception
      */
@@ -82,7 +79,7 @@ class AnnotationReader {
      */
     private function validate_request_annotation(&$attrs, $com) {
         global $SEC_LVLS;
-        if (!isset($attrs['uri']) && !isset($attrs['value'])) {
+        if (isset($attrs['uri']) == false && isset($attrs['value']) == false ) {
             throw new Exception("@GET or @POST missing uri attribute in: $com");
         }
         if (!isset($attrs['uri']) && isset($attrs['value'])) {
@@ -154,8 +151,8 @@ class AnnotationReader {
     /**
      * Scan for PHP classes in a directory, calling the passed function on them
      * 
-     * @param type $directory
-     * @param type $function
+     * @param string $directory
+     * @param function $function
      */
     private function scan_classes($directory, $function) {
         $files = scandir($directory);

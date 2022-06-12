@@ -1,6 +1,4 @@
-<?php
-global $MY_BASE;
-?>
+<?php global $MY_BASE; ?>
 <!DOCTYPE html>
 <!--
     Created on : May 3, 2014, 6:10:01 PM
@@ -9,7 +7,7 @@ global $MY_BASE;
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Flow Chart</title>
+        <title>Flowcharts</title>
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
@@ -51,10 +49,8 @@ global $MY_BASE;
         <div class="view" id="javascript_btn">
             JavaScript
         </div>
-        <div class="view" id="images_btn">
-            Images
-        </div>
-        <div id="workspace" class="edit">            
+        <div id="workspace" class="edit">     
+            <?php if ($pid) : ?>       
             <div id="var_area">
                 <div class="separator"></div>
                 <div id="variables">
@@ -107,6 +103,7 @@ global $MY_BASE;
                 </div> <!-- end instructions -->
 
             </div> <!-- end functions -->
+            <?php endif; ?>
         </div> <!-- end workspace -->
 
         <div id="output_disp">

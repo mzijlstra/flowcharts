@@ -23,11 +23,20 @@ class ProjectCtrl {
     /**
      * Simple mapping to get the sandbox inside which user code will run
      * 
-     * @GET(uri="|/sandbox$|", sec="user")
+     * @GET(uri="!/sandbox$!", sec="user")
      */
     public function getSandbox() {
         return "sandbox.php";
     }
+
+    /**
+     * Project-less view allows user to create or open project
+     * @GET(uri="!^/project/$!" sec="user")
+     */
+    public function noProject() {
+        return "flowchart.php";
+    }
+
 
     /**
      * Show project based on id
@@ -35,8 +44,8 @@ class ProjectCtrl {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return string name of view file to be rendered
      * 
-     * @GET(uri="|^/project/(\d+)$|", sec="user")
-     * @GET(uri="|^/user/(\d+)/project/(\d+)$|", sec="admin")
+     * @GET(uri="!^/project/(\d+)$!", sec="user")
+     * @GET(uri="!^/user/(\d+)/project/(\d+)$!", sec="admin")
      */
     public function getProject() {
         global $URI_PARAMS;
@@ -70,7 +79,7 @@ class ProjectCtrl {
         $VIEW_DATA['uid'] = $uid;
         $VIEW_DATA['imgs'] = $this->getImages($uid);
 
-        return "wr.php";
+        return "flowchart.php";
     }
 
     /**
@@ -112,7 +121,7 @@ class ProjectCtrl {
      * Processes an image upload request
      * @return string redirect to current images for this project
      * 
-     * @POST(uri="|/images/(\d+)|", sec="user")
+     * @POST(uri="!/images/(\d+)!", sec="user")
      */
     public function uploadImages() {
         global $URI_PARAMS;

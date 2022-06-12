@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of ProjectWS
+ * Description of ProjectWebService
  *
  * @author mzijlstra 2018-03-28
  * 
  * @WebService
  */
-class ProjectWS {
+class ProjectWebService {
     /**
      * @var ProjectDao Project Data Access Object
      * @Inject("ProjectDao") 
@@ -26,8 +26,8 @@ class ProjectWS {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return data(structure) to be JSONified or String indicating error view
      * 
-     * @GET(uri="|^/project/other_recent$|", sec="user")
-     * @GET(uri="|^/user/(\d+)/project/other_recent$|", sec="admin")
+     * @GET(uri="!^/project/other_recent$!", sec="user")
+     * @GET(uri="!^/user/(\d+)/project/other_recent$!", sec="admin")
      */
     public function getOtherRecent() {
         global $URI_PARAMS;
@@ -51,7 +51,7 @@ class ProjectWS {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return data(structure) to be JSONified or String indicating error view
      * 
-     * @GET(uri="|^/project$|", sec="user")
+     * @GET(uri="!^/project$!", sec="user")
      */
     public function getProjects() {
         $uid = $_SESSION['user']['id'];
@@ -78,7 +78,7 @@ class ProjectWS {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return data(structure) to be JSONified
      * 
-     * @GET(uri="|^/user/(\d+)/project$|", sec="user")
+     * @GET(uri="!^/user/(\d+)/project$!", sec="user")
      */
     public function getUserProjects() {
         global $URI_PARAMS;
@@ -96,7 +96,7 @@ class ProjectWS {
      * @return data(structure) to be JSONified or String indicating error view
      * @throws PDOException on insertion error
      * 
-     * @POST(uri="|^/project/(\D[^/]+)$|", sec="user")
+     * @POST(uri="!^/project/(\D[^/]+)$!", sec="user")
      */
     public function create() {
         global $URI_PARAMS;
@@ -122,7 +122,7 @@ class ProjectWS {
      * Renames a project (expects to be called from AJAX)
      * @global array $URI_PARAMS as provided by framework based on request URI
      * 
-     * @POST(uri="|^/project/(\d+)/rename$|", sec="user")
+     * @POST(uri="!^/project/(\d+)/rename$!", sec="user")
      */
     public function rename() {
         global $URI_PARAMS;
@@ -136,7 +136,7 @@ class ProjectWS {
      * Deletes a project (expects to be called from AJAX)
      * @global array $URI_PARAMS as provided by framework based on request URI
      * 
-     * @POST(uri="|^/project/(\d+)/delete$|", sec="user")
+     * @POST(uri="!^/project/(\d+)/delete$!", sec="user")
      */
     public function delete() {
         global $URI_PARAMS;
@@ -151,7 +151,7 @@ class ProjectWS {
      * @global array $VIEW_DATA empty array that we populate with view data
      * @return data(structure) to be JSONified or String indicating error view
      * 
-     * @POST(uri="|^/project/(\d+)/add/(\w+)$|", sec="user")
+     * @POST(uri="!^/project/(\d+)/add/(\w+)$!", sec="user")
      */
     public function addFunction() {
         global $URI_PARAMS;
@@ -175,7 +175,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/vars|", sec="user")
+     * @POST(uri="!^/function/(\d+)/vars!", sec="user")
      */
     public function updVars() {
         global $URI_PARAMS;
@@ -195,7 +195,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/ins|", sec="user")
+     * @POST(uri="!^/function/(\d+)/ins!", sec="user")
      */
     public function updIns() {
         global $URI_PARAMS;
@@ -215,7 +215,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/rename$|", sec="user")
+     * @POST(uri="!^/function/(\d+)/rename$!", sec="user")
      */
     public function renameFunction() {
         global $URI_PARAMS;
@@ -235,7 +235,7 @@ class ProjectWS {
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name
      * 
-     * @POST(uri="|^/function/(\d+)/delete$|", sec="user")
+     * @POST(uri="!^/function/(\d+)/delete$!", sec="user")
      */
     public function deleteFunction() {
         global $URI_PARAMS;

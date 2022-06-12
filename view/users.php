@@ -58,9 +58,6 @@ and open the template in the editor.
                 color: #333366; 
                 padding: 0em 5em;
             }
-            h1 {
-                //margin-bottom: 5px;
-            }
             table {
                 border-collapse: collapse;
                 width: 100%;
@@ -74,7 +71,6 @@ and open the template in the editor.
             }
             td {
                 cursor: pointer;
-                text-align: right;
                 border: 1px solid black;
                 padding: 0px 3px;
             }
@@ -108,10 +104,6 @@ and open the template in the editor.
                     <td><?= $user['created'] ?></td>
                     <td><?= $user['accessed'] ?></td>
                     <td><?= $user['active'] ?></td>
-                    <td><a href="user/<?= $user['id'] ?>">
-                            <button>Edit</button>
-                        </a>
-                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
