@@ -991,4 +991,29 @@ $(function () {
             return true;
         });
     });
+
+    /***********************************
+     * JavaScript Editor related code
+     ***********************************/
+     var editor_save_timeout = null;
+     $("#editor").keyup(function(evt) {
+         if (editor_save_timeout) {
+             clearTimeout(editor_save_timeout);
+         }
+         editor_save_timeout = setTimeout(saveJS, 2000);
+     });
+ 
+     function saveJS() {
+         var pid = $("h1").first().data("pid");
+         var saveMsg = $("#save_msg");
+         saveMsg.text("saving");
+         $.post(`${pid}/js`, {"js": wr.editor.getValue()})
+             .done(() => { 
+                saveMsg.text("saved");
+             })
+             .fail(() => {
+                saveMsg.text("error!");
+             });
+     } 
+     wr.saveJS = saveJS;
 });

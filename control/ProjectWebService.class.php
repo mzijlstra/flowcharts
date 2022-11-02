@@ -171,6 +171,23 @@ class ProjectWebService {
     }
 
     /**
+     * Update JavaScript of the current project
+     * @global array $URI_PARAMS
+     * @return undefined
+     * 
+     * @POST(uri="!^/project/(\d+)/js$!", sec="user")
+     */
+    public function updJavaScript() {
+        global $URI_PARAMS;
+
+        echo "Updating";
+
+        $pid = $URI_PARAMS[1];
+        $js = filter_input(INPUT_POST, "js");
+        $this->projectDao->updJS($pid, $js);
+    } 
+
+    /**
      * Update the variables for the given function (expects AJAX call)
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @return string view name

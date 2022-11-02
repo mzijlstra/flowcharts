@@ -107,7 +107,7 @@ class ProjectDao {
      */
     public function create($name, $uid) {
         $stmt = $this->db->prepare("INSERT INTO `project` VALUES "
-                . "(NULL, :name, NOW(), NOW(), 1, :uid)");
+                . "(NULL, :name, NOW(), NOW(), 1, :uid, NULL)");
         $stmt->execute(array("name" => $name, "uid" => $uid));
 
         return $this->db->lastInsertId();
@@ -155,6 +155,22 @@ class ProjectDao {
                 . "WHERE id = :pid AND user_id = :uid AND active = 1");
         $amount->execute(array("pid" => $pid, "uid" => $uid));
         return $amount->fetch(); // returns FALSE if no row was found
+    }
+
+    /**
+     * Update JavaScript for this project
+     * 
+     * Initially a project starts without JS, but when switching to JS mode
+     * this gets populated and updated (and Flowcharts no longer are)
+     * 
+     * @param int $pid project id
+     * @param String $js
+     * @return undefined
+     */
+    public function updJS($pid, $js) {
+        $stmt = $this->db->prepare("UPDATE `project` SET `js` = :js"
+                . " WHERE id = :pid");
+        $stmt->execute(array("pid" => $pid, "js" => $js));
     }
 
 }

@@ -114,8 +114,11 @@
 
         <!-- Different types of popup / overlay windows below -->
         <div id="js_code">
+            <div id="code_from_php"><?= $js ?></div>
             <div id="editor"></div>
             <div class="controls">
+                <div id="save_msg" class="save_msg"></div>
+                <div id="edit_js_btn" class="edit_btn">EDIT</div>
                 <div id="play_js_btn" class="circle_btn">
                     <div class="play"></div>
                 </div>
@@ -184,6 +187,17 @@
             <div class="center">
                 <button id="logout_stay">Stay</button>
                 <button id="logout_now">Logout</button>
+            </div>
+        </div>
+        <div id="editMsg" class="popup">
+            <div class="popup_content">
+                <div class="msg center">Switch to JS Editing mode?</div>
+                <div class="msg"> </div>
+                <div class="msg">Flowchart mode will become unavailable for this project.</div>
+            </div>
+            <div class="center">
+                <button id="edit_cancel">Cancel</button>
+                <button id="edit_ok">OK</button>
             </div>
         </div>
 

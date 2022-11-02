@@ -170,6 +170,32 @@ var wr = (function (wr) {
     wr.logoutTimer = setTimeout(wr.showLogout, 15*60*1000);
 
     /**
+     * Helper for edit JS mode
+     */
+     wr.editJS = function() {
+        $("#overlay").show();
+        $("#editMsg").show();
+
+        $("#edit_ok").click(() => {
+            $("#flowcharts_btn").hide();            
+            $("#javascript_btn").css("top", "50px")
+            $("#edit_js_btn").hide();
+            
+            $("#overlay").hide();
+            $("#editMsg").hide();    
+
+            wr.editor.setReadOnly(false);
+            wr.editor.focus();
+            wr.saveJS();
+        });
+
+        $("#edit_cancel").click(() => {
+            $("#overlay").hide();
+            $("#editMsg").hide();    
+        });
+    };
+
+    /**
      * Helper function that shows a confirmation popup with OK and Cancel 
      * @param {string} text To be displayed in popup
      * @param {function} ok To be executed when OK is clicked

@@ -176,6 +176,23 @@ div#projects:hover #project_menu {
     -ms-user-select: none;
     user-select: none;
 
+    .save_msg {
+        position: absolute;
+        top: -25px;
+        left: 14px;
+    }
+
+    .edit_btn {
+        position: absolute;
+        top: -25px;
+        left: 14px;
+        border: 1px solid $fg;
+        color: $bg;
+        background: #D00;
+        padding: 1px 3px 0px 3px;
+        cursor: pointer;
+        font-size: 12pt;
+    }
     .circle_btn {
         position: absolute;
         top: 0px;

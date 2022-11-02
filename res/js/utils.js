@@ -448,4 +448,15 @@ var $__gfxWindows = [];
         };
     }());
 
+    // make prompt calls also appear in the output window
+    (function () {
+        var oldprompt = window.prompt;
+        var wr = window.parent.wr;
+        window.prompt = function() {
+            var val = oldprompt();
+            wr.iolog(val + "<br />", "in");
+            return val;
+        }
+    })();
+
 }());

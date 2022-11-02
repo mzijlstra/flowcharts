@@ -79,7 +79,12 @@ class ProjectCtrl {
         $VIEW_DATA['uid'] = $uid;
         $VIEW_DATA['imgs'] = $this->getImages($uid);
 
-        return "flowchart.php";
+        if ($proj['js']) {
+            $VIEW_DATA['js'] = $proj['js'];
+            return "js.php";
+        } else {
+            return "flowchart.php";
+        }
     }
 
     /**

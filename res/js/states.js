@@ -339,16 +339,16 @@ $(function () {
      * Generate JavaScript from flowchart
      ********************************************************/
     // setup the editor for the JavaScript view on page load
-    var editor;
-    editor = ace.edit("editor");
-    editor.setTheme("ace/theme/clouds");
-    editor.getSession().setMode("ace/mode/javascript");
-    editor.getSession().setUseSoftTabs(true);
-    if (wr) {
+    if (!wr.editor) {
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/clouds");
+        editor.getSession().setMode("ace/mode/javascript");
+        editor.getSession().setUseSoftTabs(true);    
         wr.editor = editor;
         wr.editor.setReadOnly(true);
     }
 
+    $("#edit_js_btn").click(wr.editJS);
 
     $("#javascript_btn").click(function () {
         if (wr.state.name !== "edit") {
@@ -465,16 +465,24 @@ $(function () {
             code += "}\n\n";
             return code;
         };
-        var program = "";
-        for (var key in wr.functions) {
-            if (key !== "main") {
-                program += genFunc(key);
-            }
-        }
-        program += genFunc("main");
-        program += "main(); /* start executing main */\n";
 
-        // insert and show generated code
+        var program = "";
+        var js = $("#code_from_php").text();
+        if (js) {
+            program = js;
+            $("#flowcharts_btn").hide();
+        } else {
+            // generate JS from flowcharts
+            for (var key in wr.functions) {
+                if (key !== "main") {
+                    program += genFunc(key);
+                }
+            }
+            program += genFunc("main");
+            program += "main(); /* start executing main */\n";    
+        }
+
+        // insert and show program code
         editor.setValue(program);
         editor.selection.clearSelection();
         editor.focus();
@@ -498,6 +506,7 @@ $(function () {
         } catch (e) {
             wr.iolog(e, "err");
         }
+        wr.editor.focus();
     });
 
 
