@@ -10,6 +10,7 @@
         <title>Flowcharts</title>
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
+        <script src="res/js/lib/crypto-js.min.js"></script>
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/states.js"></script>

@@ -995,25 +995,32 @@ $(function () {
     /***********************************
      * JavaScript Editor related code
      ***********************************/
-     var editor_save_timeout = null;
-     $("#editor").keyup(function(evt) {
-         if (editor_save_timeout) {
-             clearTimeout(editor_save_timeout);
-         }
-         editor_save_timeout = setTimeout(saveJS, 2000);
-     });
+    var editor_save_timeout = null;
+    $("#editor").keyup(function(evt) {
+        $("#save_msg").text("");
+        if (editor_save_timeout) {
+            clearTimeout(editor_save_timeout);
+        }
+        editor_save_timeout = setTimeout(saveJS, 2000);
+    });
  
-     function saveJS() {
-         var pid = $("h1").first().data("pid");
-         var saveMsg = $("#save_msg");
-         saveMsg.text("saving");
-         $.post(`${pid}/js`, {"js": wr.editor.getValue()})
-             .done(() => { 
-                saveMsg.text("saved");
-             })
-             .fail(() => {
-                saveMsg.text("error!");
-             });
-     } 
-     wr.saveJS = saveJS;
+    function saveJS() {
+        var pid = $("h1").first().data("pid");
+        var saveMsg = $("#save_msg");
+        saveMsg.text("saving");
+
+        var js = wr.editor.getValue();
+        // need encryption because dreamhost flags arbitrary JavaScript 
+        // that's sent to the server as a security threat
+        var encrypted = CryptoJS.AES.encrypt(js, "Secret Passphrase");
+
+        $.post(`${pid}/js`, { "js": encrypted.toString() })
+            .done(() => { 
+            saveMsg.text("saved");
+            })
+            .fail(() => {
+            saveMsg.text("error!");
+            });
+    } 
+    wr.saveJS = saveJS;
 });

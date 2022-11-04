@@ -10,6 +10,7 @@
         <title>Flowcharts</title>
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
+        <script src="res/js/lib/crypto-js.min.js"></script>
         <script src="res/js/lib/jquery-2.1.1.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/states.js"></script>
@@ -37,6 +38,11 @@
                     wr.editor = editor;
                 }
                 editor = wr.editor;
+                var decrypted = CryptoJS.AES.decrypt($("#code_from_php").text(), "Secret Passphrase");
+                
+                // this extra step is needed to get around utf8 to utf16 maddness for ACE editor
+                $("#code_from_php").text(decrypted.toString(CryptoJS.enc.Utf8));
+
                 editor.setValue($("#code_from_php").text());
                 editor.selection.clearSelection();
                 editor.setReadOnly(false);
