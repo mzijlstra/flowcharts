@@ -997,6 +997,9 @@ $(function () {
      ***********************************/
     var editor_save_timeout = null;
     $("#editor").keyup(function(evt) {
+        if (wr.editor.getReadOnly()) {
+            return;
+        }
         $("#save_msg").text("");
         if (editor_save_timeout) {
             clearTimeout(editor_save_timeout);
