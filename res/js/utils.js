@@ -452,8 +452,8 @@ var $__gfxWindows = [];
     (function () {
         var oldprompt = window.prompt;
         var wr = window.parent.wr;
-        window.prompt = function() {
-            var val = oldprompt();
+        window.prompt = function(message, defaultValue) {
+            var val = oldprompt(message, defaultValue);
             wr.iolog(val + "<br />", "in");
             return val;
         }
