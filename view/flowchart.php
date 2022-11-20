@@ -16,7 +16,7 @@
         <script src="res/js/states.js"></script>
         <script src="res/js/edit.js"></script>
         <script src="res/js/exec.js"></script>
-        <script src="res/js/utils.js"></script>
+        <script src="res/js/utils-1.0.js"></script>
         <script src="res/js/lib/ace/ace.js" ></script>
     </head>
     <body>

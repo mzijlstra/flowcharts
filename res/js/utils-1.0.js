@@ -167,8 +167,8 @@ var $__gfxWindows = [];
         var display = $("<canvas width='32' height='32'>");
         display.css({
             "position": "absolute",
-            "top": $(this.document).height() / 2 - 30,
-            "left": $(this.document).width() / 2 - 16,
+            "top": this.height / 2 - 30,
+            "left": this.width / 2 - 16,
             "transform-origin": "16px 30px",
             "transform": "rotate(90deg)"
         });
@@ -182,8 +182,8 @@ var $__gfxWindows = [];
             "penColor": "black",
             "isPenDown": true,
             "penWidth": 2,
-            "x": $(this.document).width() / 2,
-            "y": $(this.document).height() / 2,
+            "x": this.width / 2,
+            "y": this.height / 2,
             // system functions
             "drawTurtle": drawTurtle,
             "drawPenUp": drawPenUp,
@@ -376,10 +376,10 @@ var $__gfxWindows = [];
     window.GfxWindow = function (width, height, color) {
         // parameter defaults (if not provided)
         if (!width || typeof (width) !== 'number') {
-            width = 400;
+            width = 600; 
         }
         if (!height || typeof (height) !== 'number') {
-            height = 300;
+            height = 450; 
         }
         if (!color) {
             color = "#FFF";
