@@ -249,6 +249,9 @@ var wr = (function (wr) {
         if (typeof text === "string") {
             text = text.replace("\n", "<br />");
         }
+        if (!text) {
+            text = text.toString();
+        }
         add.html(text);
         if (cname) {
             add.addClass(cname);
