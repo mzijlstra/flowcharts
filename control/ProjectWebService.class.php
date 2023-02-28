@@ -34,7 +34,7 @@ class ProjectWebService {
         $uid = $_SESSION['user']['id'];
 
         if (count($URI_PARAMS) === 2) {
-            if ($_SESSION['user']['type'] === 'admin') {
+            if ($_SESSION['user']['isAdmin']) {
                 $uid = $URI_PARAMS[1];
             } else {
                 // Show access denied

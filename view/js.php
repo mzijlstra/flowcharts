@@ -18,6 +18,7 @@
         <script src="res/js/exec.js"></script>
         <script src="res/js/utils-1.0.js"></script>
         <script src="res/js/lib/ace/ace.js" ></script>
+        <!-- <script src="res/js/lib/typescriptServices.js"></script> -->
         <style>
             #js_code {
                 display: block;
@@ -70,11 +71,14 @@
 
         <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="<?= $MY_BASE ?>/logout">logout</a>
-            <?php if ($_SESSION['user']['type'] === 'admin') : ?>
+            <?php if ($_SESSION['user']['isAdmin']) : ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
             <?php endif; ?>
         </div>
 
+        <!-- <div class="view" id="typescript_btn">
+            TypeScript
+        </div> -->
         <div class="view activeView" id="javascript_btn">
             JavaScript
         </div>

@@ -71,7 +71,7 @@ class UserCtrl {
                 "id" => $row['id'],
                 "first" => $row['firstname'],
                 "last" => $row['lastname'],
-                "type" => $row['type']
+                "isAdmin" => $row['isAdmin']
             );
 
             // update the last accessed time
@@ -171,9 +171,9 @@ class UserCtrl {
      * @POST(uri="!^/user$!", sec="admin")
      */
     public function create() {
-        $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
-        $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $first = filter_input(INPUT_POST, "first");
+        $last = filter_input(INPUT_POST, "last");
+        $email = filter_input(INPUT_POST, "email");
         $pass = filter_input(INPUT_POST, "pass");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
@@ -200,10 +200,14 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
+        $isAdmin = 0;
+        if ($type == "admin") {
+            $isAdmin = 1;
+        }
         try {
             $this->projectDao->db->beginTransaction();
 
-            $uid = $this->userDao->insert($first, $last, $email, $hash, $type, $actv);
+            $uid = $this->userDao->insert($first, $last, $email, $hash, $actv, $isAdmin);
             $pid = $this->projectDao->create("First Project", $uid);
             $this->functionDao->createMain($pid);
 
@@ -226,9 +230,9 @@ class UserCtrl {
     public function update() {
         global $URI_PARAMS;
         $uid = $URI_PARAMS[1];
-        $first = filter_input(INPUT_POST, "first", FILTER_SANITIZE_STRING);
-        $last = filter_input(INPUT_POST, "last", FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_STRING);
+        $first = filter_input(INPUT_POST, "first");
+        $last = filter_input(INPUT_POST, "last");
+        $email = filter_input(INPUT_POST, "email");
         $type = filter_input(INPUT_POST, "type");
         $active = filter_input(INPUT_POST, "active");
         $pass = filter_input(INPUT_POST, "pass");
@@ -251,7 +255,12 @@ class UserCtrl {
         if (!$active) {
             $actv = 0;
         }
-        $this->userDao->update($first, $last, $email, $type, $actv, $uid, $pass);
+        $isAdmin = 0;
+        if ($type == "admin") {
+            $isAdmin = 1;
+        }
+
+        $this->userDao->update($first, $last, $email, $isAdmin, $actv, $uid, $pass);
 
         return "Location: $uid";
     }

@@ -22,7 +22,7 @@ class UserDao {
      */
     public function checkLogin($email) {
         $find = $this->db->prepare(
-                "SELECT id, firstname, lastname, password, type "
+                "SELECT id, firstname, lastname, password, isAdmin "
                 . "FROM manalabs.user "
                 . "WHERE email = :email "
                 . "AND active = TRUE ");

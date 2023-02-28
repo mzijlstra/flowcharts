@@ -15,7 +15,7 @@ function isLoggedIn() {
 
         // Then show login page
         $_SESSION['error'] = "Please Login:";
-        header("Location: ${MY_BASE}/login");
+        header("Location: {$MY_BASE}/login");
         exit();
     }
 }
@@ -30,7 +30,7 @@ switch ($MY_MAPPING['sec']) {
     case "admin":
     default:
         isLoggedIn();
-        if ($_SESSION['user']['type'] !== 'admin') {
+        if ($_SESSION['user']['isAdmin']) {
             require "view/error/403.php";
             exit();
         }
