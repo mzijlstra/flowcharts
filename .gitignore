@@ -3,3 +3,4 @@ context.php
 .vscode
 /res/scss/.sass-cache/
 /res/img/
+/node_modules/

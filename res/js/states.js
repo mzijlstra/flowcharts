@@ -337,12 +337,15 @@ $(function () {
     /********************************************************
      *          --- The JavaScript View ---
      * Generate JavaScript from flowchart
+     * // TODO also generate TypeScript
+     * See: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+     * for reference on how to add types
      ********************************************************/
     // setup the editor for the JavaScript view on page load
     if (!wr.editor) {
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/clouds");
-        editor.getSession().setMode("ace/mode/javascript");
+        editor.getSession().setMode("ace/mode/typescript");
         editor.getSession().setUseSoftTabs(true);    
         wr.editor = editor;
         wr.editor.setReadOnly(true);

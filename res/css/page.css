@@ -660,6 +660,7 @@ div#projects:hover #project_menu {
   width: 80px;
 }
 
+#typescript_btn,
 #javascript_btn {
   top: 140px;
   right: -77px;
