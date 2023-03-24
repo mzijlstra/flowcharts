@@ -57,7 +57,7 @@ class ProjectCtrl {
 
         $record = true;
         if (count($URI_PARAMS) === 3) {
-            if ($user['type'] === 'admin') {
+            if ($user['isAdmin']) {
                 $uid = $URI_PARAMS[1];
                 $pid = $URI_PARAMS[2];
                 $record = false;
