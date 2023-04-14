@@ -89,6 +89,20 @@ class ProjectWebService {
     }
 
     /**
+     * @GET(uri="!^/projects/(\d+)$!", sec="admin")
+     */
+    public function showProjectsForUser() {
+        global $URI_PARAMS;
+        global $VIEW_DATA;
+        $uid = $URI_PARAMS[1];
+
+        // Return all projects for this user
+        $VIEW_DATA['uid'] = $uid;
+        $VIEW_DATA["projects"] = $this->projectDao->all($uid);
+        return "projects.php";
+    }
+
+    /**
      * Creates a new project, and a main function for the newly created project
      * then returns the project id as JSON (expects AJAX)
      * @global array $URI_PARAMS as provided by framework based on request URI

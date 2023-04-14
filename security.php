@@ -30,7 +30,7 @@ switch ($MY_MAPPING['sec']) {
     case "admin":
     default:
         isLoggedIn();
-        if ($_SESSION['user']['isAdmin']) {
+        if (!$_SESSION['user']['isAdmin']) {
             require "view/error/403.php";
             exit();
         }
