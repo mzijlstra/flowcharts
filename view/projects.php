@@ -15,6 +15,7 @@
     </head>
     <body>
         <table>
+            <caption>Projects for <?= $user['knownAs']?> <?= $user['lastname'] ?></caption>
             <tr>
                 <th>Project</th>
                 <th>Created</th>
@@ -23,7 +24,7 @@
             <?php foreach ($projects as $project): ?>
                 <tr>
                     <td>
-                        <a href="../user/<?= $uid ?>/project/<?= $project['id'] ?>">
+                        <a href="../user/<?= $user['id'] ?>/project/<?= $project['id'] ?>">
                             <?= $project["name"]?>
                         </a>
                     </td>

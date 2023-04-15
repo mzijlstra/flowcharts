@@ -20,6 +20,11 @@ class ProjectWebService {
     public $functionDao;
 
     /**
+     * @Inject('UserDao')
+     */
+    public $userDao;
+
+    /**
      * Gets list of 6 other most recent projects (excluding current/most recent)
      * and returns data in JSON format 
      * @global array $URI_PARAMS as provided by framework based on request URI
@@ -97,7 +102,7 @@ class ProjectWebService {
         $uid = $URI_PARAMS[1];
 
         // Return all projects for this user
-        $VIEW_DATA['uid'] = $uid;
+        $VIEW_DATA['user'] = $this->userDao->get($uid);
         $VIEW_DATA["projects"] = $this->projectDao->all($uid);
         return "projects.php";
     }
