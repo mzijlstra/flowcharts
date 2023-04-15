@@ -50,5 +50,12 @@ class UserDao {
             ORDER BY accessed DESC");
         $stmt->execute();
         return $stmt->fetchAll();        
-    }    
+    }  
+    
+    public function get($id) {
+        $stmt = $this->db->prepare(
+            "SELECT * FROM manalabs.user WHERE id = :id");
+        $stmt->execute(array("id" => $id));
+        return $stmt->fetch();
+    }
 }
