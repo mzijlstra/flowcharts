@@ -40,9 +40,9 @@
 
         <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="<?= $MY_BASE ?>/logout">logout</a>
-            <?php if ($_SESSION['user']['isAdmin']) : ?>
+            <?php if ($_SESSION['user']['isAdmin']) { ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
-            <?php endif; ?>
+            <?php } ?>
         </div>
 
         <div class="view activeView" id="flowcharts_btn">
@@ -54,16 +54,21 @@
         <div class="view" id="javascript_btn">
             JavaScript
         </div>
+
+        <div class="view" id="images_btn">
+            Images
+        </div>
+
         <div id="workspace" class="edit">     
-            <?php if ($pid) : ?>       
+            <?php if ($pid) { ?>       
             <div id="var_area">
                 <div class="separator"></div>
                 <div id="variables">
-                    <?php foreach ($funcs as $name => $fdata) : ?>
+                    <?php foreach ($funcs as $name => $fdata) { ?>
                         <div id="vars_<?= $name ?>" class="variables <?= $name == 'main' ? 'active' : '' ?>">
                             <?= $fdata['variables'] ?>
                         </div>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </div>
                 <div id="stack">
                     <div class="label">Stack &#8613;</div>
@@ -73,7 +78,7 @@
             <div id="functions">
                 <div id="fun-names">
                     <span id="add_fun">+</span>
-                    <?php foreach ($funcs as $name => $fdata): ?>
+                    <?php foreach ($funcs as $name => $fdata) { ?>
                         <span data-fid="<?= $fdata['id'] ?>" class="fun <?= $name == 'main' ? 'active' : '' ?>">
                             <span class="cornerb">
                                 <span class="cornerw"></span>
@@ -81,7 +86,7 @@
                             <span class="name"><?= $name ?></span>
                             <span class="rem">&times;</span>
                         </span>
-                    <?php endforeach; ?>
+                    <?php } ?>
 
                     <div class="controls">
                         <div class="circle_btn" id="play_pause">
@@ -100,15 +105,15 @@
                 </div> <!-- end fun-names -->
 
                 <div id="instructions">
-                    <?php foreach ($funcs as $name => $fdata) : ?>
+                    <?php foreach ($funcs as $name => $fdata) { ?>
                         <div id="ins_<?= $name ?>" class="instructions <?= $name == 'main' ? 'active' : '' ?>">
                             <?= $fdata['instructions'] ?>
                         </div>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </div> <!-- end instructions -->
 
             </div> <!-- end functions -->
-            <?php endif; ?>
+            <?php } ?>
         </div> <!-- end workspace -->
 
         <div id="output_disp">
@@ -138,12 +143,12 @@
                 <input type="submit" value="upload" />
             </form>
             <h2>Already Uploaded:</h2>
-            <?php foreach ($imgs as $img) : ?>
-                <?php if ($img[0] !== "."): ?>
+            <?php foreach ($imgs as $img) { ?>
+                <?php if ($img[0] !== '.') { ?>
                     <h3><?= $img ?></h3>
                     <img id="<?= $img ?>" src="res/img/<?= $uid ?>/<?= $img ?>" />
-                <?php endif; ?>
-            <?php endforeach; ?>
+                <?php } ?>
+            <?php } ?>
         </div>
 
         <div id="projects_disp">
