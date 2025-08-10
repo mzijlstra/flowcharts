@@ -8,7 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title>Users</title>
-        <script src="res/js/lib/jquery-2.1.1.js"></script>
+        <script src="res/js/lib/jquery-3.7.1.min.js" ></script>
         <script>
             $(function () {
                 "use strict";
@@ -95,7 +95,7 @@ and open the template in the editor.
                 <th>accessed</th>
                 <th>active</th>
             </tr>
-            <?php foreach ($users as $user) : ?>
+            <?php foreach ($users as $user) { ?>
                 <tr class="user">
                     <td><?= $user['id'] ?></td>
                     <td><?= $user['firstname'] ?></td>
@@ -105,7 +105,7 @@ and open the template in the editor.
                     <td><?= $user['accessed'] ?></td>
                     <td><?= $user['active'] ?></td>
                 </tr>
-            <?php endforeach; ?>
+            <?php } ?>
         </table>
         <div class="add">
             <button>Add a User</button>

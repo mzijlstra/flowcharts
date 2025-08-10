@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="res/css/page.css" type="text/css" />
         <link rel="stylesheet" href="res/css/hljs-default.css" type="text/css" />
         <script src="res/js/lib/crypto-js.min.js"></script>
-        <script src="res/js/lib/jquery-2.1.1.js" ></script>
+        <script src="res/js/lib/jquery-3.7.1.min.js" ></script>
         <script src="res/js/wr.js"></script>
         <script src="res/js/states.js"></script>
         <script src="res/js/edit.js"></script>
@@ -71,9 +71,9 @@
 
         <div id="user" data-id="<?= $_SESSION['user']['id'] ?>">
             Hi <?= $_SESSION['user']['first'] ?>! <a href="<?= $MY_BASE ?>/logout">logout</a>
-            <?php if ($_SESSION['user']['isAdmin']) : ?>
+            <?php if ($_SESSION['user']['isAdmin']) { ?>
                 <a href="<?= $MY_BASE ?>/user">users</a>
-            <?php endif; ?>
+            <?php } ?>
         </div>
 
         <!-- <div class="view" id="typescript_btn">
@@ -109,12 +109,12 @@
                 <input type="submit" value="upload" />
             </form>
             <h2>Already Uploaded:</h2>
-            <?php foreach ($imgs as $img) : ?>
-                <?php if ($img[0] !== "."): ?>
+            <?php foreach ($imgs as $img) { ?>
+                <?php if ($img[0] !== '.') { ?>
                     <h3><?= $img ?></h3>
                     <img id="<?= $img ?>" src="res/img/<?= $uid ?>/<?= $img ?>" />
-                <?php endif; ?>
-            <?php endforeach; ?>
+                <?php } ?>
+            <?php } ?>
         </div>
 
         <div id="projects_disp">
