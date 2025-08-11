@@ -4,50 +4,58 @@
  * Description of ProjectController
  *
  * @author mzijlstra 11/15/2014
- * 
+ *
  * @Controller
  */
-class ProjectCtrl {
-
+class ProjectCtrl
+{
     /**
      * @var ProjectDao Project Data Access Object
-     * @Inject("ProjectDao") 
+     *
+     * @Inject("ProjectDao")
      */
     public $projectDao;
+
     /**
      * @var FunctionDao Function Data Access Object
+     *
      * @Inject("FunctionDao")
      */
     public $functionDao;
 
     /**
      * Simple mapping to get the sandbox inside which user code will run
-     * 
+     *
      * @GET(uri="!/sandbox$!", sec="user")
      */
-    public function getSandbox() {
-        return "sandbox.php";
+    public function getSandbox()
+    {
+        return 'sandbox.php';
     }
 
     /**
      * Project-less view allows user to create or open project
-     * @GET(uri="!^/project/$!" sec="user")
+     *
+     * @GET(uri="!^/project/$!", sec="user")
      */
-    public function noProject() {
-        return "flowchart.php";
+    public function noProject()
+    {
+        return 'flowchart.php';
     }
-
 
     /**
      * Show project based on id
+     *
      * @global array $URI_PARAMS as provided by framework based on request URI
      * @global array $VIEW_DATA empty array that we populate with view data
+     *
      * @return string name of view file to be rendered
-     * 
+     *
      * @GET(uri="!^/project/(\d+)$!", sec="user")
      * @GET(uri="!^/user/(\d+)/project/(\d+)$!", sec="admin")
      */
-    public function getProject() {
+    public function getProject()
+    {
         global $URI_PARAMS;
         global $VIEW_DATA;
 
@@ -63,14 +71,14 @@ class ProjectCtrl {
                 $record = false;
             } else {
                 // Show access denied
-                return "error/403.php";
+                return 'error/403.php';
             }
         }
 
         $proj = $this->projectDao->get($pid, $uid, $record);
-        if (!$proj) {
+        if (! $proj) {
             // clearly uid did not match, show access denied
-            return "error/403.php";
+            return 'error/403.php';
         }
 
         $VIEW_DATA['funcs'] = $this->functionDao->all($pid);
@@ -81,27 +89,30 @@ class ProjectCtrl {
 
         if ($proj['js']) {
             $VIEW_DATA['js'] = $proj['js'];
-            return "js.php";
+
+            return 'js.php';
         } else {
-            return "flowchart.php";
+            return 'flowchart.php';
         }
     }
 
     /**
      * Helper function to load images for the given user id
-     * @param int $uid user id
+     *
+     * @param  int  $uid  user id
      * @return array of image file names
      */
-    private function getImages($uid) {
-        if (!file_exists("res/img/$uid")) {
+    private function getImages($uid)
+    {
+        if (! file_exists("res/img/$uid")) {
             mkdir("res/img/$uid");
 
             // QUESTION do we want to link default starter images?
-            $files = glob("res/img/*");
+            $files = glob('res/img/*');
             foreach ($files as $file) {
-                if (!is_dir($file)) {
-                    $link = str_replace("res/img", "res/img/$uid", $file);
-                    $source = str_replace("res/img", "..", $file);
+                if (! is_dir($file)) {
+                    $link = str_replace('res/img', "res/img/$uid", $file);
+                    $source = str_replace('res/img', '..', $file);
                     symlink($source, $link);
                 }
             }
@@ -109,12 +120,12 @@ class ProjectCtrl {
 
         $files = glob("res/img/$uid/*");
         // sort images by upload date
-        usort($files, function($a, $b) {
+        usort($files, function ($a, $b) {
             return filemtime($a) < filemtime($b);
         });
 
         // strip leading directory name
-        $imgs = array();
+        $imgs = [];
         foreach ($files as $file) {
             $imgs[] = basename($file);
         }
@@ -124,22 +135,24 @@ class ProjectCtrl {
 
     /**
      * Processes an image upload request
+     *
      * @return string redirect to current images for this project
-     * 
+     *
      * @POST(uri="!/images/(\d+)!", sec="user")
      */
-    public function uploadImages() {
+    public function uploadImages()
+    {
         global $URI_PARAMS;
 
         $uid = $URI_PARAMS[1];
         // TODO check that the given uid is our user's uid, or is admin
-        $pid = filter_input(INPUT_POST, "pid");
-        if (is_uploaded_file($_FILES["image"]["tmp_name"])) {
-            $name = $_FILES["image"]["name"];
-            move_uploaded_file($_FILES["image"]["tmp_name"], "res/img/$uid/$name");
+        $pid = filter_input(INPUT_POST, 'pid');
+        if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+            $name = $_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], "res/img/$uid/$name");
         }
+
         // TODO make it switch to the images tab!
         return "Location: ../project/$pid#images";
     }
-
 }
