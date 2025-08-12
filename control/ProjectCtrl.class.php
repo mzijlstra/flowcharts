@@ -121,7 +121,7 @@ class ProjectCtrl
         $files = glob("res/img/$uid/*");
         // sort images by upload date
         usort($files, function ($a, $b) {
-            return filemtime($a) < filemtime($b);
+            return filemtime($a) - filemtime($b);
         });
 
         // strip leading directory name

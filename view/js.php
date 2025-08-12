@@ -26,6 +26,9 @@
             #javascript_btn {
                 top: 50px;
             }
+            #images_btn {
+                top: 150px;
+            }
         </style>
         <script>
             $(() => {
@@ -81,6 +84,10 @@
         </div> -->
         <div class="view activeView" id="javascript_btn">
             JavaScript
+        </div>
+
+        <div class="view" id="images_btn">
+            Images
         </div>
 
         <div id="output_disp">
